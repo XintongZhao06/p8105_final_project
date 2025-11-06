@@ -1,0 +1,32 @@
+---
+title: "Proposal"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## The group members (names and UNIs)
+
+Xintong Zhao(xz3499)
+
+## The tentative project title
+
+
+
+## The motivation for this project
+
+
+## The intended final products
+
+
+## The anticipated data sources
+
+
+## The planned analyses / visualizations / coding challenges
+
+
+## The planned timeline
