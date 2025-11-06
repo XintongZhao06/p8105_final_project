@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## The group members (names and UNIs)
 
-Xintong Zhao(xz3499)
+Xintong Zhao(xz3499) | Boran Zhai(bz2570)
 
 ## The tentative project title
 
