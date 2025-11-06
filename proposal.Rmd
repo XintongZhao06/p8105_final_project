@@ -22,11 +22,36 @@ Xintong Zhao(xz3499) | Boran Zhai(bz2570)
 
 ## The intended final products
 
+(To provide practical short-video creation guidelines, such as recommended video duration ranges and strategies for improving viewer engagement and retention.)
 
 ## The anticipated data sources
 
 
-## The planned analyses / visualizations / coding challenges
+## The planned analyses and visualizations
+#### Exploratory Data Analysis
+- Visualize the distribution of core performance metrics (completion rate and engagement rate) using histograms, density plots, and boxplots.<br/>
+<div style="margin-bottom: 10px;"></div>
+- Use scatter plots and correlation heat maps to examine relationships among different video characteristics and their performance results.
 
+#### Regression Analysis
+- Apply multiple regression models to identify which video characteristics significantly influence completion rate and engagement rate.<br/>
+<div style="margin-bottom: 10px;"></div>
+- Interpret coefficient direction and magnitude to understand how content attributes affect viewer retention and interaction.
+
+#### Group Comparison Analysis
+- Compare performance across different video content categories such as lifestyle, sport and music.<br/>
+<div style="margin-bottom: 10px;"></div>
+- Conduct duration-based subgroup comparisons by categorizing videos into length intervals (e.g., <15s, 15–30s, 30–60s, >60s) to evaluate how video duration affects viewer retention and determine whether there is an optimal video length range that maximizes completion rate and engagement performance.
+
+#### Machine Learning Prediction
+- Build predictive models for completion rate using Linear Regression, Random Forest, and XGBoost.<br/>
+<div style="margin-bottom: 10px;"></div>
+- Evaluate and compare model performance to determine which model provides the most accurate predictions.<br/>
+<div style="margin-bottom: 10px;"></div>
+- visualize feature importance rankings to determine which content attributes contribute most strongly to viewer behavior.
+
+## Coding challenges
 
 ## The planned timeline
+
+
