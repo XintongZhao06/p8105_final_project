@@ -91,7 +91,6 @@ All files are structured in `.csv` format and will be processed in R using packa
 - visualize feature importance rankings to determine which content attributes contribute most strongly to viewer behavior.
 
 ## Coding challenges
-
 1.Data Cleaning and Preprocessing
 
 The dataset likely contains missing values, skewed variables, and outliers. Designing a systematic cleaning pipeline while keeping the app dynamic (so users can view the effect of filters or group selections in real-time) can be challenging.
@@ -104,9 +103,7 @@ Running multiple models (Linear Regression, Random Forest, XGBoost) requires car
 
 The EDA and group comparison sections require various plots (correlation heatmaps, boxplots, scatter plots, line plots). Maintaining a consistent color scheme, responsive layout, and interactive features (e.g., hover info, variable selection) will require thoughtful ggplot2 + plotly + Shiny integration.
 
-
 ## The planned timeline
-
 | **Date** | **Task** | **Deliverable / Milestone** |
 |-----------|-----------|-----------------------------|
 | **Nov 7** | Finalize team formation and submit initial proposal. | Written proposal (including objectives, methods, and preliminary plan). |
