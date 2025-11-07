@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## The group members (names and UNIs)
 
-Xintong Zhao(xz3499) | Boran Zhai(bz2570)
+Xintong Zhao(xz3499) | Boran Zhai(bz2570) | Yimeng Wang(yw4667)
 
 ## The tentative project title
 
@@ -33,10 +33,39 @@ Lack of dynamic perspective: Against the backdrop of the rapid evolution of shor
 
 ## The intended final products
 
-(To provide practical short-video creation guidelines, such as recommended video duration ranges and strategies for improving viewer engagement and retention.)
+Our final deliverable will be an interactive data-driven webpage, designed to uncover key patterns behind short video performance across platforms, creators, and content types. The site will contain seven major analytical modules on the Home page: 
+
+* Exploratory Data Analysis (EDA) Visualization Panel: Interactive visualizations including histograms, correlation matrices, scatter plots, boxplots, and line charts etc, to reveal the distribution and relationships among core engagement metrics (e.g., completion rate, interaction rate, views, and duration).
+
+* Regression Analysis Panel: Statistical modeling to identify key factors associated with video completion rate and engagement rate. Models such as multiple linear regression and generalized models will quantify how variables such as duration, platform, and category influence these outcomes.
+
+* Group Comparison Analysis: Comparative analyses across content, durations or creator categories to determine how performance metrics differ between subgroups, visualized through grouped boxplots and summary tables.
+
+* Machine Learning Prediction Models: Predictive modeling using Linear Regression, Random Forest, and XGBoost to estimate completion rate based on content and creator attributes. Feature importance charts will highlight which factors most strongly drive engagement and retention.
+
+* Practical Recommendations Module: A synthesis of findings providing actionable insights for content creators and marketers — for example, suggesting optimal video durations, category strategies, or engagement-enhancing practices based on the data-driven evidence.
+
+Each section will include visual outputs (ggplot2, plotly, and leaflet etc.), model summaries, and interpretations or comments, with all materials hosted as a collaborative GitHub-based website. The written report and a 2-minute screencast will summarize key methodologies and recommendations.
 
 ## The anticipated data sources
 
+The project will rely on a multi-dimensional dataset about social media trend data for 2025 from [kaggle website](https://www.kaggle.com/datasets/tarekmasryo/youtube-shorts-and-tiktok-trends-2025). These data files are already provided and include:
+
+* `country_platform_summary_2025.csv`: Country-level performance metrics (engagement rate, reach, views, post counts) across platforms such as TikTok and YouTube.
+
+* `monthly_trends_2025.csv`: Monthly-level temporal trends capturing seasonality and growth patterns.
+
+* `top_creators_impact_2025.csv`: Profiles of the top 1,000 creators with detailed performance metrics, used to model completion and engagement factors.
+
+* `top_hashtags_2025.csv`: Popular hashtags and related engagement trends, used for thematic and content-level analyses.
+
+* `DATA_DICTIONARY.csv`: Metadata defining variable meanings to ensure consistent interpretation and reproducibility.
+
+* `youtube_shorts_tiktok_trends_2025.csv`: Comprehensive raw dataset containing creator-level performance data across platforms, regions, and content categories with detailed engagement metrics, traffic sources, device distributions, and temporal posting patterns.
+
+* `youtube_shorts_tiktok_trends_2025.csv_ML.csv`: Machine learning-ready processed dataset with engineered features, encoded categorical variables, and normalized metrics optimized for predictive modeling and algorithm training.
+
+All files are structured in `.csv` format and will be processed in R using packages such as `tidyverse`, `dplyr`, `ggplot2`, `plotly`. The combination of geographic, temporal, and creator-level data enables both statistical inference and machine learning modeling to understand and predict short video performance on different platforms. 
 
 ## The planned analyses and visualizations
 #### Exploratory Data Analysis
