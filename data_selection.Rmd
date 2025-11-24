@@ -1,0 +1,21 @@
+---
+title: "Untitled"
+output: html_document
+date: "2025-11-24"
+---
+```{r}
+library(tidyverse)
+```
+
+```{r}
+df <- read.csv("./data/youtube_shorts_tiktok_trends_2025.csv")
+df_1 <- df %>%
+  select(platform, duration_sec, title_length, has_emoji, language, category, upload_hour, is_weekend,
+         publish_dayofweek, year_month, creator_avg_views, creator_tier, views, 
+         engagement_per_1k, likes, comments, shares, saves, completion_rate)
+```
+
+```{r}
+write.csv(df_1, "./data/df_1.csv", row.names = FALSE)
+```
+
