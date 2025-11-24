@@ -274,17 +274,18 @@ $(document).ready(function () {
 </div>
 
 
-<div id="the-group-members-names-and-unis" class="section level2">
-<h2>The group members (names and UNIs)</h2>
-<p>Xintong Zhao(xz3499) | Boran Zhai(bz2570) | Yimeng Wang(yw4667)</p>
+<div id="the-group-members-names-and-unis" class="section level3">
+<h3>The group members (names and UNIs)</h3>
+<p>Xintong Zhao(xz3499) | Boran Zhai(bz2570) | Yimeng Wang(yw4667) |
+Chuqi Chen(cc5424)</p>
 </div>
-<div id="the-tentative-project-title" class="section level2">
-<h2>The tentative project title</h2>
+<div id="the-tentative-project-title" class="section level3">
+<h3>The tentative project title</h3>
 <p>Digital Attention Attenuation: A Multi-Platform Study of Short-Form
 Video Viewer Patience</p>
 </div>
-<div id="the-motivation-for-this-project" class="section level2">
-<h2>The motivation for this project</h2>
+<div id="the-motivation-for-this-project" class="section level3">
+<h3>The motivation for this project</h3>
 <div id="historical-background-attention-as-a-new-currency"
 class="section level4">
 <h4>1. Historical background: Attention as a new currency</h4>
@@ -292,17 +293,40 @@ class="section level4">
 become a scarce and fiercely contested “new currency”. Short-video
 platforms, especially YouTube Shorts and TikTok, have completely
 reshaped the landscape of content consumption through their short, flat
-and fast features, and have raised widespread social concerns about the
-systematic shortening of human attention spans. We are at a crucial
-crossroads: How can content form, in turn, shape our cognitive habits?
-Understanding and quantifying this change is not only the need of
-academic research, but also an important review of the current digital
-cultural ecosystem.</p>
+and fast features, and have raised widespread social concerns about
+<strong>the systematic shortening of human attention spans</strong>. We
+are at a crucial crossroads: How can content form, in turn, shape our
+cognitive habits? Understanding and quantifying this change is not only
+the need of academic research, but also an important review of the
+current digital cultural ecosystem.</p>
+</div>
+<div
+id="industry-pain-point-the-paradigm-shift-from-viewership-to-completion-rate"
+class="section level4">
+<h4>2. Industry pain point: The paradigm shift from “viewership” to
+“completion rate”</h4>
+<p>Traditional video success metrics (such as views and likes) are no
+longer sufficient to reveal the deep truth of user behavior. Industry
+practice shows that the recommendation algorithms of platforms are
+increasingly inclined towards a more persuasive metric: completion rate.
+It is widely regarded as the gold standard for measuring whether a video
+truly captures and maintains the audience’s attention.</p>
+<p>However, a core contradiction emerges accordingly:</p>
+<ul>
+<li><p>The Creator’s Dilemma: Should content become shorter and shorter
+in pursuit of high completion rates? Is there still a “golden duration”
+that can maximize the audience’s patience?</p></li>
+<li><p>Platform competition: Are there systematic differences in the
+attention and patience thresholds among users of different platforms
+(such as TikTok and YouTube Shorts)?</p></li>
+<li><p>Cognitive impact: Is this extreme pursuit of “brevity”
+irreversibly reshaping users’ expectations and patience levels?</p></li>
+</ul>
 </div>
 <div
 id="research-gap-lack-of-quantitative-and-comparative-empirical-analysis"
 class="section level4">
-<h4>2. Research gap: Lack of quantitative and comparative empirical
+<h4>3. Research gap: Lack of quantitative and comparative empirical
 analysis</h4>
 <ul>
 <li><p>Although “shortened attention span” has become a common
@@ -320,8 +344,8 @@ current stage.</p></li>
 </ul>
 </div>
 </div>
-<div id="the-intended-final-products" class="section level2">
-<h2>The intended final products</h2>
+<div id="the-intended-final-products" class="section level3">
+<h3>The intended final products</h3>
 <p>Our final deliverable will be an interactive data-driven webpage,
 designed to uncover key patterns behind short video performance across
 platforms, creators, and content types. The site will contain seven
@@ -358,8 +382,8 @@ all materials hosted as a collaborative GitHub-based website. The
 written report and a 2-minute screencast will summarize key
 methodologies and recommendations.</p>
 </div>
-<div id="the-anticipated-data-sources" class="section level2">
-<h2>The anticipated data sources</h2>
+<div id="the-anticipated-data-sources" class="section level3">
+<h3>The anticipated data sources</h3>
 <p>The project will rely on a multi-dimensional dataset about social
 media trend data for 2025 from <a
 href="https://www.kaggle.com/datasets/tarekmasryo/youtube-shorts-and-tiktok-trends-2025">kaggle
@@ -397,8 +421,8 @@ statistical inference and machine learning modeling to understand and
 predict short video performance on different platforms.</p>
 </div>
 <div id="the-planned-analyses-and-visualizations"
-class="section level2">
-<h2>The planned analyses and visualizations</h2>
+class="section level3">
+<h3>The planned analyses and visualizations</h3>
 <div id="exploratory-data-analysis" class="section level4">
 <h4>Exploratory Data Analysis</h4>
 <ul>
@@ -459,11 +483,90 @@ attributes contribute most strongly to viewer behavior.</li>
 </ul>
 </div>
 </div>
-<div id="coding-challenges" class="section level2">
-<h2>Coding challenges</h2>
+<div id="coding-challenges" class="section level3">
+<h3>Coding challenges</h3>
+<p>1.Data Cleaning and Preprocessing</p>
+<p>The dataset likely contains missing values, skewed variables, and
+outliers. Designing a systematic cleaning pipeline while keeping the app
+dynamic (so users can view the effect of filters or group selections in
+real-time) can be challenging.</p>
+<p>2.Regression and Model Comparison Implementation</p>
+<p>Running multiple models (Linear Regression, Random Forest, XGBoost)
+requires careful parameter tuning and consistent data splitting.
+Comparing model performance and extracting feature importance for
+interpretability in R can be computationally intensive.</p>
+<p>3.Visualization Consistency and Interactivity</p>
+<p>The EDA and group comparison sections require various plots
+(correlation heatmaps, boxplots, scatter plots, line plots). Maintaining
+a consistent color scheme, responsive layout, and interactive features
+(e.g., hover info, variable selection) will require thoughtful ggplot2 +
+plotly + Shiny integration.</p>
 </div>
-<div id="the-planned-timeline" class="section level2">
-<h2>The planned timeline</h2>
+<div id="the-planned-timeline" class="section level3">
+<h3>The planned timeline</h3>
+<table>
+<colgroup>
+<col width="21%" />
+<col width="21%" />
+<col width="56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Date</strong></th>
+<th><strong>Task</strong></th>
+<th><strong>Deliverable / Milestone</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Nov 7</strong></td>
+<td>Finalize team formation and submit initial proposal.</td>
+<td>Written proposal (including objectives, methods, and preliminary
+plan).</td>
+</tr>
+<tr class="even">
+<td><strong>Nov 10–14</strong></td>
+<td>Attend project review meeting and discuss project direction with
+instructor.</td>
+<td>Receive feedback and refine project structure (EDA layout,
+regression approach, and ML model plan).</td>
+</tr>
+<tr class="odd">
+<td><strong>Nov 15–24</strong></td>
+<td>Conduct <strong>data cleaning and preprocessing</strong> in R
+(handling missing values, standardizing variables, etc.).</td>
+<td>Clean dataset ready for visualization and analysis.</td>
+</tr>
+<tr class="even">
+<td><strong>Nov 25–30</strong></td>
+<td>Develop <strong>EDA visualization module</strong> and <strong>group
+comparison module</strong> in R Shiny.</td>
+<td>Functional Home page showing data summary, correlations, and grouped
+analysis results.</td>
+</tr>
+<tr class="odd">
+<td><strong>Dec 1–4</strong></td>
+<td>Implement <strong>regression analysis</strong> (for completion rate
+and engagement rate) and <strong>machine learning models</strong>
+(linear regression, random forest, XGBoost).</td>
+<td>Completed analytical results with performance metrics and feature
+importance visualization.</td>
+</tr>
+<tr class="even">
+<td><strong>Dec 5–6</strong></td>
+<td>Build the <strong>recommendation &amp; conclusion module</strong>
+(how to improve short videos) and finalize webpage design. Record short
+screencast.</td>
+<td>Final webpage + screencast video + written report submitted by Dec 6
+(11:59 pm).</td>
+</tr>
+<tr class="odd">
+<td><strong>Dec 11</strong></td>
+<td>Present and discuss project in class.</td>
+<td>Participate in in-class discussion and peer review.</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
