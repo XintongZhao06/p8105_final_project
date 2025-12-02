@@ -383,6 +383,41 @@ div.tocify {
 </div>
 
 
+<pre class="r"><code>## delete
+shorts_data = read.csv(&quot;data/youtube_shorts_tiktok_trends_2025.csv&quot;) |&gt; 
+  as_tibble()
+
+df = shorts_data |&gt; 
+  dplyr::select(
+    completion_rate,
+    upload_hour,
+    is_weekend,
+    views,
+    likes,
+    comments,
+    shares,
+    saves,
+    duration_sec,
+    event_season,
+    has_emoji,
+    creator_tier,
+    creator_avg_views,
+    platform
+  ) |&gt; 
+  mutate(
+    has_emoji = as.integer(as.character(has_emoji)),
+    creator_tier = as.factor(creator_tier),
+    platform = as.factor(platform),
+    event_season = as.factor(event_season),
+    log_views = log(views + 1),
+    log_likes = log(likes + 1),
+    log_comments = log(comments + 1),
+    log_shares = log(shares + 1),
+    log_saves = log(saves + 1),
+    log_creator_avg = log(creator_avg_views + 1)
+    
+  ) |&gt; 
+  drop_na()</code></pre>
 <div id="dist-outcome" class="section level3">
 <h3>2.1 Distribution of Outcome (completion rate)</h3>
 <p>Before fitting models, we inspect the distribution of the target
@@ -393,7 +428,7 @@ completion_rate_plot &lt;- ggplot(df, aes(x = completion_rate)) +
   geom_histogram(bins = 30, fill = &quot;#9E9AC8&quot;, alpha = 0.8, 
                  color = &quot;#54278F&quot;, size = 0.4) +
   geom_vline(aes(xintercept = mean(completion_rate)), 
-             color = &quot;#E6550D&quot;, linetype = &quot;dashed&quot;, size = 1) +
+             color = &quot;#E6550D&quot;, linetype = &quot;dashed&quot;,linewidth = 1) +
   labs(title = &quot;Distribution of Completion Rate&quot;,
        x = &quot;Completion Rate&quot;, 
        y = &quot;Frequency&quot;) +
@@ -405,11 +440,13 @@ completion_rate_plot &lt;- ggplot(df, aes(x = completion_rate)) +
 ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 ## generated.</code></pre>
 <pre class="r"><code>print(completion_rate_plot)</code></pre>
-<p><img src="topic1_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="topic1_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>The distribution of completion_rate is roughly centered around
 0.6–0.7 with no extreme skewness or heavy tails. Although the shape is
 not perfectly symmetric, it does not exhibit severe outliers or
 truncation.</p>
+<p><a href="regression_analysis.html">Next: Regression Analysis
+→</a></p>
 </div>
 
 

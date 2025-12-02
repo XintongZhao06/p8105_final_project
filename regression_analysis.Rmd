@@ -76,7 +76,7 @@ df = shorts_data |>
   drop_na()
 ```
 
-Our response variable is **completion_rate**, which exhibits neither strong skewness nor heavy tails, as shown in the [EDA section](topic1_eda.html#completion-dist). Therefore, no additional transformation or preprocessing of the outcome variable is needed before fitting the regression models.
+Our response variable is **completion_rate**, which exhibits neither strong skewness nor heavy tails, as shown in the [EDA section](topic1.html#completion-dist). Therefore, no additional transformation or preprocessing of the outcome variable is needed before fitting the regression models.
 
 <div style="margin-bottom: 10px;"></div>
 ## 3. Linear Regression Analysis

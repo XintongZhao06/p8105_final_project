@@ -11,6 +11,49 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(tibble)
+library(tidyr)
+```
+
+
+```{r}
+## delete
+shorts_data = read.csv("data/youtube_shorts_tiktok_trends_2025.csv") |> 
+  as_tibble()
+
+df = shorts_data |> 
+  dplyr::select(
+    completion_rate,
+    upload_hour,
+    is_weekend,
+    views,
+    likes,
+    comments,
+    shares,
+    saves,
+    duration_sec,
+    event_season,
+    has_emoji,
+    creator_tier,
+    creator_avg_views,
+    platform
+  ) |> 
+  mutate(
+    has_emoji = as.integer(as.character(has_emoji)),
+    creator_tier = as.factor(creator_tier),
+    platform = as.factor(platform),
+    event_season = as.factor(event_season),
+    log_views = log(views + 1),
+    log_likes = log(likes + 1),
+    log_comments = log(comments + 1),
+    log_shares = log(shares + 1),
+    log_saves = log(saves + 1),
+    log_creator_avg = log(creator_avg_views + 1)
+    
+  ) |> 
+  drop_na()
 ```
 
 
@@ -24,7 +67,7 @@ completion_rate_plot <- ggplot(df, aes(x = completion_rate)) +
   geom_histogram(bins = 30, fill = "#9E9AC8", alpha = 0.8, 
                  color = "#54278F", size = 0.4) +
   geom_vline(aes(xintercept = mean(completion_rate)), 
-             color = "#E6550D", linetype = "dashed", size = 1) +
+             color = "#E6550D", linetype = "dashed",linewidth = 1) +
   labs(title = "Distribution of Completion Rate",
        x = "Completion Rate", 
        y = "Frequency") +
@@ -35,3 +78,8 @@ print(completion_rate_plot)
 ```
 
 The distribution of completion_rate is roughly centered around 0.6–0.7 with no extreme skewness or heavy tails. Although the shape is not perfectly symmetric, it does not exhibit severe outliers or truncation.
+
+
+
+[Next: Regression Analysis →](regression_analysis.html)
+
