@@ -334,10 +334,28 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="proposal.html">Proposal</a>
+  <a href="data.html">Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Topic 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="topic1_eda.html">EDA</a>
+    </li>
+    <li>
+      <a href="regression_analysis.html">Regression Analysis</a>
+    </li>
+  </ul>
 </li>
 <li>
-  <a href="regression_analysis.html">Regression</a>
+  <a href="topic2.html">Topic 2</a>
+</li>
+<li>
+  <a href="report.html">Report</a>
 </li>
 <li>
   <a href="https://github.com/XintongZhao06">
@@ -446,8 +464,7 @@ completion_rate_plot &lt;- ggplot(df, aes(x = completion_rate)) +
 <pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 ## ℹ Please use `linewidth` instead.
 ## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.</code></pre>
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
 <pre class="r"><code>print(completion_rate_plot)</code></pre>
 <p><img src="regression_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>The distribution of completion_rate is roughly centered around

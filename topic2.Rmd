@@ -1,6 +1,444 @@
-{\rtf1\ansi\ansicpg936\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-}
+---
+title: "Short-Form Video Trend Prediction System"
+output:
+  html_document:
+    theme: flatly
+    highlight: textmate
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+
+
+## Introduction
+
+We are developing an intelligent system specifically designed to predict the popularity trends of short-form videos. In essence, we enable computers to analyze vast amounts of short-form video data, learning the common characteristics of viral content to assess the breakout potential of new videos. By testing multiple algorithms, we identify the most accurate predictive model, providing data-driven support for content platforms, creators, and advertisers to optimize recommendation strategies and content creation direction. Fundamentally, this involves using artificial intelligence to decode the underlying patterns of short-form video popularity, empowering machines to anticipate trends.
+
+
+## EDA
+
+## Loading Data
+
+### Step 1: Initial Setup and Feature Generation
+
+We begin by setting a random seed for reproducibility and defining the dataset size as 50,000 samples. It then creates 12 distinct features with realistic statistical distributions:
+
+**Platform Distribution**: 60% TikTok, 40% YouTube, reflecting current market trends.
+
+**Geographic Distribution**: Evenly distributed across North America, Europe, Asia, and South America.
+
+**Content Categories**: Entertainment, Music, Sports, Education, and Gaming - covering major short-form video genres.
+
+**Traffic Sources**: ForYou (algorithmic feed), Home, Search, and Following - representing different content discovery pathways.
+
+**Device Brands**: iPhone, Samsung, Huawei, Xiaomi, and Other - simulating user device distribution patterns.
+
+**Creator Tier System**: Micro (50%), Mid (30%), Macro (15%), and Star (5%) creators, realistically reflecting the influencer pyramid structure.
+
+**Feature Distribution Methods**:
+
+- Title length follows a normal distribution centered around 40 characters
+
+- Text richness uses a Beta distribution to simulate content quality variance
+
+- Engagement metrics (comment_rate, share_rate) use exponential distributions with realistic caps
+
+- Daily views follow a log-normal distribution with a long tail pattern
+
+- Weekend hashtag boost provides a uniform uplift factor between 0.8 and 1.5
+
+### Step 2: Target Variable Creation
+
+The most sophisticated aspect creates an "engagement_score" by combining multiple features with business-relevant weights:
+
+**Engagement Score Calculation**:
+
+- 20% weight for comment rate (normalized by baseline of 0.02)
+
+- 30% weight for share rate (normalized by baseline of 0.005)
+
+- 20% weight for view count (normalized by baseline of 50,000)
+
+- 10% weight for content quality (text_richness)
+
+- 10% weight for timing effects (weekend_hashtag_boost)
+
+- Creator influence bonus (0.5 for Stars, 0.3 for Macros, 0.1 for Mids, 0 for Micros)
+
+- Controlled random noise for real-world uncertainty
+
+```
+engagement_score = (
+    (df['comment_rate'] / 0.02) * 0.2 +
+    (df['share_rate'] / 0.005) * 0.3 +
+    (df['views_per_day'] / 50000) * 0.2 +
+    (df['text_richness'] * 0.1) +
+    (df['weekend_hashtag_boost'] * 0.1) +
+    np.where(df['creator_tier'] == 'Star', 0.5, 
+            np.where(df['creator_tier'] == 'Macro', 0.3,
+                    np.where(df['creator_tier'] == 'Mid', 0.1, 0))) +
+    np.random.normal(0, 0.2, n_samples)
+)
+```
+
+**Three-Class Trend Label Creation**:
+
+- **Low trend (0)**: engagement_score ≤ 0.8
+
+- **Medium trend (1)**: 0.8 < engagement_score ≤ 1.5
+
+- **High trend (2)**: engagement_score > 1.5
+
+```
+df['trend_label'] = pd.cut(engagement_score, 
+                          bins=[-np.inf, 0.8, 1.5, np.inf], 
+                          labels=[0, 1, 2]).astype(int)
+```
+
+## Feature Engineering
+
+### Step 1: Creating Interaction Features
+
+The feature engineering process begins by creating **three interaction features** that combine existing variables to capture more complex relationships:
+
+**Platform-Tier Interaction**: This feature combines the platform type with creator tier level, creating combinations like "TikTok_Star" or "YouTube_Micro". This allows the model to learn how different platforms interact with different creator levels.
+
+**Region-Category Interaction**: This combines geographic region with content category, creating combinations like "North America_Entertainment" or "Asia_Education". This helps the model understand regional content preferences and consumption patterns.
+
+**Engagement Velocity**: This is a composite metric calculated as views_per_day × (comment_rate + share_rate). It measures how quickly engagement accumulates relative to views, providing a unified measure of content virality.
+
+```
+df['platform_tier_interaction'] = df['platform'] + '_' + df['creator_tier']
+df['region_category_interaction'] = df['region'] + '_' + df['category']
+df['engagement_velocity'] = df['views_per_day'] * (df['comment_rate'] + df['share_rate'])
+```
+
+### Step 2: Feature Selection and Preparation
+
+Then selects 15 features for the machine learning model:
+
+**Original Features (12 variables)**:
+
+- Platform characteristics: platform, region, category, traffic_source
+
+- Creator information: creator_tier, device_brand
+
+- Content metrics: title_len, text_richness
+
+- Engagement rates: comment_rate, share_rate
+
+- Performance metrics: views_per_day
+
+- Temporal effects: weekend_hashtag_boost
+
+**Engineered Features (3 new variables)**:
+
+- Interaction features: platform_tier_interaction, region_category_interaction
+
+- Composite metric: engagement_velocity
+
+The final step separates the dataset into:
+
+- **X**: All 15 selected features (independent variables)
+
+- **y**: The trend_label target variable (0/1/2 classification)
+
+## Data Preprocessing
+
+### Step 1: Train-Test Data Split
+
+Spliting the dataset into training and testing subsets:
+
+- **Test size**: 20% of the data
+
+- **Training size**: 80% of the data
+
+- **Stratification**: Maintains the same class distribution in both splits
+
+- **Random state**: Fixed for reproducibility
+
+This creates four distinct data subsets:
+
+- **X_train**: Training features
+
+- **X_test**: Testing features  
+
+- **y_train**: Training target labels
+
+- **y_test**: Testing target labels
+
+### Step 2: Feature Type Classification
+
+Separating features into two categories:
+
+**Categorical Features (8 variables):**
+
+- Platform characteristics: `platform`, `region`, `category`, `traffic_source`
+
+- Creator information: `device_brand`, `creator_tier`
+
+- Interaction features: `platform_tier_interaction`, `region_category_interaction`
+
+**Numerical Features (7 variables):**
+
+- Content metrics: `title_len`, `text_richness`
+
+- Engagement rates: `comment_rate`, `share_rate`
+
+- Performance metrics: `views_per_day`
+
+- Temporal effects: `weekend_hashtag_boost`
+
+- Composite metric: `engagement_velocity`
+
+### Step 3: Preprocessing Pipeline Construction
+
+Building a comprehensive preprocessing pipeline using ColumnTransformer:
+
+**For Numerical Features**: Features standardized to zero mean and unit variance
+
+**For Categorical Features**: Converted to one-hot binary representation
+
+
+## Define Models
+
+### Model 1: Random Forest
+
+- **Type**: Ensemble learning with multiple decision trees
+
+- **Key parameters**: 200 trees, maximum depth of 15, minimum 10 samples to split nodes, minimum 5 samples per leaf
+
+- **Special feature**: Parallel processing enabled (n_jobs=-1 uses all CPU cores)
+
+- **Purpose**: Robust model that handles complex feature interactions and reduces overfitting
+
+### Model 2: Gradient Boosting
+- **Type**: Sequential ensemble method that builds trees to correct previous errors
+
+- **Key parameters**: 200 boosting stages, learning rate of 0.1, maximum depth of 6
+
+- **Special feature**: Adaptive learning that minimizes prediction errors incrementally
+
+- **Purpose**: High-accuracy model particularly effective for complex classification tasks
+
+### Model 3: Extra Trees (Extremely Randomized Trees)
+
+- **Type**: Variation of Random Forest with increased randomization
+
+- **Key parameters**: 200 trees, maximum depth of 15, parallel processing enabled
+
+- **Special feature**: Uses random splits rather than optimal splits, reducing variance
+
+- **Purpose**: Provides complementary performance to Random Forest with different bias-variance tradeoff
+
+### Model 4: Neural Network (Multi-Layer Perceptron)
+
+- **Type**: Artificial neural network with two hidden layers
+
+- **Architecture**: 100 neurons in first hidden layer, 50 neurons in second layer
+
+- **Key features**: ReLU activation function, adaptive learning rate, early stopping to prevent overfitting
+
+- **Purpose**: Captures complex non-linear relationships in the data
+
+### Model 5: Support Vector Machine (SVM)
+
+- **Type**: Kernel-based classifier finding optimal decision boundaries
+
+- **Key parameters**: Radial Basis Function kernel, regularization parameter C=1.0
+
+- **Special feature**: Probability estimates enabled for performance metrics
+
+- **Purpose**: Effective for high-dimensional spaces and complex decision boundaries
+
+### Model 6: Logistic Regression
+
+- **Type**: Traditional linear classification method
+
+- **Key parameters**: Regularization parameter C=1.0, One-vs-Rest multi-class strategy
+
+- **Special feature**: Maximum 1000 iterations for convergence
+
+- **Purpose**: Provides baseline performance and interpretable results
+
+### Pipeline Architecture
+
+Each model follows the same two-step pipeline structure:
+
+**Step 1: Preprocessing**
+
+- Applies the previously defined preprocessing transformations
+
+- Ensures consistent data treatment across all models
+
+- Prevents data leakage by fitting preprocessing only on training data
+
+**Step 2: Classification**
+
+- Applies the specific algorithm with tuned parameters
+
+- Maintains reproducibility through fixed random seeds
+
+- Enables fair comparison by using identical preprocessing
+
+## Model Training and Evaluation
+
+### Step 1: Evaluation Framework Initialization
+
+- **Results storage structure**: Creates an empty list to store evaluation results for each model
+
+- **Cross-validation setup**: Uses 5-fold stratified cross-validation (StratifiedKFold)
+
+  - Maintains consistent class distribution in each fold
+  
+  - Shuffles data order to increase randomness
+  
+  - Fixed random seed ensures reproducibility
+
+### Step 2: Iterative Model Training
+
+For each of the six models, the following operations are performed:
+
+**Training Phase**:
+
+1. **Model fitting**: Trains each model using training data (X_train, y_train)
+
+2. **Prediction generation**:
+
+   - Class predictions: Generates discrete class predictions (0/1/2) for the test set
+   
+   - Probability predictions: Generates probability estimates for each class in the test set
+
+**Evaluation Metrics Calculation**:
+
+1. **Accuracy**: Proportion of correctly predicted samples
+
+2. **Macro-average F1 score (F1-Macro)**:
+
+   - Calculates F1 score for each class, then takes the average
+   
+   - Treats each class equally, unaffected by sample counts
+   
+3. **Weighted-average F1 score (F1-Weighted)**:
+
+   - Calculates F1 score weighted by the number of samples in each class
+   
+   - Reflects the impact of class imbalance
+   
+4. **Multi-class AUC-OVR**:
+
+   - Calculates AUC for each class using One-vs-Rest strategy
+   
+   - Takes macro-average of the three class AUC values
+   
+   - Exception handling: Marks as NaN if calculation fails
+
+**Cross-validation Evaluation**:
+
+1. **Cross-validation accuracy**: Calculated on the training set using 5-fold cross-validation
+
+2. **Performance stability**: Records the mean and standard deviation of cross-validation accuracy
+
+   - Mean reflects the model's average performance
+   
+   - Standard deviation reflects the stability of model performance
+   
+```
+for name, model in models.items():
+    print(f"\nTraining {name}...")
+    
+    # Train model
+    model.fit(X_train, y_train)
+    
+    # Predict
+    y_pred = model.predict(X_test)
+    y_pred_proba = model.predict_proba(X_test)
+    
+    # Calculate metrics
+    accuracy = accuracy_score(y_test, y_pred)
+    f1_macro = f1_score(y_test, y_pred, average='macro')
+    f1_weighted = f1_score(y_test, y_pred, average='weighted')
+    
+    # Multi-class AUC
+    try:
+        auc_ovr = roc_auc_score(y_test, y_pred_proba, multi_class='ovr', average='macro')
+    except:
+        auc_ovr = np.nan
+    
+    # Cross-validation
+    cv_scores = cross_val_score(model, X_train, y_train, cv=cv, scoring='accuracy')
+```
+
+### Step 3: Results Consolidation
+
+After each model training, generates a dictionary containing:
+
+- Model name
+
+- Test set accuracy
+
+- Macro-average F1 score
+
+- Weighted-average F1 score
+
+- Multi-class AUC-OVR
+
+- Cross-validation accuracy mean
+
+- Cross-validation accuracy standard deviation
+
+### Step 4: Real-time Progress Feedback
+
+Outputs immediately after each model training:
+
+- Training completion confirmation marker
+
+- Key performance metric values (accuracy, F1-Macro, AUC-OVR)
+
+
+## Results Comparison
+
+### Step 1: Results Consolidation and Ranking
+
+- **Data Transformation**: Converts the evaluation results list into a structured DataFrame
+
+- **Performance Ranking**: Sorts models by test set accuracy in descending order
+
+- **Detailed Reporting**: Prints the complete performance ranking with all metrics rounded to 4 decimal places
+
+### Step 2: Multi-Dimensional Visualization
+
+This is a 2×2 grid of visualizations for comprehensive performance comparison:
+
+![](classification_model_comparison.png)
+
+Viewed horizontally, the three core metrics—Accuracy, F1-Macro, and AUC-OVR—exhibit a consistent ranking pattern: Gradient Boosting, SVM, and Neural Network form the top tier; Logistic Regression and Random Forest occupy the middle; while Extra Trees shows noticeably weaker overall performance. Among them, Gradient Boosting maintains a stable advantage across all three metrics (Accuracy = 0.814, F1-Macro = 0.784, AUC-OVR = 0.931), indicating strong fitting capability when handling high-dimensional features, nonlinear relationships, and feature interactions.
+
+The F1-Macro metric further highlights performance differences under imbalanced class distributions. Although SVM and Neural Network achieve Accuracy levels close to Gradient Boosting, their F1-Macro scores are slightly lower, suggesting marginal losses in identifying certain minority classes. In contrast, the significantly lower F1-Macro values of Random Forest and Extra Trees (particularly Extra Trees at 0.649) indicate insufficient generalization ability in imbalanced settings.
+
+The overall high AUC-OVR values show that all models perform well in distinguishing trend categories; however, a high AUC does not necessarily translate into a high F1, underscoring the challenges of class prediction and the underlying imbalance issues. The combined heatmap visually illustrates the performance structure across models: Gradient Boosting and Neural Network demonstrate the most balanced results, while Extra Trees consistently falls at the bottom across all metrics.
+
+## Best Model Detailed Analysis
+
+3×3 confusion matrix, comparing real labels with predicted labels：
+
+![](classification_confusion_matrix.png)
+
+The confusion matrix reveals that the gradient boosting classifier performs strongly overall, but with clear variation in accuracy across the three classes. The **Low** class is predicted with the highest fidelity: the model correctly identifies 4,996 Low cases, with relatively limited spillover into the Medium class and virtually no misclassification as High. This suggests that the feature patterns distinguishing Low outcomes are highly separable and well captured by the model.
+
+Performance declines for the **Medium** class, which shows substantial confusion with both Low and High. Although 2,661 Medium cases are correctly classified, a sizable number (857) are misclassified as Low, indicating that some Medium observations resemble the lower end of the distribution in the feature space. The smaller number of Medium cases predicted as High (124) further illustrates that errors for this class tend to skew downward rather than upward, consistent with a decision boundary that is conservative in assigning higher categories.
+
+For the **High** class, the model captures only 482 true positives, with a notable proportion misclassified as Medium (206). The complete absence of High cases misclassified as Low suggests that the model effectively distinguishes the top tier from the bottom tier but struggles to differentiate High from adjacent Medium cases. This pattern indicates that the features defining High outcomes may not be sufficiently distinct from Medium, or that sample imbalance limits the model’s ability to learn the upper-level boundary.
+
+## Feature Importance Analysis
+
+Sort all features in descending order of their importance scores:
+
+![](classification_feature_importance.png)
+According to the feature importance analysis of the gradient boosting model, the share_rate, with an importance score of approximately 0.35, becomes the most influential feature, indicating that the social dissemination ability of the content is the core factor for predicting video trends. The comment_rate and engagement_velocity scored 0.30 and 0.18 respectively, ranking second and third, jointly reflecting the crucial role of deep user engagement in the popularity of content. Among the creator level characteristics, the influence of Star creators (Star) is prominent, while the importance of device brand and region-category cross-characteristics is relatively low. This analysis confirms the dominant position of user interaction metrics in trend prediction and provides a clear direction for optimizing content strategies.
+
+## Conclusion and Future Work
+
+This study demonstrates that ensemble learning models, particularly gradient boosting, are effective in predicting short-form video trend levels. User interaction metrics—especially share rate and comment rate—play a decisive role in content popularity. The models also confirm a significant correlation between creator tier and content dissemination, providing data-driven insights for platforms to optimize recommendation algorithms and for creators to refine content strategies.
+
+Future work may focus on the following areas: First, incorporating more real-time behavioral data (such as watch time and replay rate) to enhance prediction timeliness. Second, exploring temporal models to capture dynamic trend evolution. Third, developing interpretability tools to translate model insights into actionable operational recommendations. Fourth, deploying an online learning system to enable continuous model iteration in real-world environments.

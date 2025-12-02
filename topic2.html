@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Short-Form Video Trend Prediction System</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="data.html">Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Topic 1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="topic1_eda.html">EDA</a>
+    </li>
+    <li>
+      <a href="regression_analysis.html">Regression Analysis</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="topic2.html">Topic 2</a>
+</li>
+<li>
+  <a href="report.html">Report</a>
+</li>
+<li>
+  <a href="https://github.com/XintongZhao06">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Short-Form Video Trend Prediction
+System</h1>
+
+</div>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>We are developing an intelligent system specifically designed to
+predict the popularity trends of short-form videos. In essence, we
+enable computers to analyze vast amounts of short-form video data,
+learning the common characteristics of viral content to assess the
+breakout potential of new videos. By testing multiple algorithms, we
+identify the most accurate predictive model, providing data-driven
+support for content platforms, creators, and advertisers to optimize
+recommendation strategies and content creation direction. Fundamentally,
+this involves using artificial intelligence to decode the underlying
+patterns of short-form video popularity, empowering machines to
+anticipate trends.</p>
+</div>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+</div>
+<div id="loading-data" class="section level2">
+<h2>Loading Data</h2>
+<div id="step-1-initial-setup-and-feature-generation"
+class="section level3">
+<h3>Step 1: Initial Setup and Feature Generation</h3>
+<p>We begin by setting a random seed for reproducibility and defining
+the dataset size as 50,000 samples. It then creates 12 distinct features
+with realistic statistical distributions:</p>
+<p><strong>Platform Distribution</strong>: 60% TikTok, 40% YouTube,
+reflecting current market trends.</p>
+<p><strong>Geographic Distribution</strong>: Evenly distributed across
+North America, Europe, Asia, and South America.</p>
+<p><strong>Content Categories</strong>: Entertainment, Music, Sports,
+Education, and Gaming - covering major short-form video genres.</p>
+<p><strong>Traffic Sources</strong>: ForYou (algorithmic feed), Home,
+Search, and Following - representing different content discovery
+pathways.</p>
+<p><strong>Device Brands</strong>: iPhone, Samsung, Huawei, Xiaomi, and
+Other - simulating user device distribution patterns.</p>
+<p><strong>Creator Tier System</strong>: Micro (50%), Mid (30%), Macro
+(15%), and Star (5%) creators, realistically reflecting the influencer
+pyramid structure.</p>
+<p><strong>Feature Distribution Methods</strong>:</p>
+<ul>
+<li><p>Title length follows a normal distribution centered around 40
+characters</p></li>
+<li><p>Text richness uses a Beta distribution to simulate content
+quality variance</p></li>
+<li><p>Engagement metrics (comment_rate, share_rate) use exponential
+distributions with realistic caps</p></li>
+<li><p>Daily views follow a log-normal distribution with a long tail
+pattern</p></li>
+<li><p>Weekend hashtag boost provides a uniform uplift factor between
+0.8 and 1.5</p></li>
+</ul>
+</div>
+<div id="step-2-target-variable-creation" class="section level3">
+<h3>Step 2: Target Variable Creation</h3>
+<p>The most sophisticated aspect creates an “engagement_score” by
+combining multiple features with business-relevant weights:</p>
+<p><strong>Engagement Score Calculation</strong>:</p>
+<ul>
+<li><p>20% weight for comment rate (normalized by baseline of
+0.02)</p></li>
+<li><p>30% weight for share rate (normalized by baseline of
+0.005)</p></li>
+<li><p>20% weight for view count (normalized by baseline of
+50,000)</p></li>
+<li><p>10% weight for content quality (text_richness)</p></li>
+<li><p>10% weight for timing effects (weekend_hashtag_boost)</p></li>
+<li><p>Creator influence bonus (0.5 for Stars, 0.3 for Macros, 0.1 for
+Mids, 0 for Micros)</p></li>
+<li><p>Controlled random noise for real-world uncertainty</p></li>
+</ul>
+<pre><code>engagement_score = (
+    (df[&#39;comment_rate&#39;] / 0.02) * 0.2 +
+    (df[&#39;share_rate&#39;] / 0.005) * 0.3 +
+    (df[&#39;views_per_day&#39;] / 50000) * 0.2 +
+    (df[&#39;text_richness&#39;] * 0.1) +
+    (df[&#39;weekend_hashtag_boost&#39;] * 0.1) +
+    np.where(df[&#39;creator_tier&#39;] == &#39;Star&#39;, 0.5, 
+            np.where(df[&#39;creator_tier&#39;] == &#39;Macro&#39;, 0.3,
+                    np.where(df[&#39;creator_tier&#39;] == &#39;Mid&#39;, 0.1, 0))) +
+    np.random.normal(0, 0.2, n_samples)
+)</code></pre>
+<p><strong>Three-Class Trend Label Creation</strong>:</p>
+<ul>
+<li><p><strong>Low trend (0)</strong>: engagement_score ≤ 0.8</p></li>
+<li><p><strong>Medium trend (1)</strong>: 0.8 &lt; engagement_score ≤
+1.5</p></li>
+<li><p><strong>High trend (2)</strong>: engagement_score &gt;
+1.5</p></li>
+</ul>
+<pre><code>df[&#39;trend_label&#39;] = pd.cut(engagement_score, 
+                          bins=[-np.inf, 0.8, 1.5, np.inf], 
+                          labels=[0, 1, 2]).astype(int)</code></pre>
+</div>
+</div>
+<div id="feature-engineering" class="section level2">
+<h2>Feature Engineering</h2>
+<div id="step-1-creating-interaction-features" class="section level3">
+<h3>Step 1: Creating Interaction Features</h3>
+<p>The feature engineering process begins by creating <strong>three
+interaction features</strong> that combine existing variables to capture
+more complex relationships:</p>
+<p><strong>Platform-Tier Interaction</strong>: This feature combines the
+platform type with creator tier level, creating combinations like
+“TikTok_Star” or “YouTube_Micro”. This allows the model to learn how
+different platforms interact with different creator levels.</p>
+<p><strong>Region-Category Interaction</strong>: This combines
+geographic region with content category, creating combinations like
+“North America_Entertainment” or “Asia_Education”. This helps the model
+understand regional content preferences and consumption patterns.</p>
+<p><strong>Engagement Velocity</strong>: This is a composite metric
+calculated as views_per_day × (comment_rate + share_rate). It measures
+how quickly engagement accumulates relative to views, providing a
+unified measure of content virality.</p>
+<pre><code>df[&#39;platform_tier_interaction&#39;] = df[&#39;platform&#39;] + &#39;_&#39; + df[&#39;creator_tier&#39;]
+df[&#39;region_category_interaction&#39;] = df[&#39;region&#39;] + &#39;_&#39; + df[&#39;category&#39;]
+df[&#39;engagement_velocity&#39;] = df[&#39;views_per_day&#39;] * (df[&#39;comment_rate&#39;] + df[&#39;share_rate&#39;])</code></pre>
+</div>
+<div id="step-2-feature-selection-and-preparation"
+class="section level3">
+<h3>Step 2: Feature Selection and Preparation</h3>
+<p>Then selects 15 features for the machine learning model:</p>
+<p><strong>Original Features (12 variables)</strong>:</p>
+<ul>
+<li><p>Platform characteristics: platform, region, category,
+traffic_source</p></li>
+<li><p>Creator information: creator_tier, device_brand</p></li>
+<li><p>Content metrics: title_len, text_richness</p></li>
+<li><p>Engagement rates: comment_rate, share_rate</p></li>
+<li><p>Performance metrics: views_per_day</p></li>
+<li><p>Temporal effects: weekend_hashtag_boost</p></li>
+</ul>
+<p><strong>Engineered Features (3 new variables)</strong>:</p>
+<ul>
+<li><p>Interaction features: platform_tier_interaction,
+region_category_interaction</p></li>
+<li><p>Composite metric: engagement_velocity</p></li>
+</ul>
+<p>The final step separates the dataset into:</p>
+<ul>
+<li><p><strong>X</strong>: All 15 selected features (independent
+variables)</p></li>
+<li><p><strong>y</strong>: The trend_label target variable (0/1/2
+classification)</p></li>
+</ul>
+</div>
+</div>
+<div id="data-preprocessing" class="section level2">
+<h2>Data Preprocessing</h2>
+<div id="step-1-train-test-data-split" class="section level3">
+<h3>Step 1: Train-Test Data Split</h3>
+<p>Spliting the dataset into training and testing subsets:</p>
+<ul>
+<li><p><strong>Test size</strong>: 20% of the data</p></li>
+<li><p><strong>Training size</strong>: 80% of the data</p></li>
+<li><p><strong>Stratification</strong>: Maintains the same class
+distribution in both splits</p></li>
+<li><p><strong>Random state</strong>: Fixed for reproducibility</p></li>
+</ul>
+<p>This creates four distinct data subsets:</p>
+<ul>
+<li><p><strong>X_train</strong>: Training features</p></li>
+<li><p><strong>X_test</strong>: Testing features</p></li>
+<li><p><strong>y_train</strong>: Training target labels</p></li>
+<li><p><strong>y_test</strong>: Testing target labels</p></li>
+</ul>
+</div>
+<div id="step-2-feature-type-classification" class="section level3">
+<h3>Step 2: Feature Type Classification</h3>
+<p>Separating features into two categories:</p>
+<p><strong>Categorical Features (8 variables):</strong></p>
+<ul>
+<li><p>Platform characteristics: <code>platform</code>,
+<code>region</code>, <code>category</code>,
+<code>traffic_source</code></p></li>
+<li><p>Creator information: <code>device_brand</code>,
+<code>creator_tier</code></p></li>
+<li><p>Interaction features: <code>platform_tier_interaction</code>,
+<code>region_category_interaction</code></p></li>
+</ul>
+<p><strong>Numerical Features (7 variables):</strong></p>
+<ul>
+<li><p>Content metrics: <code>title_len</code>,
+<code>text_richness</code></p></li>
+<li><p>Engagement rates: <code>comment_rate</code>,
+<code>share_rate</code></p></li>
+<li><p>Performance metrics: <code>views_per_day</code></p></li>
+<li><p>Temporal effects: <code>weekend_hashtag_boost</code></p></li>
+<li><p>Composite metric: <code>engagement_velocity</code></p></li>
+</ul>
+</div>
+<div id="step-3-preprocessing-pipeline-construction"
+class="section level3">
+<h3>Step 3: Preprocessing Pipeline Construction</h3>
+<p>Building a comprehensive preprocessing pipeline using
+ColumnTransformer:</p>
+<p><strong>For Numerical Features</strong>: Features standardized to
+zero mean and unit variance</p>
+<p><strong>For Categorical Features</strong>: Converted to one-hot
+binary representation</p>
+</div>
+</div>
+<div id="define-models" class="section level2">
+<h2>Define Models</h2>
+<div id="model-1-random-forest" class="section level3">
+<h3>Model 1: Random Forest</h3>
+<ul>
+<li><p><strong>Type</strong>: Ensemble learning with multiple decision
+trees</p></li>
+<li><p><strong>Key parameters</strong>: 200 trees, maximum depth of 15,
+minimum 10 samples to split nodes, minimum 5 samples per leaf</p></li>
+<li><p><strong>Special feature</strong>: Parallel processing enabled
+(n_jobs=-1 uses all CPU cores)</p></li>
+<li><p><strong>Purpose</strong>: Robust model that handles complex
+feature interactions and reduces overfitting</p></li>
+</ul>
+</div>
+<div id="model-2-gradient-boosting" class="section level3">
+<h3>Model 2: Gradient Boosting</h3>
+<ul>
+<li><p><strong>Type</strong>: Sequential ensemble method that builds
+trees to correct previous errors</p></li>
+<li><p><strong>Key parameters</strong>: 200 boosting stages, learning
+rate of 0.1, maximum depth of 6</p></li>
+<li><p><strong>Special feature</strong>: Adaptive learning that
+minimizes prediction errors incrementally</p></li>
+<li><p><strong>Purpose</strong>: High-accuracy model particularly
+effective for complex classification tasks</p></li>
+</ul>
+</div>
+<div id="model-3-extra-trees-extremely-randomized-trees"
+class="section level3">
+<h3>Model 3: Extra Trees (Extremely Randomized Trees)</h3>
+<ul>
+<li><p><strong>Type</strong>: Variation of Random Forest with increased
+randomization</p></li>
+<li><p><strong>Key parameters</strong>: 200 trees, maximum depth of 15,
+parallel processing enabled</p></li>
+<li><p><strong>Special feature</strong>: Uses random splits rather than
+optimal splits, reducing variance</p></li>
+<li><p><strong>Purpose</strong>: Provides complementary performance to
+Random Forest with different bias-variance tradeoff</p></li>
+</ul>
+</div>
+<div id="model-4-neural-network-multi-layer-perceptron"
+class="section level3">
+<h3>Model 4: Neural Network (Multi-Layer Perceptron)</h3>
+<ul>
+<li><p><strong>Type</strong>: Artificial neural network with two hidden
+layers</p></li>
+<li><p><strong>Architecture</strong>: 100 neurons in first hidden layer,
+50 neurons in second layer</p></li>
+<li><p><strong>Key features</strong>: ReLU activation function, adaptive
+learning rate, early stopping to prevent overfitting</p></li>
+<li><p><strong>Purpose</strong>: Captures complex non-linear
+relationships in the data</p></li>
+</ul>
+</div>
+<div id="model-5-support-vector-machine-svm" class="section level3">
+<h3>Model 5: Support Vector Machine (SVM)</h3>
+<ul>
+<li><p><strong>Type</strong>: Kernel-based classifier finding optimal
+decision boundaries</p></li>
+<li><p><strong>Key parameters</strong>: Radial Basis Function kernel,
+regularization parameter C=1.0</p></li>
+<li><p><strong>Special feature</strong>: Probability estimates enabled
+for performance metrics</p></li>
+<li><p><strong>Purpose</strong>: Effective for high-dimensional spaces
+and complex decision boundaries</p></li>
+</ul>
+</div>
+<div id="model-6-logistic-regression" class="section level3">
+<h3>Model 6: Logistic Regression</h3>
+<ul>
+<li><p><strong>Type</strong>: Traditional linear classification
+method</p></li>
+<li><p><strong>Key parameters</strong>: Regularization parameter C=1.0,
+One-vs-Rest multi-class strategy</p></li>
+<li><p><strong>Special feature</strong>: Maximum 1000 iterations for
+convergence</p></li>
+<li><p><strong>Purpose</strong>: Provides baseline performance and
+interpretable results</p></li>
+</ul>
+</div>
+<div id="pipeline-architecture" class="section level3">
+<h3>Pipeline Architecture</h3>
+<p>Each model follows the same two-step pipeline structure:</p>
+<p><strong>Step 1: Preprocessing</strong></p>
+<ul>
+<li><p>Applies the previously defined preprocessing
+transformations</p></li>
+<li><p>Ensures consistent data treatment across all models</p></li>
+<li><p>Prevents data leakage by fitting preprocessing only on training
+data</p></li>
+</ul>
+<p><strong>Step 2: Classification</strong></p>
+<ul>
+<li><p>Applies the specific algorithm with tuned parameters</p></li>
+<li><p>Maintains reproducibility through fixed random seeds</p></li>
+<li><p>Enables fair comparison by using identical preprocessing</p></li>
+</ul>
+</div>
+</div>
+<div id="model-training-and-evaluation" class="section level2">
+<h2>Model Training and Evaluation</h2>
+<div id="step-1-evaluation-framework-initialization"
+class="section level3">
+<h3>Step 1: Evaluation Framework Initialization</h3>
+<ul>
+<li><p><strong>Results storage structure</strong>: Creates an empty list
+to store evaluation results for each model</p></li>
+<li><p><strong>Cross-validation setup</strong>: Uses 5-fold stratified
+cross-validation (StratifiedKFold)</p>
+<ul>
+<li><p>Maintains consistent class distribution in each fold</p></li>
+<li><p>Shuffles data order to increase randomness</p></li>
+<li><p>Fixed random seed ensures reproducibility</p></li>
+</ul></li>
+</ul>
+</div>
+<div id="step-2-iterative-model-training" class="section level3">
+<h3>Step 2: Iterative Model Training</h3>
+<p>For each of the six models, the following operations are
+performed:</p>
+<p><strong>Training Phase</strong>:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Model fitting</strong>: Trains each model using training
+data (X_train, y_train)</p></li>
+<li><p><strong>Prediction generation</strong>:</p>
+<ul>
+<li><p>Class predictions: Generates discrete class predictions (0/1/2)
+for the test set</p></li>
+<li><p>Probability predictions: Generates probability estimates for each
+class in the test set</p></li>
+</ul></li>
+</ol>
+<p><strong>Evaluation Metrics Calculation</strong>:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Accuracy</strong>: Proportion of correctly predicted
+samples</p></li>
+<li><p><strong>Macro-average F1 score (F1-Macro)</strong>:</p>
+<ul>
+<li><p>Calculates F1 score for each class, then takes the
+average</p></li>
+<li><p>Treats each class equally, unaffected by sample counts</p></li>
+</ul></li>
+<li><p><strong>Weighted-average F1 score (F1-Weighted)</strong>:</p>
+<ul>
+<li><p>Calculates F1 score weighted by the number of samples in each
+class</p></li>
+<li><p>Reflects the impact of class imbalance</p></li>
+</ul></li>
+<li><p><strong>Multi-class AUC-OVR</strong>:</p>
+<ul>
+<li><p>Calculates AUC for each class using One-vs-Rest strategy</p></li>
+<li><p>Takes macro-average of the three class AUC values</p></li>
+<li><p>Exception handling: Marks as NaN if calculation fails</p></li>
+</ul></li>
+</ol>
+<p><strong>Cross-validation Evaluation</strong>:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Cross-validation accuracy</strong>: Calculated on the
+training set using 5-fold cross-validation</p></li>
+<li><p><strong>Performance stability</strong>: Records the mean and
+standard deviation of cross-validation accuracy</p>
+<ul>
+<li><p>Mean reflects the model’s average performance</p></li>
+<li><p>Standard deviation reflects the stability of model
+performance</p></li>
+</ul></li>
+</ol>
+<pre><code>for name, model in models.items():
+    print(f&quot;\nTraining {name}...&quot;)
+    
+    # Train model
+    model.fit(X_train, y_train)
+    
+    # Predict
+    y_pred = model.predict(X_test)
+    y_pred_proba = model.predict_proba(X_test)
+    
+    # Calculate metrics
+    accuracy = accuracy_score(y_test, y_pred)
+    f1_macro = f1_score(y_test, y_pred, average=&#39;macro&#39;)
+    f1_weighted = f1_score(y_test, y_pred, average=&#39;weighted&#39;)
+    
+    # Multi-class AUC
+    try:
+        auc_ovr = roc_auc_score(y_test, y_pred_proba, multi_class=&#39;ovr&#39;, average=&#39;macro&#39;)
+    except:
+        auc_ovr = np.nan
+    
+    # Cross-validation
+    cv_scores = cross_val_score(model, X_train, y_train, cv=cv, scoring=&#39;accuracy&#39;)</code></pre>
+</div>
+<div id="step-3-results-consolidation" class="section level3">
+<h3>Step 3: Results Consolidation</h3>
+<p>After each model training, generates a dictionary containing:</p>
+<ul>
+<li><p>Model name</p></li>
+<li><p>Test set accuracy</p></li>
+<li><p>Macro-average F1 score</p></li>
+<li><p>Weighted-average F1 score</p></li>
+<li><p>Multi-class AUC-OVR</p></li>
+<li><p>Cross-validation accuracy mean</p></li>
+<li><p>Cross-validation accuracy standard deviation</p></li>
+</ul>
+</div>
+<div id="step-4-real-time-progress-feedback" class="section level3">
+<h3>Step 4: Real-time Progress Feedback</h3>
+<p>Outputs immediately after each model training:</p>
+<ul>
+<li><p>Training completion confirmation marker</p></li>
+<li><p>Key performance metric values (accuracy, F1-Macro,
+AUC-OVR)</p></li>
+</ul>
+</div>
+</div>
+<div id="results-comparison" class="section level2">
+<h2>Results Comparison</h2>
+<div id="step-1-results-consolidation-and-ranking"
+class="section level3">
+<h3>Step 1: Results Consolidation and Ranking</h3>
+<ul>
+<li><p><strong>Data Transformation</strong>: Converts the evaluation
+results list into a structured DataFrame</p></li>
+<li><p><strong>Performance Ranking</strong>: Sorts models by test set
+accuracy in descending order</p></li>
+<li><p><strong>Detailed Reporting</strong>: Prints the complete
+performance ranking with all metrics rounded to 4 decimal
+places</p></li>
+</ul>
+</div>
+<div id="step-2-multi-dimensional-visualization" class="section level3">
+<h3>Step 2: Multi-Dimensional Visualization</h3>
+<p>This is a 2×2 grid of visualizations for comprehensive performance
+comparison:</p>
+<p><img src="classification_model_comparison.png" /></p>
+<p>Viewed horizontally, the three core metrics—Accuracy, F1-Macro, and
+AUC-OVR—exhibit a consistent ranking pattern: Gradient Boosting, SVM,
+and Neural Network form the top tier; Logistic Regression and Random
+Forest occupy the middle; while Extra Trees shows noticeably weaker
+overall performance. Among them, Gradient Boosting maintains a stable
+advantage across all three metrics (Accuracy = 0.814, F1-Macro = 0.784,
+AUC-OVR = 0.931), indicating strong fitting capability when handling
+high-dimensional features, nonlinear relationships, and feature
+interactions.</p>
+<p>The F1-Macro metric further highlights performance differences under
+imbalanced class distributions. Although SVM and Neural Network achieve
+Accuracy levels close to Gradient Boosting, their F1-Macro scores are
+slightly lower, suggesting marginal losses in identifying certain
+minority classes. In contrast, the significantly lower F1-Macro values
+of Random Forest and Extra Trees (particularly Extra Trees at 0.649)
+indicate insufficient generalization ability in imbalanced settings.</p>
+<p>The overall high AUC-OVR values show that all models perform well in
+distinguishing trend categories; however, a high AUC does not
+necessarily translate into a high F1, underscoring the challenges of
+class prediction and the underlying imbalance issues. The combined
+heatmap visually illustrates the performance structure across models:
+Gradient Boosting and Neural Network demonstrate the most balanced
+results, while Extra Trees consistently falls at the bottom across all
+metrics.</p>
+</div>
+</div>
+<div id="best-model-detailed-analysis" class="section level2">
+<h2>Best Model Detailed Analysis</h2>
+<p>3×3 confusion matrix, comparing real labels with predicted
+labels：</p>
+<p><img src="classification_confusion_matrix.png" /></p>
+<p>The confusion matrix reveals that the gradient boosting classifier
+performs strongly overall, but with clear variation in accuracy across
+the three classes. The <strong>Low</strong> class is predicted with the
+highest fidelity: the model correctly identifies 4,996 Low cases, with
+relatively limited spillover into the Medium class and virtually no
+misclassification as High. This suggests that the feature patterns
+distinguishing Low outcomes are highly separable and well captured by
+the model.</p>
+<p>Performance declines for the <strong>Medium</strong> class, which
+shows substantial confusion with both Low and High. Although 2,661
+Medium cases are correctly classified, a sizable number (857) are
+misclassified as Low, indicating that some Medium observations resemble
+the lower end of the distribution in the feature space. The smaller
+number of Medium cases predicted as High (124) further illustrates that
+errors for this class tend to skew downward rather than upward,
+consistent with a decision boundary that is conservative in assigning
+higher categories.</p>
+<p>For the <strong>High</strong> class, the model captures only 482 true
+positives, with a notable proportion misclassified as Medium (206). The
+complete absence of High cases misclassified as Low suggests that the
+model effectively distinguishes the top tier from the bottom tier but
+struggles to differentiate High from adjacent Medium cases. This pattern
+indicates that the features defining High outcomes may not be
+sufficiently distinct from Medium, or that sample imbalance limits the
+model’s ability to learn the upper-level boundary.</p>
+</div>
+<div id="feature-importance-analysis" class="section level2">
+<h2>Feature Importance Analysis</h2>
+<p>Sort all features in descending order of their importance scores:</p>
+<p><img src="classification_feature_importance.png" /> According to the
+feature importance analysis of the gradient boosting model, the
+share_rate, with an importance score of approximately 0.35, becomes the
+most influential feature, indicating that the social dissemination
+ability of the content is the core factor for predicting video trends.
+The comment_rate and engagement_velocity scored 0.30 and 0.18
+respectively, ranking second and third, jointly reflecting the crucial
+role of deep user engagement in the popularity of content. Among the
+creator level characteristics, the influence of Star creators (Star) is
+prominent, while the importance of device brand and region-category
+cross-characteristics is relatively low. This analysis confirms the
+dominant position of user interaction metrics in trend prediction and
+provides a clear direction for optimizing content strategies.</p>
+</div>
+<div id="conclusion-and-future-work" class="section level2">
+<h2>Conclusion and Future Work</h2>
+<p>This study demonstrates that ensemble learning models, particularly
+gradient boosting, are effective in predicting short-form video trend
+levels. User interaction metrics—especially share rate and comment
+rate—play a decisive role in content popularity. The models also confirm
+a significant correlation between creator tier and content
+dissemination, providing data-driven insights for platforms to optimize
+recommendation algorithms and for creators to refine content
+strategies.</p>
+<p>Future work may focus on the following areas: First, incorporating
+more real-time behavioral data (such as watch time and replay rate) to
+enhance prediction timeliness. Second, exploring temporal models to
+capture dynamic trend evolution. Third, developing interpretability
+tools to translate model insights into actionable operational
+recommendations. Fourth, deploying an online learning system to enable
+continuous model iteration in real-world environments.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

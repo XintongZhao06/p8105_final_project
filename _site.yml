@@ -9,7 +9,11 @@ navbar:
     - text: "Data"
       href: data.html
     - text: "Topic 1"
-      href: topic1.html
+      menu:
+        - text: "EDA"
+          href: topic1_eda.html
+        - text: "Regression Analysis"
+          href: regression_analysis.html
     - text: "Topic 2"
       href: topic2.html
     - text: "Report"
