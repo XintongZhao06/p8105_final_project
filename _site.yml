@@ -5,15 +5,17 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    
   right:
-    - text: "Proposal"
-      href: proposal.html
-    - text: "Regression"
-      href: regression_analysis.html
+    - text: "Data"
+      href: data.html
+    - text: "Topic 1"
+      href: topic1.html
+    - text: "Topic 2"
+      href: topic2.html
+    - text: "Report"
+      href: report.html
     - icon: fa-github fa-lg
       href: https://github.com/XintongZhao06
-
 
 output:
   html_document:
