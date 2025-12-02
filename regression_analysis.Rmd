@@ -34,6 +34,7 @@ This section explores how **completion rate** relates to different characteristi
 <i class="fa fa-thumb-tack" style="color:#D95F02; transform: rotate(-25deg);"></i>
 These regression models are used to examine how completion rate is statistically related to different video attributes and engagement metrics. The analysis is exploratory and association-focused, rather than predictive or causal. Engagement variables such as likes, comments, shares, and saves are included to characterize how completion rate co-varies with other downstream performance indicators.
 <div style="margin-bottom: 10px;"></div>
+
 ## 2. Data Preparation
 
 We begin by importing the dataset and selecting variables relevant to the regression analysis. Several engagement-related variables are log-transformed to reduce skewness, and categorical variables are converted to factors for modeling.
@@ -75,29 +76,8 @@ df = shorts_data |>
   drop_na()
 ```
 
-### 2.1 Distribution of Outcome (completion rate)
+Our response variable is **completion_rate**, which exhibits neither strong skewness nor heavy tails, as shown in the [EDA section](topic1_eda.html#completion-dist). Therefore, no additional transformation or preprocessing of the outcome variable is needed before fitting the regression models.
 
-Before fitting models, we inspect the distribution of the target variable (*completion_rate*). This helps assess skewness and understand the modeling target's general behavior.
-
-```{r}
-# Distribution of outcome variable (completion_rate)
-completion_rate_plot <- ggplot(df, aes(x = completion_rate)) +
-  geom_histogram(bins = 30, fill = "#9E9AC8", alpha = 0.8, 
-                 color = "#54278F", size = 0.4) +
-  geom_vline(aes(xintercept = mean(completion_rate)), 
-             color = "#E6550D", linetype = "dashed", size = 1) +
-  labs(title = "Distribution of Completion Rate",
-       x = "Completion Rate", 
-       y = "Frequency") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
-
-print(completion_rate_plot)
-```
-
-The distribution of completion_rate is roughly centered around 0.6–0.7 with no extreme skewness or heavy tails. Although the shape is not perfectly symmetric, it does not exhibit severe outliers or truncation.
-
-Therefore, no additional transformation or preprocessing of the outcome variable is required before fitting the regression models.
 <div style="margin-bottom: 10px;"></div>
 ## 3. Linear Regression Analysis
 <div style="margin-bottom: 10px;"></div>
@@ -234,7 +214,7 @@ plot(step_back)
 par(mfrow = c(1, 1))
 ```
 
-The Residuals vs Fitted and Scale–Location plots show slight changes in residual spread across fitted values, indicating mild heteroscedasticity and some nonlinearity. The Q–Q plot displays noticeable tail deviations from normality. The Residuals vs Leverage plot shows a few moderately high-leverage points, but none appear strongly influential. 
+The Residuals vs Fitted and Scale–Location plots show slight changes in residual spread across fitted values, indicating mild heteroscedasticity and some non-linearity. The Q–Q plot reveals noticeable deviations in the tails from a normal distribution; however, this is also expected because Q–Q plots become highly sensitive with large sample sizes and can highlight even very small departures from normality. The Residuals vs Leverage plot shows a few moderately high-leverage points, but none appear strongly influential. 
 
 Overall, the linear model remains adequate for exploratory purposes, but the diagnostics indicate that its assumptions are not fully satisfied and the linear specification may not fully capture the underlying patterns in the data. These limitations motivate the use of nonlinear approaches, such as smooth and wiggly GAM, to capture potential nonlinear patterns that the linear specification may miss.
 <div style="margin-bottom: 10px;"></div>

@@ -11,7 +11,7 @@ navbar:
     - text: "Topic 1"
       menu:
         - text: "EDA"
-          href: topic1_eda.html
+          href: topic1.html
         - text: "Regression Analysis"
           href: regression_analysis.html
     - text: "Topic 2"
