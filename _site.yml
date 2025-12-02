@@ -9,8 +9,12 @@ navbar:
   right:
     - text: "Proposal"
       href: proposal.html
+    - text: "Regression"
+      href: regression_analysis.html
     - icon: fa-github fa-lg
       href: https://github.com/XintongZhao06
+
+
 output:
   html_document:
     theme: flatly

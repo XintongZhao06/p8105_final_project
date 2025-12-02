@@ -1,0 +1,435 @@
+---
+title: "Regression"
+output:
+  html_document:
+    theme: united
+    toc: true
+    toc_float: true
+    df_print: paged
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(modelr)
+library(mgcv)
+library(broom)
+library(car)
+library(dplyr)
+library(MASS)
+library(glmnet)
+library(caret)
+library(lmtest)
+library(sandwich)
+library(boot)
+library(gridExtra)
+library(kableExtra)
+```
+
+## 1. Overview of Modeling Approach
+
+This section explores how **completion rate** relates to different characteristics of short-form videos. Our goal is not to build a predictive model or establish causal relationships, but rather to identify statistical associations and understand which types of features tend to co-vary with completion_rate. Regression results here provide structural insights that will be expanded upon in the full report.
+
+<i class="fa fa-thumb-tack" style="color:#D95F02; transform: rotate(-25deg);"></i>
+These regression models are used to examine how completion rate is statistically related to different video attributes and engagement metrics. The analysis is exploratory and association-focused, rather than predictive or causal. Engagement variables such as likes, comments, shares, and saves are included to characterize how completion rate co-varies with other downstream performance indicators.
+<div style="margin-bottom: 10px;"></div>
+## 2. Data Preparation
+
+We begin by importing the dataset and selecting variables relevant to the regression analysis. Several engagement-related variables are log-transformed to reduce skewness, and categorical variables are converted to factors for modeling.
+
+```{r}
+shorts_data = read.csv("data/youtube_shorts_tiktok_trends_2025.csv") |> 
+  as_tibble()
+
+df = shorts_data |> 
+  dplyr::select(
+    completion_rate,
+    upload_hour,
+    is_weekend,
+    views,
+    likes,
+    comments,
+    shares,
+    saves,
+    duration_sec,
+    event_season,
+    has_emoji,
+    creator_tier,
+    creator_avg_views,
+    platform
+  ) |> 
+  mutate(
+    has_emoji = as.integer(as.character(has_emoji)),
+    creator_tier = as.factor(creator_tier),
+    platform = as.factor(platform),
+    event_season = as.factor(event_season),
+    log_views = log(views + 1),
+    log_likes = log(likes + 1),
+    log_comments = log(comments + 1),
+    log_shares = log(shares + 1),
+    log_saves = log(saves + 1),
+    log_creator_avg = log(creator_avg_views + 1)
+    
+  ) |> 
+  drop_na()
+```
+
+### 2.1 Distribution of Outcome (completion rate)
+
+Before fitting models, we inspect the distribution of the target variable (*completion_rate*). This helps assess skewness and understand the modeling target's general behavior.
+
+```{r}
+# Distribution of outcome variable (completion_rate)
+completion_rate_plot <- ggplot(df, aes(x = completion_rate)) +
+  geom_histogram(bins = 30, fill = "#9E9AC8", alpha = 0.8, 
+                 color = "#54278F", size = 0.4) +
+  geom_vline(aes(xintercept = mean(completion_rate)), 
+             color = "#E6550D", linetype = "dashed", size = 1) +
+  labs(title = "Distribution of Completion Rate",
+       x = "Completion Rate", 
+       y = "Frequency") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+
+print(completion_rate_plot)
+```
+
+The distribution of completion_rate is roughly centered around 0.6–0.7 with no extreme skewness or heavy tails. Although the shape is not perfectly symmetric, it does not exhibit severe outliers or truncation.
+
+Therefore, no additional transformation or preprocessing of the outcome variable is required before fitting the regression models.
+<div style="margin-bottom: 10px;"></div>
+## 3. Linear Regression Analysis
+<div style="margin-bottom: 10px;"></div>
+### 3.1 Overview of the Linear Models
+
+We begin with linear regression because it provides a clear and interpretable foundation. The linear models are used as an exploratory tool to understand which variables consistently relate to completion rate, rather than as high-performing predictive models.
+
+Before introducing the individual models, we outline the overall model progression:
+
+- **Model 1 – Baseline:** timing variables (event_season, is_weekend, duration_sec, upload_hour)  
+
+  ↓ add engagement  
+  
+- **Model 2 – + Engagement:** baseline + log_likes, log_comments, log_shares, log_saves  
+
+  ↓ expand to full feature set  
+  
+- **Model 3 – Full + Stepwise:** add log_creator_avg, creator_tier, has_emoji, then apply backward stepwise
+
+These steps move from a simple structural specification to a richer model that incorporates engagement and creator-level information.
+<div style="margin-bottom: 10px;"></div>
+### 3.2 Model 1: Baseline model
+
+The first model includes only timing-related predictors and basic video attributes. This provides a structural baseline for understanding completion behavior.
+
+```{r}
+model_base = lm(completion_rate ~ event_season + is_weekend 
+                + duration_sec + upload_hour, data = df)
+
+model_base |>  
+  broom::tidy() |> 
+  dplyr::select(term, estimate, p.value) |> 
+  knitr::kable(digits = 4)
+```
+
+Duration_sec is strongly and negatively associated with completion_rate, while other timing indicators show weaker effects. This motivates adding richer features next.
+<div style="margin-bottom: 10px;"></div>
+### 3.3 Model 2: Adding engagement variables model
+
+We extend the baseline model by incorporating engagement indicators (likes, comments, shares, saves). These are used exploratorily to assess how completion rate co-varies with downstream performance indicators.
+
+```{r}
+model_add = lm(completion_rate ~ event_season + is_weekend + duration_sec 
+               + upload_hour + log_likes + log_comments + log_shares + log_saves
+               , data = df)
+
+model_add |>  
+  broom::tidy() |> 
+  dplyr::select(term, estimate, p.value) |> 
+  knitr::kable(digits = 4)
+```
+
+In this regression, log_likes and log_saves show clearer associations with completion_rate. 
+
+### 3.4 Model 3: Full Model and Stepwise Selection
+
+To obtain a more parsimonious and robust predictor set, we fit a comprehensive full model and apply backward stepwise selection. This isolates the most consistently informative variables for later nonlinear modeling.
+
+```{r}
+# full model
+full_mod = lm(completion_rate ~ event_season + is_weekend + duration_sec + upload_hour 
+              + log_likes + log_comments + log_shares + log_saves 
+              + log_creator_avg + creator_tier + has_emoji, data = df)
+
+# stepwise regression(backward) 
+step_back = step(
+  full_mod,
+  direction = "backward",
+  trace = FALSE
+)
+
+step_back |>  
+  broom::tidy() |> 
+  dplyr::select(term, estimate, p.value) |> 
+  knitr::kable(digits = 4)
+```
+
+The results from the baseline, engagement-augmented, and full models show that only a small subset of predictors consistently explain variation in completion_rate. Duration remains the strongest structural factor, while likes, saves, creator_avg, and emoji usage retain significance after controlling for other variables. The stepwise procedure formalizes this by selecting exactly these five predictors and removing weaker or redundant features.
+
+<details>
+<summary><strong>Show Regression Equation</strong></summary>
+
+$$
+\hat{\text{completion_rate}} =
+0.6638
+- 0.0007932\,*\text{duration_sec}
++ 0.008618\,*\log(\text{likes}+1)
++ 0.002520\,*\log(\text{saves}+1)
+- 0.008323\,*\log(\text{creator_avg_views}+1)
++ 0.02303\,*\text{has_emoji}
+$$
+
+</details>
+
+<div style="margin-bottom: 10px;"></div>
+### 3.5 Comparison of Linear Models
+```{r}
+model_compare <- tibble(
+Model = c("Baseline", "Engagement", "Stepwise"),
+R2 = c(summary(model_base)$r.squared,
+summary(model_add)$r.squared,
+summary(step_back)$r.squared),
+Adj_R2 = c(summary(model_base)$adj.r.squared,
+summary(model_add)$adj.r.squared,
+summary(step_back)$adj.r.squared),
+AIC = c(AIC(model_base), AIC(model_add), AIC(step_back)),
+BIC = c(BIC(model_base), BIC(model_add), BIC(step_back))
+)
+
+model_compare |>
+kable(digits = 4, caption = "Comparison of Linear Regression Models") |>
+kable_styling(full_width = FALSE, position = "center")
+```
+
+Although the models include timing features, engagement indicators, and creator-level metadata, all three linear specifications produce relatively low R-squared. This is expected in real short-form video settings for several practical reasons: 
+
+- Completion rate is heavily influenced by subjective content factors that are not captured in metadata, such as humor, storytelling structure, editing quality, pacing, emotional appeal, and the relevance of the topic to the viewer. 
+
+- Short-video platforms use complex recommendation algorithms, meaning completion rate is partially shaped by algorithmic exposure patterns that are never observed in the dataset. 
+
+- Metadata explains structural aspects but not creative quality, which is often the dominant driver of retention. 
+
+- Linear models assume additive and linear relationships, which may be too restrictive for behaviors that often involve thresholds or nonlinear viewing patterns. 
+
+Despite all linear models show limited explanatory power, the stepwise model performs comparatively better across R-squared, AIC, and BIC. Therefore, it is selected as the final linear specification for diagnostic assessment.
+<div style="margin-bottom: 10px;"></div>
+### 3.6 Diagnostic Checks for the Stepwise Linear Model
+
+To ensure the validity of inference from the selected linear model, we evaluate standard regression diagnostics. Residual plots help assess linearity, homoscedasticity, and normality assumptions.
+
+```{r}
+par(mfrow = c(2, 2))
+plot(step_back)   
+par(mfrow = c(1, 1))
+```
+
+The Residuals vs Fitted and Scale–Location plots show slight changes in residual spread across fitted values, indicating mild heteroscedasticity and some nonlinearity. The Q–Q plot displays noticeable tail deviations from normality. The Residuals vs Leverage plot shows a few moderately high-leverage points, but none appear strongly influential. 
+
+Overall, the linear model remains adequate for exploratory purposes, but the diagnostics indicate that its assumptions are not fully satisfied and the linear specification may not fully capture the underlying patterns in the data. These limitations motivate the use of nonlinear approaches, such as smooth and wiggly GAM, to capture potential nonlinear patterns that the linear specification may miss.
+<div style="margin-bottom: 10px;"></div>
+## 4 Nonlinear modeling and model comparison
+
+Building on the stepwise selected predictors, we now compare linear and nonlinear models to assess whether more flexible structures can substantially improve fit or predictive performance.
+<div style="margin-bottom: 10px;"></div>
+### 4.1 Train–test split for nonlinear models
+
+We randomly sampled 5000 observations from the full dataset and applied basic preprocessing. The cleaned data was then split into an 80% training set and a 20% test set.
+```{r}
+set.seed(8105)
+sdata = read.csv("data/youtube_shorts_tiktok_trends_2025.csv") |> 
+  sample_n(5000) |>
+  mutate(id = row_number(),
+         has_emoji = as.integer(as.character(has_emoji)),
+         log_likes = log(likes + 1),
+         log_saves = log(saves + 1),
+         log_creator_avg = log(creator_avg_views + 1)
+         ) |> 
+  as_tibble()
+
+
+analysis_df =
+  sdata |> 
+  dplyr::select(
+    id,
+    completion_rate,
+    duration_sec,
+    log_likes,
+    log_saves,
+    log_creator_avg,
+    has_emoji
+  ) |> 
+  drop_na()
+
+train_df = sample_frac(analysis_df, size = 0.8)
+test_df  = anti_join(analysis_df, train_df, by = "id")
+```
+
+### 4.2 Model Specifications: Linear vs Smooth vs Wiggly GAM
+
+We fit three models using the same set of predictors:
+
+<i class="fa fa-check-circle"></i>
+A linear model
+
+<i class="fa fa-check-circle"></i>
+A smooth GAM that allows gentle nonlinear effects
+
+<i class="fa fa-check-circle"></i>
+A more flexible wiggly GAM
+
+```{r}
+#Linear
+linear_mod = lm(completion_rate ~ duration_sec + log_likes + log_saves 
+                + log_creator_avg + has_emoji, data = train_df)
+
+# GAM (smooth)
+smooth_mod = gam(
+  completion_rate ~ 
+    s(log_likes) + s(log_saves) + s(log_creator_avg) + s(duration_sec) + has_emoji,
+  data = train_df
+)
+
+# Wiggly GAM
+wiggly_mod = gam(
+  completion_rate ~ 
+    s(duration_sec, k = 30, sp = 10e-6) +
+    s(log_likes, k = 30, sp = 10e-6) +
+    s(log_saves, k = 30, sp = 10e-6) +
+    s(log_creator_avg, k = 30, sp = 10e-6) +
+    has_emoji,
+  data = train_df
+)
+```
+<div style="margin-bottom: 10px;"></div>
+### 4.3 Visual Comparison of three models
+
+For visualization, *duration_sec* is used here as the x-axis because it is a continuous predictor that allows the linear, smooth, and wiggly models to produce interpretable fitted curves. Other variables from the stepwise model like *log_likes* or *has_emoji* are either discrete or less suitable for illustrating non-linear patterns.
+
+```{r}
+# Compare model fits visually
+train_df |> 
+  gather_predictions(linear_mod, smooth_mod, wiggly_mod) |> 
+  mutate(
+    model = fct_recode(
+      model,
+      "Linear Model" = "linear_mod",
+      "Smooth GAM" = "smooth_mod",
+      "Wiggly GAM" = "wiggly_mod"
+    )
+  ) |>
+  ggplot(aes(x = duration_sec, y = completion_rate)) +
+  geom_point(alpha = .25, size = 1) +
+  geom_line(aes(y = pred), color = "#E63946") +
+  facet_wrap(~model, scales = "free_y") +
+  labs(
+    title = "Model Comparison",
+    x = "Video Duration (sec)",
+    y = "Completion Rate"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+    strip.text = element_text(face = "bold", size = 11),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
+This plot contrasts how three models fit the relationship between video duration and completion rate (with black dots as actual data and red curves as model fits). All models reflect the general pattern that completion rate declines as duration increases. The Linear Model and Smooth GAM yield stable red curves that closely align with this downward pattern. In contrast, the Wiggly GAM shows highly fluctuating and unstable fits, suggesting overfitting to noise rather than capturing meaningful structure.
+<div style="margin-bottom: 10px;"></div>
+### 4.4 Cross-validation Performance and visualization
+
+```{r}
+# Cross-validation (100 times)
+cv_df = crossv_mc(analysis_df, 100) |>
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  )
+
+cv_df =
+  cv_df |> 
+  mutate(
+    # linear model
+    linear_mod  = map(train,
+                      \(df) lm(completion_rate ~ duration_sec + log_likes 
+                               + log_saves + log_creator_avg + has_emoji,
+                               data = df)),
+    # smooth GAM
+    smooth_mod  = map(train,
+                      \(df) gam(completion_rate ~ s(log_likes) + s(log_saves) 
+                                + s(log_creator_avg) + s(duration_sec) + has_emoji,
+                                data = df)),
+    # wiggly GAM
+    wiggly_mod  = map(train,
+                      \(df) gam(completion_rate ~ 
+                                  s(duration_sec, k = 30, sp = 10e-6) 
+                                + s(log_likes, k = 30, sp = 10e-6) 
+                                + s(log_saves, k = 30, sp = 10e-6) 
+                                + s(log_creator_avg, k = 30, sp = 10e-6) 
+                                + has_emoji,
+                                data = df))
+    ) |> 
+  mutate(
+    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(mod, df)),
+    rmse_smooth = map2_dbl(smooth_mod, test, \(mod, df) rmse(mod, df)),
+    rmse_wiggly = map2_dbl(wiggly_mod, test, \(mod, df) rmse(mod, df))
+  )
+```
+
+```{r}
+# Violin plot for RMSE
+cv_df |> 
+  dplyr::select(starts_with("rmse")) |> 
+  pivot_longer(
+    everything(),
+    names_to = "model",
+    values_to = "rmse",
+    names_prefix = "rmse_"
+  ) |> 
+  mutate(
+    model = fct_recode(
+      model,
+      "Linear Model" = "linear",
+      "Smooth GAM"  = "smooth",
+      "Wiggly GAM"  = "wiggly"
+    ),
+    model = fct_inorder(model)
+  ) |> 
+  ggplot(aes(x = model, y = rmse, fill = model)) +
+  geom_violin(alpha = .7, trim = TRUE, color = NA) +
+  scale_fill_manual(values = c(
+    "Linear Model" = "#A8DADC", 
+    "Smooth GAM"  = "#BDE0FE", 
+    "Wiggly GAM"  = "#CDB4DB"  
+  )) +
+  
+  labs(
+    title = "RMSE Distribution Across Models",
+    x = "Model Type",
+    y = "RMSE"
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.text.x = element_text(size = 11),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    legend.position = "none"
+  )
+
+```
+
+The plot above shows the RMSE distribution for the Linear Model, Smooth GAM, and Wiggly GAM. It indicates that the Linear Model and Smooth GAM achieve lower and more stable prediction errors, while the Wiggly GAM shows higher and more variable RMSE values. Overall, the Linear Model and Smooth GAM generalize better than the Wiggly GAM, both in accuracy and stability. 

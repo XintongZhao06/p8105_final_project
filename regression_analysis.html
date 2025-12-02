@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Regression</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="proposal.html">Proposal</a>
+</li>
+<li>
+  <a href="regression_analysis.html">Regression</a>
+</li>
+<li>
+  <a href="https://github.com/XintongZhao06">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Regression</h1>
+
+</div>
+
+
+<div id="overview-of-modeling-approach" class="section level2">
+<h2>1. Overview of Modeling Approach</h2>
+<p>This section explores how <strong>completion rate</strong> relates to
+different characteristics of short-form videos. Our goal is not to build
+a predictive model or establish causal relationships, but rather to
+identify statistical associations and understand which types of features
+tend to co-vary with completion_rate. Regression results here provide
+structural insights that will be expanded upon in the full report.</p>
+<i class="fa fa-thumb-tack" style="color:#D95F02; transform: rotate(-25deg);"></i>
+These regression models are used to examine how completion rate is
+statistically related to different video attributes and engagement
+metrics. The analysis is exploratory and association-focused, rather
+than predictive or causal. Engagement variables such as likes, comments,
+shares, and saves are included to characterize how completion rate
+co-varies with other downstream performance indicators.
+<div style="margin-bottom: 10px;">
+
+</div>
+</div>
+<div id="data-preparation" class="section level2">
+<h2>2. Data Preparation</h2>
+<p>We begin by importing the dataset and selecting variables relevant to
+the regression analysis. Several engagement-related variables are
+log-transformed to reduce skewness, and categorical variables are
+converted to factors for modeling.</p>
+<pre class="r"><code>shorts_data = read.csv(&quot;data/youtube_shorts_tiktok_trends_2025.csv&quot;) |&gt; 
+  as_tibble()
+
+df = shorts_data |&gt; 
+  dplyr::select(
+    completion_rate,
+    upload_hour,
+    is_weekend,
+    views,
+    likes,
+    comments,
+    shares,
+    saves,
+    duration_sec,
+    event_season,
+    has_emoji,
+    creator_tier,
+    creator_avg_views,
+    platform
+  ) |&gt; 
+  mutate(
+    has_emoji = as.integer(as.character(has_emoji)),
+    creator_tier = as.factor(creator_tier),
+    platform = as.factor(platform),
+    event_season = as.factor(event_season),
+    log_views = log(views + 1),
+    log_likes = log(likes + 1),
+    log_comments = log(comments + 1),
+    log_shares = log(shares + 1),
+    log_saves = log(saves + 1),
+    log_creator_avg = log(creator_avg_views + 1)
+    
+  ) |&gt; 
+  drop_na()</code></pre>
+<div id="distribution-of-outcome-completion-rate"
+class="section level3">
+<h3>2.1 Distribution of Outcome (completion rate)</h3>
+<p>Before fitting models, we inspect the distribution of the target
+variable (<em>completion_rate</em>). This helps assess skewness and
+understand the modeling target’s general behavior.</p>
+<pre class="r"><code># Distribution of outcome variable (completion_rate)
+completion_rate_plot &lt;- ggplot(df, aes(x = completion_rate)) +
+  geom_histogram(bins = 30, fill = &quot;#9E9AC8&quot;, alpha = 0.8, 
+                 color = &quot;#54278F&quot;, size = 0.4) +
+  geom_vline(aes(xintercept = mean(completion_rate)), 
+             color = &quot;#E6550D&quot;, linetype = &quot;dashed&quot;, size = 1) +
+  labs(title = &quot;Distribution of Completion Rate&quot;,
+       x = &quot;Completion Rate&quot;, 
+       y = &quot;Frequency&quot;) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 14))</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre class="r"><code>print(completion_rate_plot)</code></pre>
+<p><img src="regression_analysis_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>The distribution of completion_rate is roughly centered around
+0.6–0.7 with no extreme skewness or heavy tails. Although the shape is
+not perfectly symmetric, it does not exhibit severe outliers or
+truncation.</p>
+Therefore, no additional transformation or preprocessing of the outcome
+variable is required before fitting the regression models.
+<div style="margin-bottom: 10px;">
+
+</div>
+</div>
+</div>
+<div id="linear-regression-analysis" class="section level2">
+<h2>3. Linear Regression Analysis</h2>
+<div style="margin-bottom: 10px;">
+
+</div>
+<div id="overview-of-the-linear-models" class="section level3">
+<h3>3.1 Overview of the Linear Models</h3>
+<p>We begin with linear regression because it provides a clear and
+interpretable foundation. The linear models are used as an exploratory
+tool to understand which variables consistently relate to completion
+rate, rather than as high-performing predictive models.</p>
+<p>Before introducing the individual models, we outline the overall
+model progression:</p>
+<ul>
+<li><p><strong>Model 1 – Baseline:</strong> timing variables
+(event_season, is_weekend, duration_sec, upload_hour)</p>
+<p>↓ add engagement</p></li>
+<li><p><strong>Model 2 – + Engagement:</strong> baseline + log_likes,
+log_comments, log_shares, log_saves</p>
+<p>↓ expand to full feature set</p></li>
+<li><p><strong>Model 3 – Full + Stepwise:</strong> add log_creator_avg,
+creator_tier, has_emoji, then apply backward stepwise</p></li>
+</ul>
+These steps move from a simple structural specification to a richer
+model that incorporates engagement and creator-level information.
+<div style="margin-bottom: 10px;">
+
+</div>
+</div>
+<div id="model-1-baseline-model" class="section level3">
+<h3>3.2 Model 1: Baseline model</h3>
+<p>The first model includes only timing-related predictors and basic
+video attributes. This provides a structural baseline for understanding
+completion behavior.</p>
+<pre class="r"><code>model_base = lm(completion_rate ~ event_season + is_weekend 
+                + duration_sec + upload_hour, data = df)
+
+model_base |&gt;  
+  broom::tidy() |&gt; 
+  dplyr::select(term, estimate, p.value) |&gt; 
+  knitr::kable(digits = 4)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">0.6650</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="left">event_seasonHolidaySeason</td>
+<td align="right">0.0030</td>
+<td align="right">0.2372</td>
+</tr>
+<tr class="odd">
+<td align="left">event_seasonRamadan</td>
+<td align="right">0.0059</td>
+<td align="right">0.1459</td>
+</tr>
+<tr class="even">
+<td align="left">event_seasonRegular</td>
+<td align="right">0.0040</td>
+<td align="right">0.0410</td>
+</tr>
+<tr class="odd">
+<td align="left">event_seasonSummerBreak</td>
+<td align="right">0.0037</td>
+<td align="right">0.0759</td>
+</tr>
+<tr class="even">
+<td align="left">is_weekend</td>
+<td align="right">-0.0006</td>
+<td align="right">0.5891</td>
+</tr>
+<tr class="odd">
+<td align="left">duration_sec</td>
+<td align="right">-0.0009</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="left">upload_hour</td>
+<td align="right">-0.0001</td>
+<td align="right">0.5239</td>
+</tr>
+</tbody>
+</table>
+Duration_sec is strongly and negatively associated with completion_rate,
+while other timing indicators show weaker effects. This motivates adding
+richer features next.
+<div style="margin-bottom: 10px;">
+
+</div>
+</div>
+<div id="model-2-adding-engagement-variables-model"
+class="section level3">
+<h3>3.3 Model 2: Adding engagement variables model</h3>
+<p>We extend the baseline model by incorporating engagement indicators
+(likes, comments, shares, saves). These are used exploratorily to assess
+how completion rate co-varies with downstream performance
+indicators.</p>
+<pre class="r"><code>model_add = lm(completion_rate ~ event_season + is_weekend + duration_sec 
+               + upload_hour + log_likes + log_comments + log_shares + log_saves
+               , data = df)
+
+model_add |&gt;  
+  broom::tidy() |&gt; 
+  dplyr::select(term, estimate, p.value) |&gt; 
+  knitr::kable(digits = 4)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">0.5751</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="left">event_seasonHolidaySeason</td>
+<td align="right">0.0033</td>
+<td align="right">0.1878</td>
+</tr>
+<tr class="odd">
+<td align="left">event_seasonRamadan</td>
+<td align="right">0.0061</td>
+<td align="right">0.1270</td>
+</tr>
+<tr class="even">
+<td align="left">event_seasonRegular</td>
+<td align="right">0.0041</td>
+<td align="right">0.0341</td>
+</tr>
+<tr class="odd">
+<td align="left">event_seasonSummerBreak</td>
+<td align="right">0.0037</td>
+<td align="right">0.0752</td>
+</tr>
+<tr class="even">
+<td align="left">is_weekend</td>
+<td align="right">-0.0006</td>
+<td align="right">0.5559</td>
+</tr>
+<tr class="odd">
+<td align="left">duration_sec</td>
+<td align="right">-0.0009</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="left">upload_hour</td>
+<td align="right">-0.0001</td>
+<td align="right">0.4576</td>
+</tr>
+<tr class="odd">
+<td align="left">log_likes</td>
+<td align="right">0.0090</td>
+<td align="right">0.0074</td>
+</tr>
+<tr class="even">
+<td align="left">log_comments</td>
+<td align="right">-0.0009</td>
+<td align="right">0.6593</td>
+</tr>
+<tr class="odd">
+<td align="left">log_shares</td>
+<td align="right">0.0010</td>
+<td align="right">0.6892</td>
+</tr>
+<tr class="even">
+<td align="left">log_saves</td>
+<td align="right">0.0025</td>
+<td align="right">0.0320</td>
+</tr>
+</tbody>
+</table>
+<p>In this regression, log_likes and log_saves show clearer associations
+with completion_rate.</p>
+</div>
+<div id="model-3-full-model-and-stepwise-selection"
+class="section level3">
+<h3>3.4 Model 3: Full Model and Stepwise Selection</h3>
+<p>To obtain a more parsimonious and robust predictor set, we fit a
+comprehensive full model and apply backward stepwise selection. This
+isolates the most consistently informative variables for later nonlinear
+modeling.</p>
+<pre class="r"><code># full model
+full_mod = lm(completion_rate ~ event_season + is_weekend + duration_sec + upload_hour 
+              + log_likes + log_comments + log_shares + log_saves 
+              + log_creator_avg + creator_tier + has_emoji, data = df)
+
+# stepwise regression(backward) 
+step_back = step(
+  full_mod,
+  direction = &quot;backward&quot;,
+  trace = FALSE
+)
+
+step_back |&gt;  
+  broom::tidy() |&gt; 
+  dplyr::select(term, estimate, p.value) |&gt; 
+  knitr::kable(digits = 4)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">0.6638</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="left">duration_sec</td>
+<td align="right">-0.0008</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="odd">
+<td align="left">log_likes</td>
+<td align="right">0.0086</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="left">log_saves</td>
+<td align="right">0.0025</td>
+<td align="right">0.0318</td>
+</tr>
+<tr class="odd">
+<td align="left">log_creator_avg</td>
+<td align="right">-0.0083</td>
+<td align="right">0.0082</td>
+</tr>
+<tr class="even">
+<td align="left">has_emoji</td>
+<td align="right">0.0230</td>
+<td align="right">0.0000</td>
+</tr>
+</tbody>
+</table>
+<p>The results from the baseline, engagement-augmented, and full models
+show that only a small subset of predictors consistently explain
+variation in completion_rate. Duration remains the strongest structural
+factor, while likes, saves, creator_avg, and emoji usage retain
+significance after controlling for other variables. The stepwise
+procedure formalizes this by selecting exactly these five predictors and
+removing weaker or redundant features.</p>
+<details>
+<summary>
+<strong>Show Regression Equation</strong>
+</summary>
+<p><span class="math display">\[
+\hat{\text{completion_rate}} =
+0.6638
+- 0.0007932\,*\text{duration_sec}
++ 0.008618\,*\log(\text{likes}+1)
++ 0.002520\,*\log(\text{saves}+1)
+- 0.008323\,*\log(\text{creator_avg_views}+1)
++ 0.02303\,*\text{has_emoji}
+\]</span></p>
+</details>
+<div style="margin-bottom: 10px;">
+
+</div>
+</div>
+<div id="comparison-of-linear-models" class="section level3">
+<h3>3.5 Comparison of Linear Models</h3>
+<pre class="r"><code>model_compare &lt;- tibble(
+Model = c(&quot;Baseline&quot;, &quot;Engagement&quot;, &quot;Stepwise&quot;),
+R2 = c(summary(model_base)$r.squared,
+summary(model_add)$r.squared,
+summary(step_back)$r.squared),
+Adj_R2 = c(summary(model_base)$adj.r.squared,
+summary(model_add)$adj.r.squared,
+summary(step_back)$adj.r.squared),
+AIC = c(AIC(model_base), AIC(model_add), AIC(step_back)),
+BIC = c(BIC(model_base), BIC(model_add), BIC(step_back))
+)
+
+model_compare |&gt;
+kable(digits = 4, caption = &quot;Comparison of Linear Regression Models&quot;) |&gt;
+kable_styling(full_width = FALSE, position = &quot;center&quot;)</code></pre>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Comparison of Linear Regression Models
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Model
+</th>
+<th style="text-align:right;">
+R2
+</th>
+<th style="text-align:right;">
+Adj_R2
+</th>
+<th style="text-align:right;">
+AIC
+</th>
+<th style="text-align:right;">
+BIC
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Baseline
+</td>
+<td style="text-align:right;">
+0.0183
+</td>
+<td style="text-align:right;">
+0.0181
+</td>
+<td style="text-align:right;">
+-74424.31
+</td>
+<td style="text-align:right;">
+-74345.29
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Engagement
+</td>
+<td style="text-align:right;">
+0.0308
+</td>
+<td style="text-align:right;">
+0.0305
+</td>
+<td style="text-align:right;">
+-75031.82
+</td>
+<td style="text-align:right;">
+-74917.67
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stepwise
+</td>
+<td style="text-align:right;">
+0.0411
+</td>
+<td style="text-align:right;">
+0.0410
+</td>
+<td style="text-align:right;">
+-75558.23
+</td>
+<td style="text-align:right;">
+-75496.77
+</td>
+</tr>
+</tbody>
+</table>
+<p>Although the models include timing features, engagement indicators,
+and creator-level metadata, all three linear specifications produce
+relatively low R-squared. This is expected in real short-form video
+settings for several practical reasons:</p>
+<ul>
+<li><p>Completion rate is heavily influenced by subjective content
+factors that are not captured in metadata, such as humor, storytelling
+structure, editing quality, pacing, emotional appeal, and the relevance
+of the topic to the viewer.</p></li>
+<li><p>Short-video platforms use complex recommendation algorithms,
+meaning completion rate is partially shaped by algorithmic exposure
+patterns that are never observed in the dataset.</p></li>
+<li><p>Metadata explains structural aspects but not creative quality,
+which is often the dominant driver of retention.</p></li>
+<li><p>Linear models assume additive and linear relationships, which may
+be too restrictive for behaviors that often involve thresholds or
+nonlinear viewing patterns.</p></li>
+</ul>
+Despite all linear models show limited explanatory power, the stepwise
+model performs comparatively better across R-squared, AIC, and BIC.
+Therefore, it is selected as the final linear specification for
+diagnostic assessment.
+<div style="margin-bottom: 10px;">
+
+</div>
+</div>
+<div id="diagnostic-checks-for-the-stepwise-linear-model"
+class="section level3">
+<h3>3.6 Diagnostic Checks for the Stepwise Linear Model</h3>
+<p>To ensure the validity of inference from the selected linear model,
+we evaluate standard regression diagnostics. Residual plots help assess
+linearity, homoscedasticity, and normality assumptions.</p>
+<pre class="r"><code>par(mfrow = c(2, 2))
+plot(step_back)   </code></pre>
+<p><img src="regression_analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>par(mfrow = c(1, 1))</code></pre>
+<p>The Residuals vs Fitted and Scale–Location plots show slight changes
+in residual spread across fitted values, indicating mild
+heteroscedasticity and some nonlinearity. The Q–Q plot displays
+noticeable tail deviations from normality. The Residuals vs Leverage
+plot shows a few moderately high-leverage points, but none appear
+strongly influential.</p>
+Overall, the linear model remains adequate for exploratory purposes, but
+the diagnostics indicate that its assumptions are not fully satisfied
+and the linear specification may not fully capture the underlying
+patterns in the data. These limitations motivate the use of nonlinear
+approaches, such as smooth and wiggly GAM, to capture potential
+nonlinear patterns that the linear specification may miss.
+<div style="margin-bottom: 10px;">
+
+</div>
+</div>
+</div>
+<div id="nonlinear-modeling-and-model-comparison"
+class="section level2">
+<h2>4 Nonlinear modeling and model comparison</h2>
+Building on the stepwise selected predictors, we now compare linear and
+nonlinear models to assess whether more flexible structures can
+substantially improve fit or predictive performance.
+<div style="margin-bottom: 10px;">
+
+</div>
+<div id="traintest-split-for-nonlinear-models" class="section level3">
+<h3>4.1 Train–test split for nonlinear models</h3>
+<p>We randomly sampled 5000 observations from the full dataset and
+applied basic preprocessing. The cleaned data was then split into an 80%
+training set and a 20% test set.</p>
+<pre class="r"><code>set.seed(8105)
+sdata = read.csv(&quot;data/youtube_shorts_tiktok_trends_2025.csv&quot;) |&gt; 
+  sample_n(5000) |&gt;
+  mutate(id = row_number(),
+         has_emoji = as.integer(as.character(has_emoji)),
+         log_likes = log(likes + 1),
+         log_saves = log(saves + 1),
+         log_creator_avg = log(creator_avg_views + 1)
+         ) |&gt; 
+  as_tibble()
+
+
+analysis_df =
+  sdata |&gt; 
+  dplyr::select(
+    id,
+    completion_rate,
+    duration_sec,
+    log_likes,
+    log_saves,
+    log_creator_avg,
+    has_emoji
+  ) |&gt; 
+  drop_na()
+
+train_df = sample_frac(analysis_df, size = 0.8)
+test_df  = anti_join(analysis_df, train_df, by = &quot;id&quot;)</code></pre>
+</div>
+<div id="model-specifications-linear-vs-smooth-vs-wiggly-gam"
+class="section level3">
+<h3>4.2 Model Specifications: Linear vs Smooth vs Wiggly GAM</h3>
+<p>We fit three models using the same set of predictors:</p>
+<p><i class="fa fa-check-circle"></i> A linear model</p>
+<p><i class="fa fa-check-circle"></i> A smooth GAM that allows gentle
+nonlinear effects</p>
+<p><i class="fa fa-check-circle"></i> A more flexible wiggly GAM</p>
+<pre class="r"><code>#Linear
+linear_mod = lm(completion_rate ~ duration_sec + log_likes + log_saves 
+                + log_creator_avg + has_emoji, data = train_df)
+
+# GAM (smooth)
+smooth_mod = gam(
+  completion_rate ~ 
+    s(log_likes) + s(log_saves) + s(log_creator_avg) + s(duration_sec) + has_emoji,
+  data = train_df
+)
+
+# Wiggly GAM
+wiggly_mod = gam(
+  completion_rate ~ 
+    s(duration_sec, k = 30, sp = 10e-6) +
+    s(log_likes, k = 30, sp = 10e-6) +
+    s(log_saves, k = 30, sp = 10e-6) +
+    s(log_creator_avg, k = 30, sp = 10e-6) +
+    has_emoji,
+  data = train_df
+)</code></pre>
+<div style="margin-bottom: 10px;">
+
+</div>
+</div>
+<div id="visual-comparison-of-three-models" class="section level3">
+<h3>4.3 Visual Comparison of three models</h3>
+<p>For visualization, <em>duration_sec</em> is used here as the x-axis
+because it is a continuous predictor that allows the linear, smooth, and
+wiggly models to produce interpretable fitted curves. Other variables
+from the stepwise model like <em>log_likes</em> or <em>has_emoji</em>
+are either discrete or less suitable for illustrating non-linear
+patterns.</p>
+<pre class="r"><code># Compare model fits visually
+train_df |&gt; 
+  gather_predictions(linear_mod, smooth_mod, wiggly_mod) |&gt; 
+  mutate(
+    model = fct_recode(
+      model,
+      &quot;Linear Model&quot; = &quot;linear_mod&quot;,
+      &quot;Smooth GAM&quot; = &quot;smooth_mod&quot;,
+      &quot;Wiggly GAM&quot; = &quot;wiggly_mod&quot;
+    )
+  ) |&gt;
+  ggplot(aes(x = duration_sec, y = completion_rate)) +
+  geom_point(alpha = .25, size = 1) +
+  geom_line(aes(y = pred), color = &quot;#E63946&quot;) +
+  facet_wrap(~model, scales = &quot;free_y&quot;) +
+  labs(
+    title = &quot;Model Comparison&quot;,
+    x = &quot;Video Duration (sec)&quot;,
+    y = &quot;Completion Rate&quot;
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 14),
+    strip.text = element_text(face = &quot;bold&quot;, size = 11),
+    panel.grid.minor = element_blank()
+  )</code></pre>
+<p><img src="regression_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+This plot contrasts how three models fit the relationship between video
+duration and completion rate (with black dots as actual data and red
+curves as model fits). All models reflect the general pattern that
+completion rate declines as duration increases. The Linear Model and
+Smooth GAM yield stable red curves that closely align with this downward
+pattern. In contrast, the Wiggly GAM shows highly fluctuating and
+unstable fits, suggesting overfitting to noise rather than capturing
+meaningful structure.
+<div style="margin-bottom: 10px;">
+
+</div>
+</div>
+<div id="cross-validation-performance-and-visualization"
+class="section level3">
+<h3>4.4 Cross-validation Performance and visualization</h3>
+<pre class="r"><code># Cross-validation (100 times)
+cv_df = crossv_mc(analysis_df, 100) |&gt;
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  )
+
+cv_df =
+  cv_df |&gt; 
+  mutate(
+    # linear model
+    linear_mod  = map(train,
+                      \(df) lm(completion_rate ~ duration_sec + log_likes 
+                               + log_saves + log_creator_avg + has_emoji,
+                               data = df)),
+    # smooth GAM
+    smooth_mod  = map(train,
+                      \(df) gam(completion_rate ~ s(log_likes) + s(log_saves) 
+                                + s(log_creator_avg) + s(duration_sec) + has_emoji,
+                                data = df)),
+    # wiggly GAM
+    wiggly_mod  = map(train,
+                      \(df) gam(completion_rate ~ 
+                                  s(duration_sec, k = 30, sp = 10e-6) 
+                                + s(log_likes, k = 30, sp = 10e-6) 
+                                + s(log_saves, k = 30, sp = 10e-6) 
+                                + s(log_creator_avg, k = 30, sp = 10e-6) 
+                                + has_emoji,
+                                data = df))
+    ) |&gt; 
+  mutate(
+    rmse_linear = map2_dbl(linear_mod, test, \(mod, df) rmse(mod, df)),
+    rmse_smooth = map2_dbl(smooth_mod, test, \(mod, df) rmse(mod, df)),
+    rmse_wiggly = map2_dbl(wiggly_mod, test, \(mod, df) rmse(mod, df))
+  )</code></pre>
+<pre class="r"><code># Violin plot for RMSE
+cv_df |&gt; 
+  dplyr::select(starts_with(&quot;rmse&quot;)) |&gt; 
+  pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;,
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;
+  ) |&gt; 
+  mutate(
+    model = fct_recode(
+      model,
+      &quot;Linear Model&quot; = &quot;linear&quot;,
+      &quot;Smooth GAM&quot;  = &quot;smooth&quot;,
+      &quot;Wiggly GAM&quot;  = &quot;wiggly&quot;
+    ),
+    model = fct_inorder(model)
+  ) |&gt; 
+  ggplot(aes(x = model, y = rmse, fill = model)) +
+  geom_violin(alpha = .7, trim = TRUE, color = NA) +
+  scale_fill_manual(values = c(
+    &quot;Linear Model&quot; = &quot;#A8DADC&quot;, 
+    &quot;Smooth GAM&quot;  = &quot;#BDE0FE&quot;, 
+    &quot;Wiggly GAM&quot;  = &quot;#CDB4DB&quot;  
+  )) +
+  
+  labs(
+    title = &quot;RMSE Distribution Across Models&quot;,
+    x = &quot;Model Type&quot;,
+    y = &quot;RMSE&quot;
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 16),
+    axis.text.x = element_text(size = 11),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    legend.position = &quot;none&quot;
+  )</code></pre>
+<p><img src="regression_analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>The plot above shows the RMSE distribution for the Linear Model,
+Smooth GAM, and Wiggly GAM. It indicates that the Linear Model and
+Smooth GAM achieve lower and more stable prediction errors, while the
+Wiggly GAM shows higher and more variable RMSE values. Overall, the
+Linear Model and Smooth GAM generalize better than the Wiggly GAM, both
+in accuracy and stability.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
