@@ -1,0 +1,156 @@
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-video"></i> Short Video Trend Analysis Platform</h3>
+                <p>Deep data mining project based on TikTok and YouTube Shorts, exploring key factors for short video success.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Project Links</h4>
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="data.html"><i class="fas fa-database"></i> Data</a></li>
+                    <li><a href="topic1.html"><i class="fas fa-chart-line"></i> Completion Rate Analysis</a></li>
+                    <li><a href="topic2.html"><i class="fas fa-robot"></i> Trend Prediction</a></li>
+                    <li><a href="report.html"><i class="fas fa-file-alt"></i> Final Report</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Technology Stack</h4>
+                <div class="tech-tags">
+                    <span class="tech-tag">R</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">JavaScript</span>
+                    <span class="tech-tag">HTML/CSS</span>
+                    <span class="tech-tag">Bootstrap</span>
+                    <span class="tech-tag">Chart.js</span>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Contact & Contribution</h4>
+                <div class="social-links">
+                    <a href="https://github.com/XintongZhao06" class="social-link">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="mailto:your-email@example.com" class="social-link">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2025 Short Video Analysis Project | Data Source: YouTube Shorts & TikTok Trends 2025</p>
+            <p class="disclaimer">This project is for academic research purposes only</p>
+        </div>
+    </div>
+</footer>
+
+<style>
+.site-footer {
+    background: var(--dark-color, #2c3e50);
+    color: white;
+    padding: 4rem 0 2rem;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-section h3,
+.footer-section h4 {
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.footer-section h4 {
+    font-size: 1.1rem;
+    color: #94a3b8;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.footer-section li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer-section a:hover {
+    color: var(--primary-color, #3498db);
+}
+
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tech-tag {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer-bottom {
+    border-top: 1px solid #334155;
+    padding-top: 2rem;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.disclaimer {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    
+    .site-footer {
+        padding: 3rem 0 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
