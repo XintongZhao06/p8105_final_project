@@ -1,0 +1,455 @@
+---
+title: "Factors Influencing Short Video Completion Rate: EDA"
+output: github_document
+date: "2025-11-24"
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(janitor)
+library(scales)
+library(patchwork)
+
+# Define modern color palette
+modern_colors <- c("#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51", 
+                   "#8ecae6", "#219ebc", "#023047", "#ffb703", "#fb8500")
+
+theme_set(theme_minimal(base_size = 12))
+```
+
+```{r load_data}
+df <- read_csv("./data/youtube_shorts_tiktok_trends_2025.csv") %>% 
+  clean_names()
+
+glimpse(df)
+```
+
+```{r missing_summary}
+missing_summary <- df %>%
+  summarise(across(everything(), ~sum(is.na(.)))) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "missing_count") %>%
+  filter(missing_count > 0) %>%
+  mutate(missing_pct = missing_count / nrow(df) * 100) %>%
+  arrange(desc(missing_count))
+
+print(missing_summary)
+```
+
+```{r basic_metrics}
+metrics_summary <- df %>%
+  summarise(
+    total_videos = n(),
+    total_views = sum(views, na.rm = TRUE),
+    avg_views = mean(views, na.rm = TRUE),
+    median_views = median(views, na.rm = TRUE),
+    avg_engagement = mean(engagement_rate, na.rm = TRUE),
+    median_engagement = median(engagement_rate, na.rm = TRUE),
+    avg_completion = mean(completion_rate, na.rm = TRUE),
+    median_completion = median(completion_rate, na.rm = TRUE),
+    avg_duration = mean(duration_sec, na.rm = TRUE),
+    median_duration = median(duration_sec, na.rm = TRUE)
+  )
+
+print(metrics_summary)
+```
+
+## 1. Distribution of Key Metrics
+
+```{r completion_distribution}
+completion_dist_plot <- ggplot(df, aes(x = completion_rate)) +
+  geom_density(fill = modern_colors[1], alpha = 0.6, color = modern_colors[1]) +
+  geom_vline(xintercept = median(df$completion_rate, na.rm = TRUE), 
+             linetype = "dashed", color = modern_colors[5], size = 1) +
+  labs(title = "Distribution of Completion Rate",
+       x = "Completion Rate",
+       y = "Density") +
+  theme_minimal()
+
+completion_dist_plot
+```
+
+```{r engagement_distribution}
+engagement_dist_plot <- ggplot(df, aes(x = engagement_rate)) +
+  geom_density(fill = modern_colors[2], alpha = 0.6, color = modern_colors[2]) +
+  geom_vline(xintercept = median(df$engagement_rate, na.rm = TRUE), 
+             linetype = "dashed", color = modern_colors[5], size = 1) +
+  labs(title = "Distribution of Engagement Rate",
+       x = "Engagement Rate",
+       y = "Density") +
+  theme_minimal()
+
+engagement_dist_plot
+```
+
+```{r metrics_boxplot}
+metrics_boxplot <- df %>%
+  select(engagement_rate, completion_rate) %>%
+  pivot_longer(everything(), names_to = "metric", values_to = "value") %>%
+  mutate(metric = recode(metric, 
+                         engagement_rate = "Engagement Rate",
+                         completion_rate = "Completion Rate")) %>%
+  ggplot(aes(x = metric, y = value, fill = metric)) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_manual(values = c("Engagement Rate" = modern_colors[2], 
+                                "Completion Rate" = modern_colors[1])) +
+  labs(title = "Distribution of Engagement and Completion Rates",
+       x = "",
+       y = "Rate") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+metrics_boxplot
+```
+
+```{r engagement_vs_completion}
+engagement_completion_plot <- ggplot(df, aes(x = completion_rate, y = engagement_rate)) +
+  geom_point(alpha = 0.3, color = modern_colors[1]) +
+  geom_smooth(method = "lm", color = modern_colors[2], se = TRUE, size = 1) +
+  labs(title = "Engagement Rate vs Completion Rate",
+       x = "Completion Rate",
+       y = "Engagement Rate") +
+  theme_minimal()
+
+engagement_completion_plot
+```
+
+## 2. Temporal Patterns: Upload Timing
+
+```{r hour_analysis_combined}
+hour_analysis_data <- df %>%
+  group_by(upload_hour) %>%
+  summarise(
+    video_count = n(),
+    avg_completion = mean(completion_rate, na.rm = TRUE),
+    avg_engagement = mean(engagement_rate, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(upload_hour)
+
+p1 <- ggplot(hour_analysis_data, aes(x = upload_hour, y = video_count)) +
+  geom_bar(stat = "identity", fill = modern_colors[3], alpha = 0.7) +
+  scale_x_continuous(breaks = seq(0, 23, 2)) +
+  labs(title = "Video Count by Upload Hour",
+       x = "Upload Hour (24h format)",
+       y = "Video Count") +
+  theme_minimal()
+
+p2 <- ggplot(hour_analysis_data, aes(x = upload_hour, y = avg_completion)) +
+  geom_line(color = modern_colors[4], size = 1.2) +
+  geom_point(color = modern_colors[4], size = 3) +
+  scale_x_continuous(breaks = seq(0, 23, 2)) +
+  labs(title = "Avg Completion Rate by Upload Hour",
+       x = "Upload Hour (24h format)",
+       y = "Average Completion Rate") +
+  theme_minimal()
+
+p3 <- ggplot(hour_analysis_data, aes(x = upload_hour, y = avg_engagement)) +
+  geom_line(color = modern_colors[5], size = 1.2) +
+  geom_point(color = modern_colors[5], size = 3) +
+  scale_x_continuous(breaks = seq(0, 23, 2)) +
+  labs(title = "Avg Engagement Rate by Upload Hour",
+       x = "Upload Hour (24h format)",
+       y = "Average Engagement Rate") +
+  theme_minimal()
+
+# Combine plots
+hour_analysis_combined <- p1 / (p2 | p3)
+hour_analysis_combined
+```
+
+```{r weekend_distribution}
+weekend_data <- df %>%
+  mutate(day_type = ifelse(is_weekend == 1, "Weekend", "Weekday")) %>%
+  count(day_type)
+
+weekend_plot <- ggplot(weekend_data, aes(x = day_type, y = n, fill = day_type)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  geom_text(aes(label = comma(n)), vjust = -0.5, size = 5) +
+  scale_fill_manual(values = c("Weekday" = modern_colors[4], "Weekend" = modern_colors[5])) +
+  labs(title = "Upload Distribution: Weekday vs Weekend",
+       x = "Day Type",
+       y = "Video Count") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+weekend_plot
+```
+
+```{r weekend_performance}
+weekend_performance_data <- df %>%
+  mutate(day_type = ifelse(is_weekend == 1, "Weekend", "Weekday")) %>%
+  group_by(day_type) %>%
+  summarise(
+    video_count = n(),
+    avg_completion = mean(completion_rate, na.rm = TRUE),
+    avg_engagement = mean(engagement_rate, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+p_completion <- ggplot(weekend_performance_data, aes(x = day_type, y = avg_completion, fill = day_type)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  geom_text(aes(label = round(avg_completion, 4)), vjust = -0.5, size = 4) +
+  scale_fill_manual(values = c("Weekday" = modern_colors[4], "Weekend" = modern_colors[5])) +
+  labs(title = "Completion Rate",
+       x = "Day Type",
+       y = "Average Completion Rate") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p_engagement <- ggplot(weekend_performance_data, aes(x = day_type, y = avg_engagement, fill = day_type)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  geom_text(aes(label = round(avg_engagement, 4)), vjust = -0.5, size = 4) +
+  scale_fill_manual(values = c("Weekday" = modern_colors[4], "Weekend" = modern_colors[5])) +
+  labs(title = "Engagement Rate",
+       x = "Day Type",
+       y = "Average Engagement Rate") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+weekend_performance_plot <- p_completion | p_engagement
+weekend_performance_plot
+```
+
+## 3. Content Characteristics: Duration and Title
+
+```{r duration_distribution}
+duration_plot <- ggplot(df, aes(x = duration_sec)) +
+  geom_histogram(bins = 50, fill = modern_colors[6], alpha = 0.7, color = "black") +
+  labs(title = "Distribution of Video Duration",
+       x = "Duration (seconds)",
+       y = "Video Count") +
+  theme_minimal()
+
+duration_plot
+```
+
+```{r title_length_distribution}
+title_length_plot <- ggplot(df, aes(x = title_length)) +
+  geom_histogram(bins = 50, fill = modern_colors[7], alpha = 0.7, color = "black") +
+  labs(title = "Distribution of Title Length",
+       x = "Title Length (characters)",
+       y = "Video Count") +
+  theme_minimal()
+
+title_length_plot
+```
+
+```{r title_completion_analysis}
+title_completion_data <- df %>%
+  mutate(title_bin = cut(title_length, 
+                         breaks = seq(0, max(title_length, na.rm = TRUE) + 10, by = 10),
+                         include.lowest = TRUE)) %>%
+  group_by(title_bin) %>%
+  summarise(
+    video_count = n(),
+    avg_completion = mean(completion_rate, na.rm = TRUE),
+    avg_engagement = mean(engagement_rate, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(video_count >= 5)
+
+title_completion_plot <- ggplot(title_completion_data, aes(x = title_bin, y = avg_completion)) +
+  geom_bar(stat = "identity", fill = modern_colors[7], alpha = 0.5) +
+  labs(title = "Average Completion Rate by Title Length",
+       x = "Title Length (characters)",
+       y = "Average Completion Rate") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+title_completion_plot
+```
+
+
+```{r emoji_comparison}
+emoji_performance_data <- df %>%
+  mutate(emoji_usage = ifelse(has_emoji == 1, "With Emoji", "Without Emoji")) %>%
+  group_by(emoji_usage) %>%
+  summarise(
+    video_count = n(),
+    avg_completion = mean(completion_rate, na.rm = TRUE),
+    avg_engagement = mean(engagement_rate, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+print(emoji_performance_data)
+
+p_emoji_completion <- ggplot(emoji_performance_data, aes(x = emoji_usage, y = avg_completion, fill = emoji_usage)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  geom_text(aes(label = round(avg_completion, 4)), vjust = -0.5, size = 4) +
+  scale_fill_manual(values = c("With Emoji" = modern_colors[3], 
+                                "Without Emoji" = modern_colors[6])) +
+  labs(title = "Completion Rate",
+       x = "Emoji Usage",
+       y = "Average Completion Rate") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p_emoji_engagement <- ggplot(emoji_performance_data, aes(x = emoji_usage, y = avg_engagement, fill = emoji_usage)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  geom_text(aes(label = round(avg_engagement, 4)), vjust = -0.5, size = 4) +
+  scale_fill_manual(values = c("With Emoji" = modern_colors[3], 
+                                "Without Emoji" = modern_colors[6])) +
+  labs(title = "Engagement Rate",
+       x = "Emoji Usage",
+       y = "Average Engagement Rate") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+emoji_comparison_plot <- p_emoji_completion | p_emoji_engagement
+emoji_comparison_plot
+```
+
+```{r emoji_boxplot}
+emoji_boxplot <- df %>%
+  mutate(emoji_usage = ifelse(has_emoji == 1, "With Emoji", "Without Emoji")) %>%
+  select(emoji_usage, completion_rate, engagement_rate) %>%
+  pivot_longer(cols = c(completion_rate, engagement_rate),
+               names_to = "metric",
+               values_to = "value") %>%
+  mutate(metric = recode(metric,
+                         completion_rate = "Completion Rate",
+                         engagement_rate = "Engagement Rate")) %>%
+  ggplot(aes(x = emoji_usage, y = value, fill = emoji_usage)) +
+  geom_boxplot(alpha = 0.7) +
+  facet_wrap(~metric, scales = "free_y") +
+  scale_fill_manual(values = c("With Emoji" = modern_colors[3], 
+                                "Without Emoji" = modern_colors[6])) +
+  labs(title = "Distribution of Metrics by Emoji Usage",
+       x = "Emoji Usage",
+       y = "Rate") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+emoji_boxplot
+```
+
+## 4. Content Type and Category
+
+```{r category_distribution}
+category_data <- df %>%
+  count(category) %>%
+  arrange(desc(n)) %>%
+  head(15) %>%
+  mutate(percentage = n / sum(n) * 100,
+         label = paste0(category, "\n", round(percentage, 1), "%"))
+
+category_plot <- ggplot(category_data, aes(x = "", y = n, fill = category)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  geom_text(aes(label = round(percentage, 1)), 
+            position = position_stack(vjust = 0.5),
+            size = 3.5, color = "white", fontface = "bold") +
+  scale_fill_manual(values = rep(modern_colors, length.out = 15)) +
+  labs(title = "Top 15 Video Categories Distribution",
+       fill = "Category") +
+  theme_void() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+        legend.position = "right")
+
+category_plot
+```
+
+```{r hashtag_analysis}
+hashtag_data <- df %>%
+  group_by(hashtag) %>%
+  summarise(
+    video_count = n(),
+    total_views = sum(views, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(total_views)) %>%
+  head(20)
+
+hashtag_plot <- ggplot(hashtag_data, aes(x = reorder(hashtag, total_views), y = total_views)) +
+  geom_bar(stat = "identity", fill = modern_colors[8], alpha = 0.8) +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Top 20 Hashtags by Total Views",
+       x = "Hashtag",
+       y = "Total Views") +
+  theme_minimal()
+
+hashtag_plot
+```
+
+## 5. Creator Analysis
+
+```{r creator_views_correlation}
+creator_views_plot <- ggplot(df, aes(x = creator_avg_views, y = views)) +
+  geom_point(alpha = 0.05, color = modern_colors[8]) +
+  geom_smooth(method = "lm", color = modern_colors[9], se = TRUE, size = 1) +
+  scale_x_log10(labels = comma) +
+  scale_y_log10(labels = comma) +
+  labs(title = "Creator Average Views vs Video Views",
+       x = "Creator Average Views (Log Scale)",
+       y = "Video Views (Log Scale)") +
+  theme_minimal()
+
+creator_views_plot
+```
+
+## 6. Platform Comparison
+
+```{r platform_performance}
+platform_data <- df %>%
+  group_by(platform) %>%
+  summarise(
+    video_count = n(),
+    avg_completion = mean(completion_rate, na.rm = TRUE),
+    avg_engagement = mean(engagement_rate, na.rm = TRUE),
+    avg_views = mean(views, na.rm = TRUE),
+    total_views = sum(views, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(avg_completion))
+
+print(platform_data)
+
+p_platform_completion <- ggplot(platform_data, aes(x = platform, y = avg_completion, fill = platform)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  geom_text(aes(label = round(avg_completion, 4)), vjust = -0.5, size = 4) +
+  scale_fill_manual(values = c("TikTok" = modern_colors[1], 
+                                "YouTube Shorts" = modern_colors[2])) +
+  labs(title = "Completion Rate",
+       x = "Platform",
+       y = "Average Completion Rate") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p_platform_engagement <- ggplot(platform_data, aes(x = platform, y = avg_engagement, fill = platform)) +
+  geom_bar(stat = "identity", alpha = 0.8) +
+  geom_text(aes(label = round(avg_engagement, 4)), vjust = -0.5, size = 4) +
+  scale_fill_manual(values = c("TikTok" = modern_colors[1], 
+                                "YouTube Shorts" = modern_colors[2])) +
+  labs(title = "Engagement Rate",
+       x = "Platform",
+       y = "Average Engagement Rate") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+platform_plot <- p_platform_completion | p_platform_engagement
+platform_plot
+```
+
+```{r platform_boxplot}
+platform_boxplot <- df %>%
+  select(platform, completion_rate, engagement_rate) %>%
+  pivot_longer(cols = c(completion_rate, engagement_rate),
+               names_to = "metric",
+               values_to = "value") %>%
+  mutate(metric = recode(metric,
+                         completion_rate = "Completion Rate",
+                         engagement_rate = "Engagement Rate")) %>%
+  ggplot(aes(x = platform, y = value, fill = platform)) +
+  geom_boxplot(alpha = 0.7) +
+  facet_wrap(~metric, scales = "free_y") +
+  scale_fill_manual(values = c("TikTok" = modern_colors[1], 
+                                "YouTube Shorts" = modern_colors[2])) +
+  labs(title = "Distribution of Metrics by Platform",
+       x = "Platform",
+       y = "Rate") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+platform_boxplot
+```
