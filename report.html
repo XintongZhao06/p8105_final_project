@@ -16,7 +16,7 @@
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -382,29 +382,6 @@ and Trend Prediction</h1>
 </div>
 
 
-<!-- Collapsible Top TOC -->
-<details style="padding:12px; border: 1px solid #ccc; border-radius:6px;
-                background:#f8f9fa; margin-bottom:20px;">
-<summary style="font-size:20px; font-weight:bold; cursor:pointer;">
-📘 Click to Expand Table of Contents
-</summary>
-<p><br></p>
-<div id="custom-toc">
-<!-- TOC will be injected automatically after page loads -->
-</div>
-</details>
-<script>
-// Copy existing R Markdown TOC into the collapsible TOC box
-document.addEventListener("DOMContentLoaded", function() {
-  // R Markdown TOC is usually in nav#toc or .toc
-  var toc = document.querySelector("nav#toc") || document.querySelector(".toc");
-  var target = document.getElementById("custom-toc");
-
-  if (toc && target) {
-    target.innerHTML = toc.innerHTML;
-  }
-});
-</script>
 <div id="abstract" class="section level1">
 <h1><strong>0 Abstract</strong></h1>
 <p>A concise summary of project motivation, data, methods, and key
@@ -442,34 +419,30 @@ these changes and the reasons for them should be documented!)</p>
 </div>
 <div id="initial-questions-and-project-evolution"
 class="section level1">
-<h1><strong>3 Initial questions and project evolution</strong></h1>
-<p>(What questions are you trying to answer? How did these questions
-evolve over the course of the project? What new questions did you
-consider in the course of your analysis?)</p>
-<p>We began with broad exploratory questions for the two topics.</p>
-<div id="topic-1-completion-rate" class="section level3">
-<h3><strong>Topic 1 — Completion Rate</strong></h3>
-<ul>
-<li>Initial question: <em>Which features correlate with how fully
-viewers watch a video?</em><br />
-</li>
-<li>After EDA, we refined our focus to modeling structural associations
-using regression.<br />
-</li>
-<li>As diagnostics suggested nonlinearity, we extended the models to
-include GAMs.</li>
-</ul>
-</div>
-<div id="topic-2-trend-label-prediction" class="section level3">
-<h3><strong>Topic 2 — Trend Label Prediction</strong></h3>
-<ul>
-<li>Initial question: <em>Can trending videos be predicted from
-metadata?</em><br />
-</li>
-<li>Adjustments based on EDA, class imbalance, chosen models, and
-performance results.</li>
-</ul>
-</div>
+<h1><strong>3 Initial Questions and Project Evolution</strong></h1>
+<p>The project began with an interest in understanding viewer retention
+by examining completion rate. Our initial plan included exploratory data
+analysis, followed by regression modeling and then building a model
+using machine learning methods to evaluate how to predict completion
+rates from metadata. Early results showed that completion rate was
+extremely difficult to predict, even when more flexible machine learning
+models were applied. This outcome suggested that completion behavior is
+strongly driven by unobserved factors such as creative quality and
+recommendation exposure, which are not present in metadata. As a result,
+completion rate was treated only as a descriptive target, and the focus
+shifted to exploratory identification of structural associations rather
+than building predictive models.</p>
+<p>These findings also prompted us to adjust the scope of our research.
+Since metadata did not seem to explain view completion rates well, we
+began to consider whether other performance metrics were more suitable
+for prediction. Trend labels emerged as a suitable alternative because
+they may capture platform-level dynamics and rely less on unobserved
+content attributes. This consideration led to the second part of the
+project, which examines the extent to which trend labels can be
+predicted using machine learning methods. The evolution of these
+research questions reflects a growing understanding of both the
+strengths and limits of metadata in explaining short-form video
+performance.</p>
 </div>
 <div id="data" class="section level1">
 <h1><strong>4 Data</strong></h1>
@@ -499,29 +472,380 @@ ideas.)</p>
 <h2><strong>5.2 EDA — Trend Label</strong></h2>
 </div>
 </div>
-<div id="additional-analysis" class="section level1">
-<h1><strong>6. Additional Analysis</strong></h1>
-<div id="topic-1-modeling-completion-rate" class="section level2">
-<h2><strong>6.1 Topic 1: Modeling Completion Rate</strong></h2>
-<p>(ZBR) ### <strong>6.1.1 Modeling Motivation</strong></p>
-<p>Completion rate is a continuous outcome influenced by timing factors,
-creator metadata, and engagement patterns.<br />
-We model completion_rate using regression to quantify associations, not
-to maximize predictive performance.<br />
-Because completion behavior depends on creative quality and
-recommendation exposure—both unobserved variables—we expect low R²
-values and interpret the model as descriptive.</p>
-<div id="regression-models" class="section level3">
-<h3><strong>6.1.2 Regression Models</strong></h3>
-<hr />
+<div id="further-statistical-analysis" class="section level1">
+<h1><strong>6 Further statistical analysis</strong></h1>
+<div id="topic-1-exploratory-regression-analysis-of-completion-rate"
+class="section level2">
+<h2><strong>6.1 Topic 1: Exploratory Regression Analysis of Completion
+Rate</strong></h2>
+<div id="purpose-of-the-regression-analysis" class="section level3">
+<h3><strong>6.1.1 Purpose of the Regression Analysis</strong></h3>
+<p>Completion rate serves as a key performance metric for short-form
+videos, reflecting how fully viewers watch a given video. Although
+creators often attribute retention to content quality, narrative
+structure, or emotional engagement, these elements are unobserved in
+platform metadata. Our modeling objective is therefore not prediction,
+but descriptive quantification of associations between completion_rate
+and observable characteristics such as duration, engagement metrics,
+posting timing, and creator attributes.</p>
+<p>Given the inherent limitations of metadata and the complexity of
+viewer behavior — shaped by recommendation algorithms, scrolling
+patterns, and individual preferences — we expect the explanatory power
+of the regression models to be modest. Nonetheless, regression analysis
+still offers a clear way to assess which metadata features are
+associated with completion rate and to identify where nonlinear or
+structural patterns may warrant more flexible models.</p>
 </div>
-<div id="conclusion-for-topic-1" class="section level3">
-<h3><strong>Conclusion for Topic 1</strong></h3>
-<p>Completion rate shows consistent associations with duration,
-engagement intensity, creator reach, and formatting choices. However,
-low R² values highlight the importance of unobserved creative factors.
-Regression provides structural insights, not predictive accuracy, and
-motivates future modeling incorporating content-based features.</p>
+<div id="linear-regression-models" class="section level3">
+<h3><strong>6.1.2 Linear Regression Models</strong></h3>
+<p>We first developed three linear models to examine these associations:
+(1) a baseline regression including only timing-related features; (2) an
+engagement-augmented model that incorporates log-transformed interaction
+metrics; and (3) a full specification that adds creator-level attributes
+and applies backward stepwise selection to identify a more parsimonious
+set of predictors. This progression allowed us to evaluate how the
+explanatory contribution of different variable groups changes as the
+model becomes more comprehensive. We then extended the analysis to
+nonlinear GAM models to assess whether more flexible functional forms
+capture additional structure or improve explanatory performance beyond
+what linear models can provide.</p>
+<div id="baseline-linear-regression" class="section level4">
+<h4><strong>6.1.2.1 Baseline Linear Regression</strong></h4>
+<p>The baseline regression evaluates how timing-related features and
+basic video attributes relate to completion_rate. The estimated model
+is:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{completion_rate}_i
+&amp;= \beta_0
++ \beta_1 \,\text{event_season}_i
++ \beta_2 \,\text{is_weekend}_i \\
+&amp;\quad + \beta_3 \,\text{duration_sec}_i
++ \beta_4 \,\text{upload_hour}_i
++ \varepsilon_i .
+\end{aligned}
+\]</span></p>
+<div style="text-align: center;">
+<img src="regression_images/model1.png" width="100%">
+<p>
+Table 6.1    Summary of baseline linear regression
+</p>
+</div>
+<p>Table 6.1 reports the estimated coefficients and summarizes how basic
+timing and structural attributes relate to completion rate. The
+intercept reflects the expected completion rate for the reference
+category, and while not substantively meaningful on its own, it serves
+as the baseline against which other coefficients are interpreted.
+Consistent with expectations, video duration emerges as the strongest
+predictor: the coefficient for <code>duration_sec</code> is negative
+(<span class="math inline">\(\beta_3\)</span> = -0.0009) and highly
+significant (p-value &lt; 0.05), indicating that longer videos tend to
+yield lower completion rates, even within the short-form format. Among
+the seasonal indicators, only the Regular season shows a small positive
+association (p-value = 0.041 &lt; 0.05). The remaining
+<code>event_season</code> categories, as well as <code>is_weekend</code>
+and <code>upload_hour</code>, do not exhibit statistically significant
+effects, suggesting that broad posting time patterns have limited
+influence on completion rate in this dataset.</p>
+<p>Overall, the baseline model highlights duration as the primary
+structural correlate of viewer retention, while other timing-related
+features contribute little explanatory power. This motivates the
+incorporation of engagement and creator-level variables in subsequent
+models.</p>
+</div>
+<div id="engagement-augmented-linear-regression" class="section level4">
+<h4>6.1.2.2 Engagement-Augmented Linear Regression</h4>
+<p>To explore whether audience interaction patterns co-vary with viewer
+retention, the second model adds log-transformed engagement metrics —
+likes, comments, shares, and saves — to the baseline specification.
+These variables allow us to examine the relationship between video
+engagement signals and completion rates. The augmented model is
+presented as follows:</p>
+<p><span style="font-size: 95%;"> <span class="math display">\[
+\begin{aligned}
+\text{completion_rate}_i
+&amp;= \beta_0
++ \beta_1 \,*\text{event_season}_i
++ \beta_2 \,*\text{is_weekend}_i
++ \beta_3 \,*\text{duration_sec}_i \\
+&amp;\quad + \beta_4 \,*\text{upload_hour}_i + \beta_5
+*\log(\text{likes}_i + 1)
++ \beta_6 *\log(\text{comments}_i + 1) \\
+&amp;\quad + \beta_7 *\log(\text{shares}_i + 1)
++ \beta_8 *\log(\text{saves}_i + 1)
++ \varepsilon_i .
+\end{aligned}
+\]</span> </span></p>
+<div style="text-align: center;">
+<img src="regression_images/model2.png" width="100%">
+<p>
+Table 6.2    Summary of engagement-augmented linear regression
+</p>
+</div>
+<p>Table 6.2 presents the augmented model. Duration remains the
+strongest negative predictor, consistent the baseline finding. Among
+engagement metrics, <code>log_likes</code> and <code>log_saves</code>
+show statistically significant positive associations with
+<code>completion_rate</code> (p &lt; 0.05). This pattern indicates that
+videos with stronger engagement signals also tend to have higher
+completion rates, although the association is correlational rather than
+causal. In contrast, <code>log_comments</code> and
+<code>log_shares</code> are not significant, indicating that not all
+engagement forms are linked to retention. The timing-related predictors
+(<code>event_season</code>, <code>is_weekend</code>, and
+<code>upload_hour</code>) continue to show limited explanatory value,
+reinforcing that temporal posting patterns do not strongly shape viewer
+retention.</p>
+<p>Overall, expanding the model to incorporate interaction measures
+offers a modest improvement but does not fundamentally change the
+structure of associations identified earlier.</p>
+</div>
+<div id="full-linear-model-and-stepwise-selection"
+class="section level4">
+<h4>6.1.2.3 Full Linear Model and Stepwise Selection</h4>
+<p>To examine whether creator attributes or stylistic choices add
+explanatory value beyond engagement patterns, the third model introduces
+creator-level variables such as log_creator_avg, creator_tier, and
+has_emoji. We define the full model as follows:</p>
+<p><span style="font-size: 95%;"> <span class="math display">\[
+\begin{aligned}
+\text{completion_rate}_i
+&amp;= \beta_0
++ \beta_1 \,*\text{event_season}_i
++ \beta_2 \,*\text{is_weekend}_i
++ \beta_3 \,*\text{duration_sec}_i
++ \beta_4 \,*\text{upload_hour}_i \\
+&amp;\quad + \beta_5 *\log(\text{likes}_i + 1)
++ \beta_6 *\log(\text{comments}_i + 1)
++ \beta_7 *\log(\text{shares}_i + 1)
++ \beta_8 *\log(\text{saves}_i + 1) \\
+&amp;\quad + \beta_9 *\log(\text{creator_avg_views}_i + 1)
++ \beta_{10} *\text{creator_tier}_i
++ \beta_{11} *\text{has_emoji}_i
++ \varepsilon_i .
+\end{aligned}
+\]</span> </span></p>
+<p>Because the full specification contains numerous correlated
+predictors, a backward stepwise procedure is applied to identify a more
+concise subset of variables. The results of final model are presented in
+Table 6.3.</p>
+<div style="text-align: center;">
+<img src="regression_images/model3.png" width="100%">
+<p>
+Table 6.3    Summary of stepwise (backward) regression
+</p>
+</div>
+<p><span style="font-size: 95%;"> <span class="math display">\[
+\begin{aligned}
+\widehat{\text{completion_rate}}_i
+&amp;= \ 0.6638
+- 0.0007932 \,*\text{duration_sec}_i
++ 0.008618 *\log(\text{likes}_i + 1) \\
+&amp;\quad + 0.002520 *\log(\text{saves}_i + 1)
+- 0.008323 *\log(\text{creator_avg_views}_i + 1) \\
+&amp;\quad + 0.02303\, *\text{has_emoji}_i .
+\end{aligned}
+\]</span> </span></p>
+<p>The backward stepwise model finally retains only five predictors —
+<code>duration_sec</code>, <code>log_likes</code>,
+<code>log_saves</code>, <code>log_creator_avg</code>, and
+<code>has_emoji</code> — indicating that these features are the ones
+most strongly associated with variation in completion rate. The negative
+coefficient for <code>log_creator_avg</code> is particularly notable.
+Holding other factors constant, videos from creators with larger average
+viewership tend to show slightly lower completion rates. This may
+reflect heterogeneous audience behavior or differences in content style
+across creator tiers. Meanwhile, <code>has_emoji</code> shows a small
+but statistically significant positive effect, suggesting that visual
+cues in titles may enhance viewer engagement. Variables removed during
+stepwise selection, such as the seasonal and posting-time indicators,
+contributed little once the more informative predictors were
+included.</p>
+<p>Overall, the stepwise model produces a concise set of variables
+strongly linked to completion rate. This provides a clear summary of the
+linear relationships, establishing a useful baseline for further
+exploration.</p>
+</div>
+<div id="comparison-of-linear-models" class="section level4">
+<h4>6.1.2.4 Comparison of Linear Models</h4>
+<p>The three linear models show small but incremental improvements in
+fit as additional predictors are added. As shown in Table 6.4, the
+baseline model explains only a small share of variation in
+<code>completion_rate</code> (r-squared = 0.0183). Adding engagement
+variables increases the r-squared to 0.0308, and the stepwise model
+achieves the highest value at 0.0411.</p>
+<div style="text-align: center;">
+<img src="regression_images/linear_regression_comparison.png" width="90%">
+<p>
+Table 6.4    Comparison of linear regression models
+</p>
+</div>
+<p>Despite these incremental differences, all three models ultimately
+exhibit low r-squared. This is unsurprising in the context of short-form
+video performance, where much of viewer retention is shaped by factors
+not captured in metadata - such as creative quality, editing style,
+narrative pacing, emotional tone, and topic relevance. Completion
+outcomes are also influenced by platform recommendation systems, which
+shape exposure patterns in ways not observable in the dataset. Moreover,
+linear models impose additive and monotonic relationships that may be
+too restrictive for inherently nonlinear viewing behaviors. Together,
+these unobserved elements limit the explanatory power of linear models
+and help clarify why metadata-based regressions account for only a small
+fraction of the variation in completion rate.</p>
+</div>
+<div id="regression-diagnostics" class="section level4">
+<h4>6.1.2.5 Regression Diagnostics</h4>
+<p>To assess whether the stepwise model satisfies key regression
+assumptions, we examine the standard set of diagnostic plots. These
+plots provide insight into linearity, homoscedasticity, normality of
+residuals, and the influence of individual observations.</p>
+<div style="text-align: center;">
+<img src="regression_images/diagnostic_checks.png" width="100%">
+<p>
+Figure 6.x    Diagnostic plots for the stepwise linear model
+</p>
+</div>
+<p>The Residuals vs Fitted and Scale–Location plots show slight changes
+in residual spread across fitted values, indicating mild
+heteroscedasticity and some non-linearity. The Q–Q plot reveals
+noticeable deviations in the tails from a normal distribution; however,
+this is also expected because Q–Q plots become highly sensitive with
+large sample sizes and can highlight even very small departures from
+normality. The Residuals vs Leverage plot shows a few moderately
+high-leverage points, but none appear strongly influential.</p>
+<p>Overall, the linear model remains adequate for exploratory purposes,
+but the diagnostics indicate that its assumptions are not fully
+satisfied and the linear specification may not fully capture the
+underlying patterns in the data. These limitations motivate the use of
+nonlinear approaches, such as smooth and wiggly GAM, to capture
+potential nonlinear patterns that the linear specification may not fully
+capture.</p>
+</div>
+</div>
+<div id="nonlinear-modeling-and-model-comparison"
+class="section level3">
+<h3>6.1.3 Nonlinear Modeling and Model Comparison</h3>
+<p>Building on the predictors retained from the stepwise linear model,
+we extend the analysis to nonlinear specifications to assess whether
+more flexible functional forms can better capture patterns in
+completion_rate. In particular, we compare a standard linear model with
+two generalized additive models (GAMs) that allow nonlinear effects of
+the predictors.</p>
+<div id="traintest-split-for-nonlinear-models" class="section level4">
+<h4>6.1.3.1 Train–Test Split for Nonlinear Models</h4>
+<p>To evaluate predictive performance while avoiding overfitting, we
+randomly sampled 5,000 observations from the full dataset and applied
+the same preprocessing steps used in earlier models. The resulting
+dataset was then partitioned into an 80% training set and a 20% test
+set. All nonlinear models were fit on the training data and evaluated on
+the held-out test data.</p>
+</div>
+<div id="model-specifications-linear-vs-smooth-vs-wiggly-gam"
+class="section level4">
+<h4>6.1.3.2 Model Specifications: Linear vs Smooth vs Wiggly GAM</h4>
+<p>We estimate three models using the same predictor set identified
+through stepwise selection:</p>
+<ol style="list-style-type: decimal">
+<li><p>Linear Model — assumes additive, linear effects for all
+predictors.</p></li>
+<li><p>Smooth GAM — allows predictors such as duration_sec to vary
+smoothly, capturing gentle nonlinear trends.</p></li>
+<li><p>Wiggly GAM — uses a higher degree of smoothness flexibility,
+allowing complex and rapidly changing nonlinear shapes.</p></li>
+</ol>
+<p>These models represent a progression from simple to increasingly
+flexible structures, enabling assessment of whether added nonlinearity
+improves fit or merely introduces noise.</p>
+</div>
+<div id="visual-comparison-of-three-models" class="section level4">
+<h4>6.1.3.3 Visual Comparison of three models</h4>
+<p>To illustrate differences in model behavior, we visualize fitted
+values against <code>duration_sec</code>, because it is a continuous
+predictor that allows the linear, smooth, and wiggly models to produce
+interpretable fitted curves. Variables such as <code>log_likes</code> or
+<code>has_emoji</code> are either discrete or less suitable for
+illustrating non-linear patterns.</p>
+<div style="text-align: center;">
+<img src="regression_images/nonlinear_comparison.png" width="100%">
+<p>
+Figure 6.1    Visual comparison of linear, smooth GAM, and wiggly GAM
+fits
+</p>
+</div>
+<p>Across all three models, the downward association between video
+duration and completion_rate is clearly visible. The Linear Model
+produces a simple declining line, while the Smooth GAM allows gradual
+curvature but remains stable and consistent with overall trends. In
+contrast, the Wiggly GAM shows highly fluctuating and unstable fits,
+suggesting overfitting to noise rather than capturing meaningful
+structure.</p>
+</div>
+<div id="cross-validation-performance-and-visualization"
+class="section level4">
+<h4>6.1.3.4 Cross-Validation Performance and Visualization</h4>
+<p>Although prediction is not the primary goal of our analysis,
+cross-validated RMSE provides a useful way to compare how differently
+structured models behave out of sample and whether added flexibility
+leads to more stable estimates. Rather than interpreting RMSE as a
+measure of forecasting accuracy, we use it here to assess the extent to
+which each model captures consistent patterns versus overfitting
+noise.</p>
+<div style="text-align: center;">
+<img src="regression_images/RMSE_distribution.png" width="100%">
+<p>
+Figure 6.2    RMSE distributions for the linear and GAM models
+</p>
+</div>
+<p>The RMSE distributions show that the Linear Model and Smooth GAM
+produce similarly low and stable error levels across folds, indicating
+that their fitted relationships generalize reasonably well to held-out
+data. In contrast, the Wiggly GAM exhibits both higher RMSE values and
+substantially greater variability, showing the instability observed in
+its fitted curve. This pattern reinforces the conclusion that excessive
+model flexibility primarily captures sampling noise rather than
+meaningful structure in the relationship between duration and completion
+rate.</p>
+<p>Overall, these results suggest that modest nonlinear flexibility can
+be informative, but highly wiggly specifications offer little additional
+insight and reduce model stability. This indicates that simpler models
+are better suited for summarizing the underlying relationships in the
+data and align well with the exploratory goals of Topic 1.</p>
+</div>
+</div>
+<div id="conclusion-of-regression-findings" class="section level3">
+<h3>6.1.4 Conclusion of Regression Findings</h3>
+<p>The regression analyses collectively provide a structured overview of
+how metadata features relate to short-form video completion rates.
+Across all model specifications, video duration consistently emerges as
+the strongest and most stable correlate of completion rate, exhibiting a
+negative association in all models. Engagement-related variables such as
+<code>log_likes</code> and <code>log_saves</code> also contribute
+meaningfully once introduced, suggesting that videos that prompt
+stronger viewer interaction tend to retain audiences slightly better.
+Creator-level factors, particularly <code>log_creator_avg</code>, show
+weaker and inverse relationships, indicating that larger creators do not
+necessarily achieve higher completion rates.</p>
+<p>Although adding predictors improves model fit incrementally, the
+overall explanatory power remains low, with the best linear model
+achieving an r-squared of approximately 0.041. This reflects the
+inherent limitation of metadata, as viewer retention is a complex
+outcome shaped by uncaptured features such as creative quality,
+narrative structure, editing choices, emotional resonance, and platform
+dynamics.</p>
+<p>Nonlinear modeling further highlights these constraints. The Smooth
+GAM captures mild curvature but offers only marginal improvements over
+the linear specification, while the Wiggly GAM overfits and performs
+poorly out of sample. Therefore, these results show that more flexible
+functional forms do not substantially enhance predictive accuracy,
+reinforcing the conclusion that metadata explains only a small portion
+of completion behavior.</p>
+<p>Overall, the regression analysis provides useful descriptive insight
+into how structural and engagement-related attributes relate to
+completion rate, but it also underscores the central role of unobserved
+creative and algorithmic factors. These findings motivate the
+exploration of richer feature sets or alternative modeling approaches in
+future work, while also providing a clear baseline for interpreting
+patterns in video performance.</p>
 </div>
 </div>
 <div id="topic-2-modeling-trend-label" class="section level2">
@@ -533,25 +857,73 @@ motivates future modeling incorporating content-based features.</p>
 <h1><strong>7. Discussion</strong></h1>
 <p>(What were your findings? Are they what you expect? What insights
 into the data can you make?)</p>
-<div id="completion-rate-insights" class="section level2">
-<h2><strong>7.1 Completion Rate Insights</strong></h2>
-<p>(ZBR)</p>
+<div id="discussion-of-completion-rate" class="section level2">
+<h2><strong>7.1 Discussion of Completion Rate </strong></h2>
+<p>The regression results reveal several clear patterns in the
+relationship between video features and view completion rates. Among all
+models, video length consistently has the strongest influence. Longer
+videos tend to have lower view completion rates, which aligns with
+expectations for short-video platforms, as viewers prefer quick and
+easy-to-understand content. Interaction metrics such as likes and saves
+are also positively correlated with view completion rates, indicating
+that videos that retain viewers tend to generate more interaction. More
+Surprisingly, an unexpected finding is that creator-level attributes,
+including average historical views, have a weak and even negative
+correlation with view completion rates. This suggests that having a
+large audience does not guarantee high retention rates, and content
+features may be more important than creator scale.</p>
+<p>Some results align with intuition, particularly the significant
+impact of duration and interaction metrics. However, the limited impact
+of creator attributes and posting time variables is unexpected. The
+consistently low R-squared value across all models also indicate that
+these predictors explain only a small portion of the variation in view
+completion rates. Adding more predictors provides limited improvement,
+further suggesting that metadata only captures some of the potential
+factors influencing viewer retention, and many important factors are not
+included in the dataset.</p>
+<p>These findings offer several broader insights. View completion rates
+appear to depend more on video-level quality, such as content design,
+thematic appeal, than on the creator’s identity or posting time. The low
+R-squared value confirms that most determinants of retention, including
+creative quality and algorithmic exposure, are not reflected in the
+existing variables. Furthermore, the non-linear model shows little
+improvement over the linear model, suggesting that the primary
+limitation lies in the lack of relevant content-level information rather
+than the functional form of the model. In conclusion, metadata can
+reveal some meaningful patterns, but it can only explain a small
+fraction of audience behavior on short video platforms.</p>
 </div>
 <div id="trend-prediction-insights" class="section level2">
 <h2><strong>7.2 Trend Prediction Insights</strong></h2>
 <p>(ZXT)</p>
 </div>
-<div id="unexpected-findings" class="section level2">
-<h2><strong>7.3 Unexpected Findings</strong></h2>
-<ul>
-<li>Low R² but realistic (ZBR)</li>
-<li>Nonlinear models did not substantially outperform linear models
-(ZBR) () ()</li>
-</ul>
-</div>
 </div>
 <div id="limitations-and-future-work" class="section level1">
 <h1><strong>8 Limitations and Future Work</strong></h1>
+<p>For Topic 1, a major limitation of regression analysis is that it
+models all videos data as a single merged dataset without distinguishing
+between different platforms, languages or content categories. Because
+short videos vary greatly in purpose, audience, and cultural context,
+merging all observations introduces significant heterogeneity. This
+weakens true relationships, makes some predictors insignificant, and
+masks confounding patterns that may exist in specific subgroups. The
+large sample size further exacerbates this problem. In addition, the
+consistently low R-squared values across all models indicate that the
+current set of metadata variables captures only a small portion of the
+factors influencing completion rate. This weak model fit may reflect not
+only the limits of metadata but also the absence of important
+content-level or behaviour-level variables that are not observable in
+the dataset. Therefore, in future research, we should not only expand
+the breadth of observed variables but also use stratified or subgroup
+analysis to better control the model and obtain more accurate
+regressions. For example, completion rate can be modeled separately by
+language or platform to determine whether the observed correlations are
+consistent across different content types or whether they are masked by
+confounding effects in the aggregate dataset. This can also help to
+identify confounding factors specific to each category and more clearly
+explain differences in completion rates across different video
+types.</p>
+<p>For Topic 2</p>
 </div>
 
 
