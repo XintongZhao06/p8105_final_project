@@ -643,10 +643,4 @@ Sort all features in descending order of their importance scores:
 ![](classification_feature_importance.png)
 According to the feature importance analysis of the gradient boosting model, the share_rate, with an importance score of approximately 0.35, becomes the most influential feature, indicating that the social dissemination ability of the content is the core factor for predicting video trends. The comment_rate and engagement_velocity scored 0.30 and 0.18 respectively, ranking second and third, jointly reflecting the crucial role of deep user engagement in the popularity of content. Among the creator level characteristics, the influence of Star creators (Star) is prominent, while the importance of device brand and region-category cross-characteristics is relatively low. This analysis confirms the dominant position of user interaction metrics in trend prediction and provides a clear direction for optimizing content strategies.
 
-## Conclusion and Future Work
-
-This study demonstrates that ensemble learning models, particularly gradient boosting, are effective in predicting short-form video trend levels. User interaction metrics—especially share rate and comment rate—play a decisive role in content popularity. The models also confirm a significant correlation between creator tier and content dissemination, providing data-driven insights for platforms to optimize recommendation algorithms and for creators to refine content strategies.
-
-Future work may focus on the following areas: First, incorporating more real-time behavioral data (such as watch time and replay rate) to enhance prediction timeliness. Second, exploring temporal models to capture dynamic trend evolution. Third, developing interpretability tools to translate model insights into actionable operational recommendations. Fourth, deploying an online learning system to enable continuous model iteration in real-world environments.
-
 [Next: Report →](report.html)

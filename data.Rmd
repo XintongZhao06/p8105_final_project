@@ -11,6 +11,8 @@ output:
 
 ## 1. Dataset Overview
 
+**DATA URL**: [Kaggle](https://www.kaggle.com/datasets/tarekmasryo/youtube-shorts-and-tiktok-trends-2025)
+
 This dataset captures **short-form video performance** across **YouTube Shorts** and **TikTok** platforms during 2025. It contains over 50,000 video records designed for analysis of engagement dynamics, cultural patterns, and content trends in the short-form video landscape.
 
 **Key Characteristics:**
@@ -19,7 +21,7 @@ This dataset captures **short-form video performance** across **YouTube Shorts**
 
 - **Platforms:** TikTok and YouTube Shorts
 
-- **Records:** ~48,000-50,000 videos
+- **Records:** over 50,000 videos
 
 - **Geography:** Global coverage with country-level granularity (ISO-2 codes)
 

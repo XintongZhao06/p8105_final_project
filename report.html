@@ -16,7 +16,7 @@
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -446,19 +446,56 @@ performance.</p>
 </div>
 <div id="data" class="section level1">
 <h1><strong>4 Data</strong></h1>
-<p>(Source, scraping method, cleaning, etc.)</p>
+<div id="source-information" class="section level2">
+<h2><strong>4.1 Source Information</strong></h2>
 <ul>
-<li>Source of dataset</li>
-<li>Scraping or collection details</li>
-<li>Variables (completion_rate, trend_label, views, likes, etc.)<br />
-</li>
-<li>Cleaning steps</li>
-<li>Transformations:
-<ul>
-<li>log-transform of engagement variables which are skewness</li>
-<li>converting categorical variables into factors</li>
-</ul></li>
+<li><p><strong>Platform</strong>: <a
+href="https://www.kaggle.com/datasets/tarekmasryo/youtube-shorts-and-tiktok-trends-2025">Kaggle</a></p></li>
+<li><p><strong>Dataset Type</strong>: Social media analytics,
+synthetic/curated dataset</p></li>
+<li><p><strong>Size</strong>: ~50,000 video records</p></li>
+<li><p><strong>Time Period</strong>: 2025 (January-September)</p></li>
 </ul>
+</div>
+<div id="key-variables" class="section level2">
+<h2><strong>4.1 Key Variables</strong></h2>
+<div id="engagement-metrics" class="section level3">
+<h3><strong>4.2.1 Engagement Metrics</strong></h3>
+<ul>
+<li><p><strong>views</strong>: Total views count</p></li>
+<li><p><strong>likes</strong>: Likes count</p></li>
+<li><p><strong>comments</strong>: Comments count</p></li>
+<li><p><strong>shares</strong>: Shares count</p></li>
+<li><p><strong>saves</strong>: Saves count</p></li>
+<li><p><strong>completion_rate</strong>:
+<code>avg_watch_time_sec / duration_sec</code></p></li>
+<li><p><strong>engagement_rate</strong>:
+<code>(likes+comments+shares+saves) / views</code></p></li>
+</ul>
+</div>
+<div id="classification-target-variables" class="section level3">
+<h3><strong>4.2.2 Classification &amp; Target Variables</strong></h3>
+<ul>
+<li><p><strong>completion_rate</strong></p></li>
+<li><p><strong>trend_label</strong></p></li>
+</ul>
+</div>
+</div>
+<div id="data-characteristics" class="section level2">
+<h2><strong>4.3 Data Characteristics</strong></h2>
+<div id="data-transformations" class="section level3">
+<h3><strong>4.3.1 Data Transformations</strong></h3>
+<ul>
+<li><p>Categorical variables converted to factors</p></li>
+<li><p>Derived metrics</p></li>
+</ul>
+</div>
+<div id="data-cleaning" class="section level3">
+<h3><strong>4.3.2 Data Cleaning</strong></h3>
+<p>There are <strong>no missing values</strong> in the dataset, so the
+data cleaning process is not included.</p>
+</div>
+</div>
 </div>
 <div id="exploratory-data-analysis-eda" class="section level1">
 <h1><strong>5 Exploratory Data Analysis (EDA)</strong></h1>
@@ -472,12 +509,10 @@ ideas.)</p>
 <h2><strong>5.2 EDA — Trend Label</strong></h2>
 </div>
 </div>
-<div id="further-statistical-analysis" class="section level1">
-<h1><strong>6 Further statistical analysis</strong></h1>
-<div id="topic-1-exploratory-regression-analysis-of-completion-rate"
-class="section level2">
-<h2><strong>6.1 Topic 1: Exploratory Regression Analysis of Completion
-Rate</strong></h2>
+<div id="detailed-regression-ml-analysis" class="section level1">
+<h1><strong>6 Detailed Regression &amp; ML Analysis</strong></h1>
+<div id="topic-1-completion-rate-analysis" class="section level2">
+<h2><strong>6.1 Topic 1: Completion Rate Analysis</strong></h2>
 <div id="purpose-of-the-regression-analysis" class="section level3">
 <h3><strong>6.1.1 Purpose of the Regression Analysis</strong></h3>
 <p>Completion rate serves as a key performance metric for short-form
@@ -554,7 +589,7 @@ incorporation of engagement and creator-level variables in subsequent
 models.</p>
 </div>
 <div id="engagement-augmented-linear-regression" class="section level4">
-<h4>6.1.2.2 Engagement-Augmented Linear Regression</h4>
+<h4><strong>6.1.2.2 Engagement-Augmented Linear Regression</strong></h4>
 <p>To explore whether audience interaction patterns co-vary with viewer
 retention, the second model adds log-transformed engagement metrics —
 likes, comments, shares, and saves — to the baseline specification.
@@ -602,7 +637,8 @@ structure of associations identified earlier.</p>
 </div>
 <div id="full-linear-model-and-stepwise-selection"
 class="section level4">
-<h4>6.1.2.3 Full Linear Model and Stepwise Selection</h4>
+<h4><strong>6.1.2.3 Full Linear Model and Stepwise
+Selection</strong></h4>
 <p>To examine whether creator attributes or stylistic choices add
 explanatory value beyond engagement patterns, the third model introduces
 creator-level variables such as log_creator_avg, creator_tier, and
@@ -667,7 +703,7 @@ linear relationships, establishing a useful baseline for further
 exploration.</p>
 </div>
 <div id="comparison-of-linear-models" class="section level4">
-<h4>6.1.2.4 Comparison of Linear Models</h4>
+<h4><strong>6.1.2.4 Comparison of Linear Models</strong></h4>
 <p>The three linear models show small but incremental improvements in
 fit as additional predictors are added. As shown in Table 6.4, the
 baseline model explains only a small share of variation in
@@ -694,7 +730,7 @@ and help clarify why metadata-based regressions account for only a small
 fraction of the variation in completion rate.</p>
 </div>
 <div id="regression-diagnostics" class="section level4">
-<h4>6.1.2.5 Regression Diagnostics</h4>
+<h4><strong>6.1.2.5 Regression Diagnostics</strong></h4>
 <p>To assess whether the stepwise model satisfies key regression
 assumptions, we examine the standard set of diagnostic plots. These
 plots provide insight into linearity, homoscedasticity, normality of
@@ -724,7 +760,7 @@ capture.</p>
 </div>
 <div id="nonlinear-modeling-and-model-comparison"
 class="section level3">
-<h3>6.1.3 Nonlinear Modeling and Model Comparison</h3>
+<h3><strong>6.1.3 Nonlinear Modeling and Model Comparison</strong></h3>
 <p>Building on the predictors retained from the stepwise linear model,
 we extend the analysis to nonlinear specifications to assess whether
 more flexible functional forms can better capture patterns in
@@ -732,7 +768,7 @@ completion_rate. In particular, we compare a standard linear model with
 two generalized additive models (GAMs) that allow nonlinear effects of
 the predictors.</p>
 <div id="traintest-split-for-nonlinear-models" class="section level4">
-<h4>6.1.3.1 Train–Test Split for Nonlinear Models</h4>
+<h4><strong>6.1.3.1 Train–Test Split for Nonlinear Models</strong></h4>
 <p>To evaluate predictive performance while avoiding overfitting, we
 randomly sampled 5,000 observations from the full dataset and applied
 the same preprocessing steps used in earlier models. The resulting
@@ -742,7 +778,8 @@ the held-out test data.</p>
 </div>
 <div id="model-specifications-linear-vs-smooth-vs-wiggly-gam"
 class="section level4">
-<h4>6.1.3.2 Model Specifications: Linear vs Smooth vs Wiggly GAM</h4>
+<h4><strong>6.1.3.2 Model Specifications: Linear vs Smooth vs Wiggly
+GAM</strong></h4>
 <p>We estimate three models using the same predictor set identified
 through stepwise selection:</p>
 <ol style="list-style-type: decimal">
@@ -758,7 +795,7 @@ flexible structures, enabling assessment of whether added nonlinearity
 improves fit or merely introduces noise.</p>
 </div>
 <div id="visual-comparison-of-three-models" class="section level4">
-<h4>6.1.3.3 Visual Comparison of three models</h4>
+<h4><strong>6.1.3.3 Visual Comparison of three models</strong></h4>
 <p>To illustrate differences in model behavior, we visualize fitted
 values against <code>duration_sec</code>, because it is a continuous
 predictor that allows the linear, smooth, and wiggly models to produce
@@ -782,7 +819,8 @@ structure.</p>
 </div>
 <div id="cross-validation-performance-and-visualization"
 class="section level4">
-<h4>6.1.3.4 Cross-Validation Performance and Visualization</h4>
+<h4><strong>6.1.3.4 Cross-Validation Performance and
+Visualization</strong></h4>
 <p>Although prediction is not the primary goal of our analysis,
 cross-validated RMSE provides a useful way to compare how differently
 structured models behave out of sample and whether added flexibility
@@ -813,7 +851,7 @@ data and align well with the exploratory goals of Topic 1.</p>
 </div>
 </div>
 <div id="conclusion-of-regression-findings" class="section level3">
-<h3>6.1.4 Conclusion of Regression Findings</h3>
+<h3><strong>6.1.4 Conclusion of Regression Findings</strong></h3>
 <p>The regression analyses collectively provide a structured overview of
 how metadata features relate to short-form video completion rates.
 Across all model specifications, video duration consistently emerges as
@@ -848,9 +886,191 @@ future work, while also providing a clear baseline for interpreting
 patterns in video performance.</p>
 </div>
 </div>
-<div id="topic-2-modeling-trend-label" class="section level2">
-<h2><strong>6.2 Topic 2: Modeling Trend Label</strong></h2>
-<p>(ZXT)</p>
+<div id="topic-2-trend-prediction" class="section level2">
+<h2><strong>6.2 Topic 2: Trend Prediction</strong></h2>
+<div id="purpose-of-the-ml-analysis" class="section level3">
+<h3><strong>6.2.1 Purpose of the ML Analysis</strong></h3>
+<p>We applyed several algorthms designed to predict popularity trends
+for short-form videos. By analyzing extensive video data, we identify
+patterns in viral content and assess the breakout potential of new
+videos. By testing multiple algorithms, we identify the most accurate
+predictive model, providing data-driven support for content platforms,
+creators, and advertisers.</p>
+</div>
+<div id="data-preparation-and-exploration" class="section level3">
+<h3><strong>6.2.2 Data Preparation and Exploration</strong></h3>
+<div id="dataset-characteristics" class="section level4">
+<h4><strong>6.2.2.1 Dataset Characteristics</strong></h4>
+<p>We created a simulated dataset of 50,000 samples with the following
+characteristics:</p>
+<ul>
+<li><p><strong>Platform Distribution</strong>: 60% TikTok, 40%
+YouTube</p></li>
+<li><p><strong>Content Categories</strong>: Entertainment, Music,
+Sports, Education, Gaming</p></li>
+<li><p><strong>Creator Tiers</strong>: Micro (50%), Mid (30%), Macro
+(15%), Star (5%)</p></li>
+<li><p><strong>Key Metrics</strong>: Title length, text richness,
+comment rate, share rate, daily views</p></li>
+</ul>
+</div>
+</div>
+<div id="target-variable-construction" class="section level3">
+<h3><strong>6.2.2.2 Target Variable Construction</strong></h3>
+<p>We constructed an <strong>Engagement Score</strong> using the
+following weighted formula:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{Engagement Score} = &amp;
+\left(\frac{\text{comment_rate}}{0.02}\right) \times 0.2 \\
+                         &amp; +
+\left(\frac{\text{share_rate}}{0.005}\right) \times 0.3 \\
+                         &amp; +
+\left(\frac{\text{views_per_day}}{50000}\right) \times 0.2 \\
+                         &amp; + \text{text_richness} \times 0.1 \\
+                         &amp; + \text{weekend_hashtag_boost} \times 0.1
+\\
+                         &amp; + \text{creator_tier_bonus} \\
+                         &amp; + N(0, 0.2)
+\end{aligned}
+\]</span></p>
+<p>Where the creator tier bonus is defined as:</p>
+<p><span class="math display">\[
+\text{creator_tier_bonus} =
+\begin{cases}
+0.5 &amp; \text{if Star} \\
+0.3 &amp; \text{if Macro} \\
+0.1 &amp; \text{if Mid} \\
+0 &amp; \text{if Micro}
+\end{cases}
+\]</span></p>
+<p>Based on the Engagement Score, videos are classified into three trend
+categories:</p>
+<ul>
+<li><p><strong>Low Trend (0)</strong>: Engagement Score ≤ 0.8</p></li>
+<li><p><strong>Medium Trend (1)</strong>: 0.8 &lt; Engagement Score ≤
+1.5</p></li>
+<li><p><strong>High Trend (2)</strong>: Engagement Score &gt;
+1.5</p></li>
+</ul>
+</div>
+<div id="feature-engineering" class="section level3">
+<h3><strong>6.2.3 Feature Engineering</strong></h3>
+<p>We created three interaction features to capture complex
+relationships:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Platform-Tier Interaction</strong>: Combines platform
+type with creator tier</p>
+<p><span class="math display">\[
+\text{platform_tier} = \text{platform} \oplus \text{creator_tier}
+\]</span></p></li>
+<li><p><strong>Region-Category Interaction</strong>: Combines geographic
+region with content category</p>
+<p><span class="math display">\[
+\text{region_category} = \text{region} \oplus \text{category}
+\]</span></p></li>
+<li><p><strong>Engagement Velocity</strong>: Composite metric measuring
+virality speed</p>
+<p><span class="math display">\[
+\text{engagement_velocity} = \text{views_per_day} \times
+(\text{comment_rate} + \text{share_rate})
+\]</span></p></li>
+</ol>
+<p>Where <span class="math inline">\(\oplus\)</span> denotes feature
+concatenation.</p>
+<p>The final model utilizes 15 features including:</p>
+<ul>
+<li><p>12 original features (platform, region, category, traffic_source,
+device_brand, creator_tier, title_len, text_richness, comment_rate,
+share_rate, views_per_day, weekend_hashtag_boost)</p></li>
+<li><p>3 interaction features (platform_tier, region_category,
+engagement_velocity)</p></li>
+</ul>
+</div>
+<div id="data-preprocessing" class="section level3">
+<h3><strong>6.2.4 Data Preprocessing</strong></h3>
+<div id="data-splitting" class="section level4">
+<h4><strong>6.2.4.1 Data Splitting</strong></h4>
+<p>The dataset was randomly split into training (80%) and testing (20%)
+sets while maintaining proportional representation of each trend class
+in both subsets.</p>
+</div>
+<div id="feature-transformation" class="section level4">
+<h4><strong>6.2.4.1 Feature Transformation</strong></h4>
+<ul>
+<li><p><strong>Numerical Features</strong>: Standardized to zero mean
+and unit variance</p></li>
+<li><p><strong>Categorical Features</strong>: Transformed using one-hot
+encoding</p></li>
+</ul>
+</div>
+</div>
+<div id="model-definition" class="section level3">
+<h3><strong>6.2.5 Model Definition</strong></h3>
+<p>We tested six machine learning models:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Random Forest</strong>: Ensemble of 200 decision trees
+with maximum depth 15</p></li>
+<li><p><strong>Gradient Boosting</strong>: 200 sequential trees with
+learning rate <span class="math inline">\(\eta = 0.1\)</span></p></li>
+<li><p><strong>Extra Trees</strong>: Extremely randomized trees variant
+with 200 estimators</p></li>
+<li><p><strong>Neural Network</strong>: Multi-layer perceptron with
+architecture <span class="math inline">\([100, 50]\)</span>
+neurons</p></li>
+<li><p><strong>Support Vector Machine</strong>: RBF kernel with
+regularization <span class="math inline">\(C = 1.0\)</span></p></li>
+<li><p><strong>Logistic Regression</strong>: Linear classifier with
+one-vs-rest strategy</p></li>
+</ol>
+</div>
+<div id="model-training-and-evaluation" class="section level3">
+<h3><strong>6.2.6 Model Training and Evaluation</strong></h3>
+<div id="evaluation-metrics" class="section level4">
+<h4><strong>6.2.6.1 Evaluation Metrics</strong></h4>
+<p>Models were evaluated using multiple metrics:</p>
+<ul>
+<li><p><strong>Accuracy</strong></p></li>
+<li><p><strong>Macro-average F1 Score</strong></p></li>
+<li><p><strong>Weighted-average F1 Score</strong></p></li>
+<li><p><strong>AUC-OVR</strong></p></li>
+<li><p><strong>5-Fold Cross-Validation Accuracy</strong></p></li>
+</ul>
+</div>
+<div id="training-process" class="section level4">
+<h4><strong>6.2.6.2 Training Process</strong></h4>
+<p>All models were trained using identical preprocessing pipelines to
+ensure fair comparison, with performance evaluated on the held-out test
+set.</p>
+</div>
+</div>
+<div id="results-comparison" class="section level3">
+<h3><strong>6.2.7 Results Comparison</strong></h3>
+<div id="performance-ranking" class="section level4">
+<h4><strong>6.2.7.1 Performance Ranking</strong></h4>
+<p>Gradient Boosting demonstrated superior performance across all
+metrics:</p>
+<p><img src="classification_model_comparison.png" /></p>
+</div>
+</div>
+<div id="best-model-analysis" class="section level3">
+<h3><strong>6.2.8 Best Model Analysis</strong></h3>
+<p>The Gradient Boosting model achieved the following confusion
+matrix:</p>
+<p><img src="classification_confusion_matrix.png" /></p>
+<p>The model demonstrates strong performance distinguishing Low from
+High trends but shows some confusion at the Medium-High boundary, with
+206 High-trend videos misclassified as Medium.</p>
+</div>
+<div id="feature-importance-analysis" class="section level3">
+<h3><strong>6.2.9 Feature Importance Analysis</strong></h3>
+<p>The Gradient Boosting model revealed the following feature importance
+ranking:</p>
+<p><img src="classification_feature_importance.png" /></p>
+<p>Analysis confirms user interaction metrics (particularly sharing and
+commenting) are the primary predictors of video trends, accounting for
+65% of the model’s decision-making.</p>
+</div>
 </div>
 </div>
 <div id="discussion" class="section level1">
@@ -895,35 +1115,77 @@ fraction of audience behavior on short video platforms.</p>
 </div>
 <div id="trend-prediction-insights" class="section level2">
 <h2><strong>7.2 Trend Prediction Insights</strong></h2>
-<p>(ZXT)</p>
+<p>The analysis reveals several significant findings that largely align
+with expectations from short-form video platform dynamics. The superior
+performance of Gradient Boosting was anticipated, given its proven
+effectiveness in handling structured data with complex feature
+interactions. What exceeded expectations was the magnitude of difference
+between models, with Gradient Boosting achieving 3.2% higher accuracy
+than its nearest competitor.</p>
+<p>Our research results show that the proposed trend prediction system
+effectively captures meaningful behavioral patterns in short video
+participation. High, medium and low trend categories show clear and
+consistent separations in key indicators such as views, likes, comments,
+shares and saves. This model is highly consistent with people’s
+expectations: the higher the trend of a video, the more user stickiness
+it will naturally accumulate and accelerate its visibility in the
+platform’s recommendation ecosystem. The distribution of user stickiness
+scores further validates the reliability of the constructed tags - each
+category forms a different group, which indicates that our feature
+design has successfully captured the potential drivers of viral
+spread.</p>
 </div>
 </div>
 <div id="limitations-and-future-work" class="section level1">
 <h1><strong>8 Limitations and Future Work</strong></h1>
-<p>For Topic 1, a major limitation of regression analysis is that it
-models all videos data as a single merged dataset without distinguishing
-between different platforms, languages or content categories. Because
-short videos vary greatly in purpose, audience, and cultural context,
-merging all observations introduces significant heterogeneity. This
-weakens true relationships, makes some predictors insignificant, and
-masks confounding patterns that may exist in specific subgroups. The
-large sample size further exacerbates this problem. In addition, the
-consistently low R-squared values across all models indicate that the
-current set of metadata variables captures only a small portion of the
-factors influencing completion rate. This weak model fit may reflect not
-only the limits of metadata but also the absence of important
-content-level or behaviour-level variables that are not observable in
-the dataset. Therefore, in future research, we should not only expand
-the breadth of observed variables but also use stratified or subgroup
-analysis to better control the model and obtain more accurate
-regressions. For example, completion rate can be modeled separately by
-language or platform to determine whether the observed correlations are
-consistent across different content types or whether they are masked by
-confounding effects in the aggregate dataset. This can also help to
-identify confounding factors specific to each category and more clearly
-explain differences in completion rates across different video
-types.</p>
-<p>For Topic 2</p>
+<p>For <strong>Topic 1</strong>, a major limitation of regression
+analysis is that it models all videos data as a single merged dataset
+without distinguishing between different platforms, languages or content
+categories. Because short videos vary greatly in purpose, audience, and
+cultural context, merging all observations introduces significant
+heterogeneity. This weakens true relationships, makes some predictors
+insignificant, and masks confounding patterns that may exist in specific
+subgroups. The large sample size further exacerbates this problem. In
+addition, the consistently low R-squared values across all models
+indicate that the current set of metadata variables captures only a
+small portion of the factors influencing completion rate. This weak
+model fit may reflect not only the limits of metadata but also the
+absence of important content-level or behaviour-level variables that are
+not observable in the dataset. Therefore, in future research, we should
+not only expand the breadth of observed variables but also use
+stratified or subgroup analysis to better control the model and obtain
+more accurate regressions. For example, completion rate can be modeled
+separately by language or platform to determine whether the observed
+correlations are consistent across different content types or whether
+they are masked by confounding effects in the aggregate dataset. This
+can also help to identify confounding factors specific to each category
+and more clearly explain differences in completion rates across
+different video types.</p>
+<p>For <strong>Topic 2</strong>，although the proposed system
+demonstrates a strong predictive ability for short video trends, there
+are still some limitations, providing opportunities for future
+enhancement. Firstly, the dataset relies on synthetic or proxy-generated
+behavioral patterns, which means that the participation relationships in
+model learning may not fully capture platform-specific nuances or
+rapidly evolving user habits in real-world environments. In addition,
+the current functional design mainly focuses on structured metadata and
+digital interaction metrics, but does not incorporate multimodal
+elements such as video content, audio attributes, or text semantics,
+which are known to have a significant impact on viral spread. The
+contemporaneity of social trends has also been simplified. These models
+handle each sample independently instead of modeling the dynamic trend
+propagation over time. Finally, through advanced technologies such as
+transformer-based architectures, self-supervised representation
+learning, and automatic hyperparameter optimization, the model
+performance can be further enhanced.</p>
+<p>In future work, integrating real platform data streams, expanding the
+feature space to include visual and NLP-based content signals, and
+adopting time series prediction methods, such as sequence models or
+graph-based diffusion learning, will enable the system to better track
+emerging cultural patterns. Deploying the model into a real-time
+feedback loop and evaluating it under production constraints will
+further verify its practical value for content creators, marketers, and
+recommendation systems.</p>
 </div>
 
 
