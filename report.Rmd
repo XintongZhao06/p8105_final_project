@@ -203,7 +203,7 @@ Overall, the stepwise model produces a concise set of variables strongly linked 
 The three linear models show small but incremental improvements in fit as additional predictors are added. As shown in Table 6.4, the baseline model explains only a small share of variation in `completion_rate` (r-squared = 0.0183). Adding engagement variables increases the r-squared to 0.0308, and the stepwise model achieves the highest value at 0.0411.
 
 <div style="text-align: center;"> 
-<img src="regression_images/linear_regression_comparison.png" width="90%"> 
+<img src="regression_images/linear_regression_comparison.png" width="80%"> 
 <p>Table 6.4&nbsp;&nbsp;&nbsp;&nbsp;Comparison of linear regression models</p> </div>
 
 Despite these incremental differences, all three models ultimately exhibit low r-squared. This is unsurprising in the context of short-form video performance, where much of viewer retention is shaped by factors not captured in metadata - such as creative quality, editing style, narrative pacing, emotional tone, and topic relevance. Completion outcomes are also influenced by platform recommendation systems, which shape exposure patterns in ways not observable in the dataset. Moreover, linear models impose additive and monotonic relationships that may be too restrictive for inherently nonlinear viewing behaviors. Together, these unobserved elements limit the explanatory power of linear models and help clarify why metadata-based regressions account for only a small fraction of the variation in completion rate.
