@@ -27,7 +27,7 @@ library(gridExtra)
 library(kableExtra)
 ```
 
-## 1. Overview of Modeling Approach
+## 1. Introduction
 
 This section explores how **completion rate** relates to different characteristics of short-form videos. Our goal is not to build a predictive model or establish causal relationships, but rather to identify statistical associations and understand which types of features tend to co-vary with completion_rate. Regression results here provide structural insights that will be expanded upon in the full report.
 
@@ -161,15 +161,16 @@ The results from the baseline, engagement-augmented, and full models show that o
 <summary><strong>Show Regression Equation</strong></summary>
 
 $$
-\hat{\text{completion_rate}} =
-0.6638
-- 0.0007932\,*\text{duration_sec}
-+ 0.008618\,*\log(\text{likes}+1)
-+ 0.002520\,*\log(\text{saves}+1)
-- 0.008323\,*\log(\text{creator_avg_views}+1)
-+ 0.02303\,*\text{has_emoji}
+\begin{aligned}
+\widehat{\text{completion_rate}}_i
+&= \ 0.6638
+- 0.0007932 \,*\text{duration_sec}_i
++ 0.008618 *\log(\text{likes}_i + 1) \\
+&\quad + 0.002520 *\log(\text{saves}_i + 1)
+- 0.008323 *\log(\text{creator_avg_views}_i + 1) \\
+&\quad + 0.02303\, *\text{has_emoji}_i .
+\end{aligned}
 $$
-
 </details>
 
 <div style="margin-bottom: 10px;"></div>
@@ -192,6 +193,10 @@ kable(digits = 4, caption = "Comparison of Linear Regression Models") |>
 kable_styling(full_width = FALSE, position = "center")
 ```
 
+The three linear models show small but incremental improvements in fit as additional predictors are added. The baseline model has an R-squared of `r round(summary(model_base)$r.squared, 4)`, 
+while the engagement model increases it slightly to `r round(summary(model_add)$r.squared, 4)`. 
+The stepwise model achieves the highest R-squared at `r round(summary(step_back)$r.squared, 4)`.
+
 Although the models include timing features, engagement indicators, and creator-level metadata, all three linear specifications produce relatively low R-squared. This is expected in real short-form video settings for several practical reasons: 
 
 - Completion rate is heavily influenced by subjective content factors that are not captured in metadata, such as humor, storytelling structure, editing quality, pacing, emotional appeal, and the relevance of the topic to the viewer. 
@@ -204,7 +209,7 @@ Although the models include timing features, engagement indicators, and creator-
 
 Despite all linear models show limited explanatory power, the stepwise model performs comparatively better across R-squared, AIC, and BIC. Therefore, it is selected as the final linear specification for diagnostic assessment.
 <div style="margin-bottom: 10px;"></div>
-### 3.6 Diagnostic Checks for the Stepwise Linear Model
+### 3.6 Regression Diagnostics
 
 To ensure the validity of inference from the selected linear model, we evaluate standard regression diagnostics. Residual plots help assess linearity, homoscedasticity, and normality assumptions.
 
