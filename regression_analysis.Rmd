@@ -2,7 +2,7 @@
 title: "Regression"
 output:
   html_document:
-    theme: united
+    theme: flatly
     toc: true
     toc_float: true
     df_print: paged
