@@ -648,3 +648,5 @@ According to the feature importance analysis of the gradient boosting model, the
 This study demonstrates that ensemble learning models, particularly gradient boosting, are effective in predicting short-form video trend levels. User interaction metrics—especially share rate and comment rate—play a decisive role in content popularity. The models also confirm a significant correlation between creator tier and content dissemination, providing data-driven insights for platforms to optimize recommendation algorithms and for creators to refine content strategies.
 
 Future work may focus on the following areas: First, incorporating more real-time behavioral data (such as watch time and replay rate) to enhance prediction timeliness. Second, exploring temporal models to capture dynamic trend evolution. Third, developing interpretability tools to translate model insights into actionable operational recommendations. Fourth, deploying an online learning system to enable continuous model iteration in real-world environments.
+
+[Next: Report →](report.html)

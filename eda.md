@@ -1,79 +1,115 @@
----
-title: "EDA for Completion Rate"
-output:
-  html_document:
-    theme: united
-    toc: true
-    toc_float: true
-    df_print: paged
-    code_folding: hide
----
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-library(ggplot2)
-library(dplyr)
-library(tibble)
-library(tidyr)
-library(patchwork)
-library(scales)
-library(knitr)
+Factors Influencing Short Video Completion Rate: EDA
+================
+2025-11-24
 
+``` r
+library(tidyverse)
+library(janitor)
+library(scales)
+library(patchwork)
+
+# Define modern color palette
 modern_colors <- c("#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51", 
                    "#8ecae6", "#219ebc", "#023047", "#ffb703", "#fb8500")
 
 theme_set(theme_minimal(base_size = 12))
 ```
 
-```{r}
-shorts_data = read.csv("data/youtube_shorts_tiktok_trends_2025.csv") |> 
-  as_tibble()
-
-df = shorts_data |> 
-  dplyr::select(
-    completion_rate,
-    engagement_rate,
-    upload_hour,
-    is_weekend,
-    views,
-    likes,
-    comments,
-    shares,
-    saves,
-    duration_sec,
-    title_length,
-    event_season,
-    has_emoji,
-    category,
-    hashtag,
-    creator_tier,
-    creator_avg_views,
-    platform
-  ) |> 
-  mutate(
-    has_emoji = as.integer(as.character(has_emoji)),
-    creator_tier = as.factor(creator_tier),
-    platform = as.factor(platform),
-    event_season = as.factor(event_season),
-    log_views = log(views + 1),
-    log_likes = log(likes + 1),
-    log_comments = log(comments + 1),
-    log_shares = log(shares + 1),
-    log_saves = log(saves + 1),
-    log_creator_avg = log(creator_avg_views + 1)
-  ) |> 
-  drop_na()
+``` r
+df <- read_csv("./data/youtube_shorts_tiktok_trends_2025.csv") %>% 
+  clean_names()
 ```
 
-```{r missing_summary}
+    ## Rows: 48079 Columns: 58
+    ## ── Column specification ────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr  (28): platform, country, region, language, category, hashtag, title_key...
+    ## dbl  (29): week_of_year, duration_sec, views, likes, comments, shares, saves...
+    ## date  (1): publish_date_approx
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+glimpse(df)
+```
+
+    ## Rows: 48,079
+    ## Columns: 58
+    ## $ platform                <chr> "TikTok", "TikTok", "TikTok", "TikTok", "TikTo…
+    ## $ country                 <chr> "Jp", "Se", "Za", "Kr", "Au", "Ke", "Us", "Us"…
+    ## $ region                  <chr> "Asia", "Europe", "Africa", "Asia", "Oceania",…
+    ## $ language                <chr> "ja", "sv", "en", "ko", "en", "sw", "en", "en"…
+    ## $ category                <chr> "Gaming", "Food", "Art", "News", "Beauty", "Ar…
+    ## $ hashtag                 <chr> "#Lifestyle", "#Sports", "#Workout", "#Esports…
+    ## $ title_keywords          <chr> "Night Routine — College", "Morning Routine — …
+    ## $ author_handle           <chr> "NextVision", "DailyVlogsDiego", "BeyondHub", …
+    ## $ sound_type              <chr> "trending", "trending", "licensed", "original"…
+    ## $ music_track             <chr> "8bit loop", "Street vibe", "Gallery pad", "Ne…
+    ## $ week_of_year            <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+    ## $ duration_sec            <dbl> 40, 18, 22, 36, 35, 33, 26, 18, 31, 34, 36, 13…
+    ## $ views                   <dbl> 252497, 270580, 7385, 72377, 16174, 47449, 270…
+    ## $ likes                   <dbl> 21755, 23080, 363, 6243, 832, 2462, 1868, 8917…
+    ## $ comments                <dbl> 3170, 2124, 33, 811, 68, 254, 257, 1084, 584, …
+    ## $ shares                  <dbl> 1977, 2108, 38, 383, 67, 245, 218, 562, 556, 4…
+    ## $ saves                   <dbl> 3415, 3265, 69, 391, 204, 155, 306, 556, 559, …
+    ## $ engagement_rate         <dbl> 0.120069, 0.113005, 0.068111, 0.108156, 0.0724…
+    ## $ trend_label             <chr> "rising", "declining", "seasonal", "declining"…
+    ## $ source_hint             <chr> "TikTok Creative Center", "TikTok Creative Cen…
+    ## $ notes                   <chr> "split-screen", "greenscreen", "subtitles", "c…
+    ## $ device_type             <chr> "Android", "Android", "Android", "Android", "A…
+    ## $ upload_hour             <dbl> 15, 3, 15, 15, 18, 18, 21, 23, 18, 18, 15, 17,…
+    ## $ genre                   <chr> "Lifestyle", "Sports", "Sports", "Gaming", "Co…
+    ## $ trend_duration_days     <dbl> 4, 56, 11, 10, 6, 12, 19, 7, 17, 3, 4, 5, 6, 6…
+    ## $ trend_type              <chr> "Short", "Evergreen", "Medium", "Medium", "Sho…
+    ## $ engagement_velocity     <dbl> 63124.25, 4831.79, 671.36, 7237.70, 2695.67, 3…
+    ## $ dislikes                <dbl> 1011, 655, 12, 229, 19, 83, 51, 64, 58, 201, 4…
+    ## $ comment_ratio           <dbl> 0.012555, 0.007850, 0.004469, 0.011205, 0.0042…
+    ## $ share_rate              <dbl> 0.007830, 0.007791, 0.005146, 0.005292, 0.0041…
+    ## $ save_rate               <dbl> 0.013525, 0.012067, 0.009343, 0.005402, 0.0126…
+    ## $ like_dislike_ratio      <dbl> 21.49704, 35.18293, 27.92308, 27.14348, 41.600…
+    ## $ publish_dayofweek       <chr> "Saturday", "Wednesday", "Sunday", "Friday", "…
+    ## $ publish_period          <chr> "Afternoon", "Night", "Afternoon", "Afternoon"…
+    ## $ event_season            <chr> "Regular", "Regular", "Regular", "SummerBreak"…
+    ## $ tags                    <chr> "daily, lifestyle, motivation", "gym, football…
+    ## $ sample_comments         <chr> "ずっと見ちゃう😂", "This is fire 🔥", "Instant like!",…
+    ## $ creator_avg_views       <dbl> 96474.3, 104638.4, 108139.9, 102133.2, 87549.4…
+    ## $ creator_tier            <chr> "Mid", "Mid", "Mid", "Mid", "Mid", "Mid", "Mid…
+    ## $ season                  <chr> "Spring", "Fall", "Fall", "Summer", "Fall", "F…
+    ## $ publish_date_approx     <date> 2025-01-04, 2025-01-01, 2025-01-05, 2025-01-0…
+    ## $ year_month              <chr> "2025-01", "2025-01", "2025-01", "2025-01", "2…
+    ## $ title                   <chr> "Night Routine — Productivity 🏖️", "Football sk…
+    ## $ title_length            <dbl> 31, 24, 22, 30, 13, 23, 22, 17, 17, 22, 21, 22…
+    ## $ has_emoji               <dbl> 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1…
+    ## $ avg_watch_time_sec      <dbl> 25.8, 10.4, 11.7, 23.7, 24.6, 18.1, 20.2, 13.1…
+    ## $ completion_rate         <dbl> 0.645, 0.578, 0.532, 0.658, 0.703, 0.548, 0.77…
+    ## $ device_brand            <chr> "iPhone", "iPhone", "Huawei", "Huawei", "Huawe…
+    ## $ traffic_source          <chr> "External", "Search", "External", "Search", "F…
+    ## $ is_weekend              <dbl> 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+    ## $ row_id                  <chr> "2e681528d17a1fe1986857942536ec27", "2e35fa0b2…
+    ## $ engagement_total        <dbl> 30317, 30577, 503, 7828, 1171, 3116, 2649, 111…
+    ## $ like_rate               <dbl> 0.086159, 0.085298, 0.049154, 0.086257, 0.0514…
+    ## $ dislike_rate            <dbl> 0.004004, 0.002421, 0.001625, 0.003164, 0.0011…
+    ## $ engagement_per_1k       <dbl> 120.069, 113.005, 68.111, 108.156, 72.400, 65.…
+    ## $ engagement_like_rate    <dbl> 0.08615944, 0.08529825, 0.04915369, 0.08625668…
+    ## $ engagement_comment_rate <dbl> 0.012554605, 0.007849804, 0.004468517, 0.01120…
+    ## $ engagement_share_rate   <dbl> 0.007829796, 0.007790672, 0.005145565, 0.00529…
+
+``` r
 missing_summary <- df %>%
   summarise(across(everything(), ~sum(is.na(.)))) %>%
   pivot_longer(everything(), names_to = "variable", values_to = "missing_count") %>%
   filter(missing_count > 0) %>%
   mutate(missing_pct = missing_count / nrow(df) * 100) %>%
   arrange(desc(missing_count))
+
+print(missing_summary)
 ```
 
-```{r basic_metrics}
+    ## # A tibble: 0 × 3
+    ## # ℹ 3 variables: variable <chr>, missing_count <int>, missing_pct <dbl>
+
+``` r
 metrics_summary <- df %>%
   summarise(
     total_videos = n(),
@@ -87,45 +123,50 @@ metrics_summary <- df %>%
     avg_duration = mean(duration_sec, na.rm = TRUE),
     median_duration = median(duration_sec, na.rm = TRUE)
   )
+
+print(metrics_summary)
 ```
+
+    ## # A tibble: 1 × 10
+    ##   total_videos total_views avg_views median_views avg_engagement
+    ##          <int>       <dbl>     <dbl>        <dbl>          <dbl>
+    ## 1        48079  4773896651    99293.        59620         0.0754
+    ## # ℹ 5 more variables: median_engagement <dbl>, avg_completion <dbl>,
+    ## #   median_completion <dbl>, avg_duration <dbl>, median_duration <dbl>
 
 ## 1. Distribution of Key Metrics
 
-```{r completion_distribution}
-completion_rate_plot <- ggplot(df, aes(x = completion_rate)) +
-  geom_histogram(bins = 30, fill = modern_colors[1], alpha = 0.8, 
-                 color = modern_colors[8], size = 0.4) +
-  geom_vline(aes(xintercept = mean(completion_rate)), 
-             color = modern_colors[10], linetype = "dashed", linewidth = 1) +
+``` r
+completion_dist_plot <- ggplot(df, aes(x = completion_rate)) +
+  geom_density(fill = modern_colors[1], alpha = 0.6, color = modern_colors[1]) +
+  geom_vline(xintercept = median(df$completion_rate, na.rm = TRUE), 
+             linetype = "dashed", color = modern_colors[5], size = 1) +
   labs(title = "Distribution of Completion Rate",
-       x = "Completion Rate", 
-       y = "Frequency") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+       x = "Completion Rate",
+       y = "Density") +
+  theme_minimal()
 
-print(completion_rate_plot)
+completion_dist_plot
 ```
 
-Before fitting models, we inspect the distribution of the target variable completion rate. This helps assess skewness and understand the modeling target's general behavior. The distribution of completion_rate is roughly centered around 0.6–0.7 with no extreme skewness or heavy tails. Although the shape is not perfectly symmetric, it does not exhibit severe outliers or truncation.
+![](eda_files/figure-gfm/completion_distribution-1.png)<!-- -->
 
-```{r engagement_distribution}
+``` r
 engagement_dist_plot <- ggplot(df, aes(x = engagement_rate)) +
-  geom_histogram(bins = 30, fill = modern_colors[2], alpha = 0.8, 
-                 color = modern_colors[8], size = 0.4) +
-  geom_vline(aes(xintercept = mean(engagement_rate)), 
-             color = modern_colors[10], linetype = "dashed", linewidth = 1) +
+  geom_density(fill = modern_colors[2], alpha = 0.6, color = modern_colors[2]) +
+  geom_vline(xintercept = median(df$engagement_rate, na.rm = TRUE), 
+             linetype = "dashed", color = modern_colors[5], size = 1) +
   labs(title = "Distribution of Engagement Rate",
        x = "Engagement Rate",
-       y = "Frequency") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+       y = "Density") +
+  theme_minimal()
 
 engagement_dist_plot
 ```
 
-We also examine the distribution of engagement_rate to understand how users interact with video content outside of completion behavior. The engagement rate is highly right-skewed, with the vast majority of values concentrated below 0.10, indicating that most videos receive relatively low levels of interaction (likes, comments, shares). A long tail extends toward 0.25, suggesting a small subset of videos achieves notably higher engagement. This skewness is common in behavioral metrics and may warrant transformation if included in predictive modeling.
+![](eda_files/figure-gfm/engagement_distribution-1.png)<!-- -->
 
-```{r metrics_boxplot}
+``` r
 metrics_boxplot <- df %>%
   select(engagement_rate, completion_rate) %>%
   pivot_longer(everything(), names_to = "metric", values_to = "value") %>%
@@ -140,30 +181,32 @@ metrics_boxplot <- df %>%
        x = "",
        y = "Rate") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 metrics_boxplot
 ```
 
-```{r engagement_vs_completion}
+![](eda_files/figure-gfm/metrics_boxplot-1.png)<!-- -->
+
+``` r
 engagement_completion_plot <- ggplot(df, aes(x = completion_rate, y = engagement_rate)) +
   geom_point(alpha = 0.3, color = modern_colors[1]) +
   geom_smooth(method = "lm", color = modern_colors[2], se = TRUE, size = 1) +
   labs(title = "Engagement Rate vs Completion Rate",
        x = "Completion Rate",
        y = "Engagement Rate") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme_minimal()
 
 engagement_completion_plot
 ```
 
-A scatterplot of engagement rate against completion rate reveals a weak positive relationship between the two metrics. While higher engagement occasionally coincides with higher completion, the pattern is diffuse, indicating that completion does not strongly dictate engagement, or vice versa. This suggests that different factors may drive these two outcome measures, and they could be modeled separately if needed.
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+![](eda_files/figure-gfm/engagement_vs_completion-1.png)<!-- -->
 
 ## 2. Temporal Patterns: Upload Timing
 
-```{r hour_analysis_combined}
+``` r
 hour_analysis_data <- df %>%
   group_by(upload_hour) %>%
   summarise(
@@ -180,36 +223,34 @@ p1 <- ggplot(hour_analysis_data, aes(x = upload_hour, y = video_count)) +
   labs(title = "Video Count by Upload Hour",
        x = "Upload Hour (24h format)",
        y = "Video Count") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme_minimal()
 
 p2 <- ggplot(hour_analysis_data, aes(x = upload_hour, y = avg_completion)) +
   geom_line(color = modern_colors[4], size = 1.2) +
   geom_point(color = modern_colors[4], size = 3) +
   scale_x_continuous(breaks = seq(0, 23, 2)) +
-  labs(title = "Completion Rate by Upload Hour",
+  labs(title = "Avg Completion Rate by Upload Hour",
        x = "Upload Hour (24h format)",
        y = "Average Completion Rate") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme_minimal()
 
 p3 <- ggplot(hour_analysis_data, aes(x = upload_hour, y = avg_engagement)) +
   geom_line(color = modern_colors[5], size = 1.2) +
   geom_point(color = modern_colors[5], size = 3) +
   scale_x_continuous(breaks = seq(0, 23, 2)) +
-  labs(title = "Engagement Rate by Upload Hour",
+  labs(title = "Avg Engagement Rate by Upload Hour",
        x = "Upload Hour (24h format)",
        y = "Average Engagement Rate") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme_minimal()
 
 # Combine plots
 hour_analysis_combined <- p1 / (p2 | p3)
 hour_analysis_combined
 ```
-Video upload volume follows a distinct diurnal pattern, with peaks occurring during late afternoon and evening hours (e.g., 16-22). This likely corresponds to creator and audience activity patterns after school or work. However, the average completion rate remains relatively stable (~0.635-0.645) across all hours, showing little dependence on upload timing. Engagement rate exhibits minor fluctuations, with a possible slight elevation during peak upload hours, suggesting timing may influence interaction more than completion.
 
-```{r weekend_distribution}
+![](eda_files/figure-gfm/hour_analysis_combined-1.png)<!-- -->
+
+``` r
 weekend_data <- df %>%
   mutate(day_type = ifelse(is_weekend == 1, "Weekend", "Weekday")) %>%
   count(day_type)
@@ -222,13 +263,14 @@ weekend_plot <- ggplot(weekend_data, aes(x = day_type, y = n, fill = day_type)) 
        x = "Day Type",
        y = "Video Count") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 weekend_plot
 ```
 
-```{r weekend_performance}
+![](eda_files/figure-gfm/weekend_distribution-1.png)<!-- -->
+
+``` r
 weekend_performance_data <- df %>%
   mutate(day_type = ifelse(is_weekend == 1, "Weekend", "Weekday")) %>%
   group_by(day_type) %>%
@@ -247,8 +289,7 @@ p_completion <- ggplot(weekend_performance_data, aes(x = day_type, y = avg_compl
        x = "Day Type",
        y = "Average Completion Rate") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 p_engagement <- ggplot(weekend_performance_data, aes(x = day_type, y = avg_engagement, fill = day_type)) +
   geom_bar(stat = "identity", alpha = 0.8) +
@@ -258,46 +299,43 @@ p_engagement <- ggplot(weekend_performance_data, aes(x = day_type, y = avg_engag
        x = "Day Type",
        y = "Average Engagement Rate") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 weekend_performance_plot <- p_completion | p_engagement
 weekend_performance_plot
 ```
 
-Comparing upload volume and average metrics by day type shows that weekday uploads far exceed weekend uploads (29,953 vs. 18,126). However, average completion_rate remains nearly identical (~0.635) across both periods, implying that completion is not influenced by the day of upload. Engagement rate is slightly higher on weekdays (0.0755) than on weekends (0.054), which may reflect differences in audience availability or content type posted on different days.
+![](eda_files/figure-gfm/weekend_performance-1.png)<!-- -->
 
 ## 3. Content Characteristics: Duration and Title
 
-```{r duration_distribution}
+``` r
 duration_plot <- ggplot(df, aes(x = duration_sec)) +
   geom_histogram(bins = 50, fill = modern_colors[6], alpha = 0.7, color = "black") +
   labs(title = "Distribution of Video Duration",
        x = "Duration (seconds)",
        y = "Video Count") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme_minimal()
 
 duration_plot
 ```
 
-The distribution of video duration is heavily right-skewed, with a vast majority of videos being very short. A significant concentration of videos falls under 50 seconds, aligning with the platform's short-form video format. The frequency drops sharply as duration increases, with very few videos exceeding several minutes. This distribution is critical for understanding the inherent format of the data and may necessitate segmenting analysis by duration brackets (e.g., short vs. long).
+![](eda_files/figure-gfm/duration_distribution-1.png)<!-- -->
 
-```{r title_length_distribution}
+``` r
 title_length_plot <- ggplot(df, aes(x = title_length)) +
   geom_histogram(bins = 50, fill = modern_colors[7], alpha = 0.7, color = "black") +
   labs(title = "Distribution of Title Length",
        x = "Title Length (characters)",
        y = "Video Count") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme_minimal()
 
 title_length_plot
 ```
 
-Title lengths are concentrated within a relatively short range, typically between 10 and 40 characters. The distribution is unimodal, indicating a common convention for title brevity on the platform. 
+![](eda_files/figure-gfm/title_length_distribution-1.png)<!-- -->
 
-```{r title_completion_analysis}
+``` r
 title_completion_data <- df %>%
   mutate(title_bin = cut(title_length, 
                          breaks = seq(0, max(title_length, na.rm = TRUE) + 10, by = 10),
@@ -317,15 +355,14 @@ title_completion_plot <- ggplot(title_completion_data, aes(x = title_bin, y = av
        x = "Title Length (characters)",
        y = "Average Completion Rate") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 title_completion_plot
 ```
 
-The relationship between title length (in characters) and average completion rate appears non-linear and complex. While the provided chart shows variations, there is no consistent monotonic trend. Completion rates fluctuate within a narrow band across different title length buckets. This implies that the mere length of a title is not a primary driver of completion; instead, the semantic content, clarity, or use of elements like emojis may be more influential.
+![](eda_files/figure-gfm/title_completion_analysis-1.png)<!-- -->
 
-```{r emoji_comparison}
+``` r
 emoji_performance_data <- df %>%
   mutate(emoji_usage = ifelse(has_emoji == 1, "With Emoji", "Without Emoji")) %>%
   group_by(emoji_usage) %>%
@@ -336,6 +373,16 @@ emoji_performance_data <- df %>%
     .groups = "drop"
   )
 
+print(emoji_performance_data)
+```
+
+    ## # A tibble: 2 × 4
+    ##   emoji_usage   video_count avg_completion avg_engagement
+    ##   <chr>               <int>          <dbl>          <dbl>
+    ## 1 With Emoji          22135          0.650         0.0815
+    ## 2 Without Emoji       25944          0.623         0.0702
+
+``` r
 p_emoji_completion <- ggplot(emoji_performance_data, aes(x = emoji_usage, y = avg_completion, fill = emoji_usage)) +
   geom_bar(stat = "identity", alpha = 0.8) +
   geom_text(aes(label = round(avg_completion, 4)), vjust = -0.5, size = 4) +
@@ -345,8 +392,7 @@ p_emoji_completion <- ggplot(emoji_performance_data, aes(x = emoji_usage, y = av
        x = "Emoji Usage",
        y = "Average Completion Rate") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 p_emoji_engagement <- ggplot(emoji_performance_data, aes(x = emoji_usage, y = avg_engagement, fill = emoji_usage)) +
   geom_bar(stat = "identity", alpha = 0.8) +
@@ -357,14 +403,15 @@ p_emoji_engagement <- ggplot(emoji_performance_data, aes(x = emoji_usage, y = av
        x = "Emoji Usage",
        y = "Average Engagement Rate") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 emoji_comparison_plot <- p_emoji_completion | p_emoji_engagement
 emoji_comparison_plot
 ```
 
-```{r emoji_boxplot}
+![](eda_files/figure-gfm/emoji_comparison-1.png)<!-- -->
+
+``` r
 emoji_boxplot <- df %>%
   mutate(emoji_usage = ifelse(has_emoji == 1, "With Emoji", "Without Emoji")) %>%
   select(emoji_usage, completion_rate, engagement_rate) %>%
@@ -383,17 +430,16 @@ emoji_boxplot <- df %>%
        x = "Emoji Usage",
        y = "Rate") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 emoji_boxplot
 ```
 
-The presence of emojis in video titles shows a clear positive association with both performance metrics. Videos with emojis have a higher average completion rate compared to those without. The effect on engagement rate is even more pronounced. This suggests that emojis may serve as effective visual cues that enhance click-through rates, initial viewer retention, and propensity to interact, making title design a potentially important feature.
+![](eda_files/figure-gfm/emoji_boxplot-1.png)<!-- -->
 
 ## 4. Content Type and Category
 
-```{r category_distribution}
+``` r
 category_data <- df %>%
   count(category) %>%
   arrange(desc(n)) %>%
@@ -411,15 +457,15 @@ category_plot <- ggplot(category_data, aes(x = "", y = n, fill = category)) +
   labs(title = "Top 15 Video Categories Distribution",
        fill = "Category") +
   theme_void() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
         legend.position = "right")
 
 category_plot
 ```
 
-The dataset encompasses videos from 15 primary content categories, indicating a diverse range of topics. This breadth allows for analysis of how completion and engagement behaviors vary across different types of content, such as Art, Gaming, Fitness, and Tech.
+![](eda_files/figure-gfm/category_distribution-1.png)<!-- -->
 
-```{r hashtag_analysis}
+``` r
 hashtag_data <- df %>%
   group_by(hashtag) %>%
   summarise(
@@ -437,17 +483,16 @@ hashtag_plot <- ggplot(hashtag_data, aes(x = reorder(hashtag, total_views), y = 
   labs(title = "Top 20 Hashtags by Total Views",
        x = "Hashtag",
        y = "Total Views") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme_minimal()
 
 hashtag_plot
 ```
 
-Analysis of top hashtags reveals immense disparities in total viewership. Hashtags like #FYP (For You Page) and #GRWM (Get Ready With Me) garner billions of views, representing major content trends and discovery mechanisms on the platform. In contrast, niche tags like #BookTok or #StudyWithMe have significantly lower but still substantial view counts.
+![](eda_files/figure-gfm/hashtag_analysis-1.png)<!-- -->
 
 ## 5. Creator Analysis
 
-```{r creator_views_correlation}
+``` r
 creator_views_plot <- ggplot(df, aes(x = creator_avg_views, y = views)) +
   geom_point(alpha = 0.05, color = modern_colors[8]) +
   geom_smooth(method = "lm", color = modern_colors[9], se = TRUE, size = 1) +
@@ -456,17 +501,18 @@ creator_views_plot <- ggplot(df, aes(x = creator_avg_views, y = views)) +
   labs(title = "Creator Average Views vs Video Views",
        x = "Creator Average Views (Log Scale)",
        y = "Video Views (Log Scale)") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme_minimal()
 
 creator_views_plot
 ```
 
-A scatterplot of individual video views against the creator's average view count (both on a log scale) reveals the expected positive correlation but with significant dispersion. Videos from creators with a high average view base tend to also achieve high view counts for individual videos, forming a diagonal trend. However, there is substantial vertical spread, indicating that even creators with a moderate or low average following can produce occasional viral hits that far exceed their typical performance. Conversely, some videos from high-average creators underperform relative to their baseline. This highlights that while a creator's established audience is a strong predictor, the content-specific factors of an individual video are critical determinants of its success.
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+![](eda_files/figure-gfm/creator_views_correlation-1.png)<!-- -->
 
 ## 6. Platform Comparison
 
-```{r platform_performance}
+``` r
 platform_data <- df %>%
   group_by(platform) %>%
   summarise(
@@ -479,6 +525,16 @@ platform_data <- df %>%
   ) %>%
   arrange(desc(avg_completion))
 
+print(platform_data)
+```
+
+    ## # A tibble: 2 × 6
+    ##   platform video_count avg_completion avg_engagement avg_views total_views
+    ##   <chr>          <int>          <dbl>          <dbl>     <dbl>       <dbl>
+    ## 1 TikTok         28844          0.676         0.0918    99800.  2878625796
+    ## 2 YouTube        19235          0.574         0.0509    98532.  1895270855
+
+``` r
 p_platform_completion <- ggplot(platform_data, aes(x = platform, y = avg_completion, fill = platform)) +
   geom_bar(stat = "identity", alpha = 0.8) +
   geom_text(aes(label = round(avg_completion, 4)), vjust = -0.5, size = 4) +
@@ -488,8 +544,7 @@ p_platform_completion <- ggplot(platform_data, aes(x = platform, y = avg_complet
        x = "Platform",
        y = "Average Completion Rate") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 p_platform_engagement <- ggplot(platform_data, aes(x = platform, y = avg_engagement, fill = platform)) +
   geom_bar(stat = "identity", alpha = 0.8) +
@@ -500,14 +555,15 @@ p_platform_engagement <- ggplot(platform_data, aes(x = platform, y = avg_engagem
        x = "Platform",
        y = "Average Engagement Rate") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 platform_plot <- p_platform_completion | p_platform_engagement
 platform_plot
 ```
 
-```{r platform_boxplot}
+![](eda_files/figure-gfm/platform_performance-1.png)<!-- -->
+
+``` r
 platform_boxplot <- df %>%
   select(platform, completion_rate, engagement_rate) %>%
   pivot_longer(cols = c(completion_rate, engagement_rate),
@@ -525,12 +581,9 @@ platform_boxplot <- df %>%
        x = "Platform",
        y = "Rate") +
   theme_minimal() +
-  theme(legend.position = "none",
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14))
+  theme(legend.position = "none")
 
 platform_boxplot
 ```
 
-The average performance metrics between TikTok and YouTube are remarkably similar. The average completion rate is slightly higher on TikTok compared to YouTube , while the average engagement rate is also marginally greater on TikTok. However, the distribution of engagement rates reveals a more notable difference: TikTok's distribution is more right-skewed with a thicker tail toward higher engagement values, whereas YouTube's engagement rates are more tightly clustered at lower values. This suggests that while overall averages are comparable, the potential for high engagement virality might be structurally different between the platforms, with TikTok facilitating more extreme "outlier" engagement events.
-
-[Next: Completion Rate Analysis →](regression_analysis.html)
+![](eda_files/figure-gfm/platform_boxplot-1.png)<!-- -->
