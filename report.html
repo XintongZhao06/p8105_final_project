@@ -11,7 +11,7 @@
 
 
 
-<title>report.knit</title>
+<title>Short-Form Video Analytics: Completion Rate and Trend Prediction</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,7 +29,11 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
@@ -218,7 +222,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -228,6 +298,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -286,16 +366,198 @@ $(document).ready(function () {
 
 <div id="header">
 
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
+
+<h1 class="title toc-ignore">Short-Form Video Analytics: Completion Rate
+and Trend Prediction</h1>
 
 </div>
 
 
-<p>{ {;;} {*;;} }</p>
+<!-- Collapsible Top TOC -->
+<details style="padding:12px; border: 1px solid #ccc; border-radius:6px;
+                background:#f8f9fa; margin-bottom:20px;">
+<summary style="font-size:20px; font-weight:bold; cursor:pointer;">
+📘 Click to Expand Table of Contents
+</summary>
+<p><br></p>
+<div id="custom-toc">
+<!-- TOC will be injected automatically after page loads -->
+</div>
+</details>
+<script>
+// Copy existing R Markdown TOC into the collapsible TOC box
+document.addEventListener("DOMContentLoaded", function() {
+  // R Markdown TOC is usually in nav#toc or .toc
+  var toc = document.querySelector("nav#toc") || document.querySelector(".toc");
+  var target = document.getElementById("custom-toc");
+
+  if (toc && target) {
+    target.innerHTML = toc.innerHTML;
+  }
+});
+</script>
+<div id="abstract" class="section level1">
+<h1><strong>0 Abstract</strong></h1>
+<p>A concise summary of project motivation, data, methods, and key
+findings.</p>
+</div>
+<div id="motivation" class="section level1">
+<h1><strong>1 Motivation</strong></h1>
+<p>Short-form platforms such as TikTok and YouTube Shorts generate
+massive volumes of user interaction data. Understanding patterns that
+drive <strong>completion rate</strong> (viewer retention) and
+<strong>trend label</strong> (whether a video becomes trending) provides
+insight into how videos perform and how creators or platforms might
+optimize content.</p>
+<p>Our project is motivated by two central questions:</p>
+<ul>
+<li><strong>Which video attributes show statistical associations with
+completion rate?</strong><br />
+</li>
+<li><strong>Can trend labels be predicted from metadata using machine
+learning?</strong></li>
+</ul>
+<p>We aim to distill interpretable insights, not merely build
+high-accuracy models. Completion rate is influenced by content quality
+and recommendation algorithms, neither of which is directly measured.
+Therefore, we expect relatively low explanatory power from traditional
+statistical models, and the analysis is intended as a descriptive
+exploration.</p>
+</div>
+<div id="related-work" class="section level1">
+<h1><strong>2 Related Work</strong></h1>
+<p>(Anything that inspired you, such as a paper, a web site, or
+something we discussed in class.)</p>
+<p>(We anticipate that your project will change somewhat over time;
+these changes and the reasons for them should be documented!)</p>
+</div>
+<div id="initial-questions-and-project-evolution"
+class="section level1">
+<h1><strong>3 Initial questions and project evolution</strong></h1>
+<p>(What questions are you trying to answer? How did these questions
+evolve over the course of the project? What new questions did you
+consider in the course of your analysis?)</p>
+<p>We began with broad exploratory questions for the two topics.</p>
+<div id="topic-1-completion-rate" class="section level3">
+<h3><strong>Topic 1 — Completion Rate</strong></h3>
+<ul>
+<li>Initial question: <em>Which features correlate with how fully
+viewers watch a video?</em><br />
+</li>
+<li>After EDA, we refined our focus to modeling structural associations
+using regression.<br />
+</li>
+<li>As diagnostics suggested nonlinearity, we extended the models to
+include GAMs.</li>
+</ul>
+</div>
+<div id="topic-2-trend-label-prediction" class="section level3">
+<h3><strong>Topic 2 — Trend Label Prediction</strong></h3>
+<ul>
+<li>Initial question: <em>Can trending videos be predicted from
+metadata?</em><br />
+</li>
+<li>Adjustments based on EDA, class imbalance, chosen models, and
+performance results.</li>
+</ul>
+</div>
+</div>
+<div id="data" class="section level1">
+<h1><strong>4 Data</strong></h1>
+<p>(Source, scraping method, cleaning, etc.)</p>
+<ul>
+<li>Source of dataset</li>
+<li>Scraping or collection details</li>
+<li>Variables (completion_rate, trend_label, views, likes, etc.)<br />
+</li>
+<li>Cleaning steps</li>
+<li>Transformations:
+<ul>
+<li>log-transform of engagement variables which are skewness</li>
+<li>converting categorical variables into factors</li>
+</ul></li>
+</ul>
+</div>
+<div id="exploratory-data-analysis-eda" class="section level1">
+<h1><strong>5 Exploratory Data Analysis (EDA)</strong></h1>
+<div id="eda-completion-rate" class="section level2">
+<h2><strong>5.1 EDA — Completion Rate</strong></h2>
+<p>(Visualizations, summaries, and exploratory statistical analyses.
+Justify the steps you took, and show any major changes to your
+ideas.)</p>
+</div>
+<div id="eda-trend-label" class="section level2">
+<h2><strong>5.2 EDA — Trend Label</strong></h2>
+</div>
+</div>
+<div id="additional-analysis" class="section level1">
+<h1><strong>6. Additional Analysis</strong></h1>
+<div id="topic-1-modeling-completion-rate" class="section level2">
+<h2><strong>6.1 Topic 1: Modeling Completion Rate</strong></h2>
+<p>(ZBR) ### <strong>6.1.1 Modeling Motivation</strong></p>
+<p>Completion rate is a continuous outcome influenced by timing factors,
+creator metadata, and engagement patterns.<br />
+We model completion_rate using regression to quantify associations, not
+to maximize predictive performance.<br />
+Because completion behavior depends on creative quality and
+recommendation exposure—both unobserved variables—we expect low R²
+values and interpret the model as descriptive.</p>
+<div id="regression-models" class="section level3">
+<h3><strong>6.1.2 Regression Models</strong></h3>
+<hr />
+</div>
+<div id="conclusion-for-topic-1" class="section level3">
+<h3><strong>Conclusion for Topic 1</strong></h3>
+<p>Completion rate shows consistent associations with duration,
+engagement intensity, creator reach, and formatting choices. However,
+low R² values highlight the importance of unobserved creative factors.
+Regression provides structural insights, not predictive accuracy, and
+motivates future modeling incorporating content-based features.</p>
+</div>
+</div>
+<div id="topic-2-modeling-trend-label" class="section level2">
+<h2><strong>6.2 Topic 2: Modeling Trend Label</strong></h2>
+<p>(ZXT)</p>
+</div>
+</div>
+<div id="discussion" class="section level1">
+<h1><strong>7. Discussion</strong></h1>
+<p>(What were your findings? Are they what you expect? What insights
+into the data can you make?)</p>
+<div id="completion-rate-insights" class="section level2">
+<h2><strong>7.1 Completion Rate Insights</strong></h2>
+<p>(ZBR)</p>
+</div>
+<div id="trend-prediction-insights" class="section level2">
+<h2><strong>7.2 Trend Prediction Insights</strong></h2>
+<p>(ZXT)</p>
+</div>
+<div id="unexpected-findings" class="section level2">
+<h2><strong>7.3 Unexpected Findings</strong></h2>
+<ul>
+<li>Low R² but realistic (ZBR)</li>
+<li>Nonlinear models did not substantially outperform linear models
+(ZBR) () ()</li>
+</ul>
+</div>
+</div>
+<div id="limitations-and-future-work" class="section level1">
+<h1><strong>8 Limitations and Future Work</strong></h1>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -327,7 +589,41 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

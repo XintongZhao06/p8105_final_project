@@ -1,6 +1,167 @@
-{\rtf1\ansi\ansicpg936\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-}
+---
+title: "Short-Form Video Analytics: Completion Rate and Trend Prediction"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    highlight: textmate
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  warning = FALSE, 
+  message = FALSE,
+  fig.align = "center"
+)
+
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+```
+
+<!-- Collapsible Top TOC -->
+<details style="padding:12px; border: 1px solid #ccc; border-radius:6px;
+                background:#f8f9fa; margin-bottom:20px;">
+<summary style="font-size:20px; font-weight:bold; cursor:pointer;">
+📘 Click to Expand Table of Contents
+</summary>
+
+<br>
+
+<div id="custom-toc">
+<!-- TOC will be injected automatically after page loads -->
+</div>
+
+</details>
+
+<script>
+// Copy existing R Markdown TOC into the collapsible TOC box
+document.addEventListener("DOMContentLoaded", function() {
+  // R Markdown TOC is usually in nav#toc or .toc
+  var toc = document.querySelector("nav#toc") || document.querySelector(".toc");
+  var target = document.getElementById("custom-toc");
+
+  if (toc && target) {
+    target.innerHTML = toc.innerHTML;
+  }
+});
+</script>
+
+
+# **0 Abstract**
+A concise summary of project motivation, data, methods, and key findings.
+
+
+
+# **1 Motivation**
+
+Short-form platforms such as TikTok and YouTube Shorts generate massive volumes of user interaction data. Understanding patterns that drive **completion rate** (viewer retention) and **trend label** (whether a video becomes trending) provides insight into how videos perform and how creators or platforms might optimize content.
+
+Our project is motivated by two central questions:
+
+- **Which video attributes show statistical associations with completion rate?**  
+- **Can trend labels be predicted from metadata using machine learning?**
+
+We aim to distill interpretable insights, not merely build high-accuracy models. Completion rate is influenced by content quality and recommendation algorithms, neither of which is directly measured. Therefore, we expect relatively low explanatory power from traditional statistical models, and the analysis is intended as a descriptive exploration.
+
+
+
+# **2 Related Work**
+(Anything that inspired you, such as a paper, a web site, or something we discussed in class.)
+
+(We anticipate that your project will change somewhat over time; these changes and the reasons for them should be documented!)
+
+
+# **3 Initial questions and project evolution**
+(What questions are you trying to answer? How did these questions evolve over the course of the project? What new questions did you consider in the course of your analysis?)
+
+We began with broad exploratory questions for the two topics.
+
+### **Topic 1 — Completion Rate**
+- Initial question: *Which features correlate with how fully viewers watch a video?*  
+- After EDA, we refined our focus to modeling structural associations using regression.  
+- As diagnostics suggested nonlinearity, we extended the models to include GAMs.
+
+### **Topic 2 — Trend Label Prediction**
+- Initial question: *Can trending videos be predicted from metadata?*  
+- Adjustments based on EDA, class imbalance, chosen models, and performance results.
+
+
+
+# **4 Data**
+(Source, scraping method, cleaning, etc.)
+
+
+- Source of dataset
+- Scraping or collection details
+- Variables (completion_rate, trend_label, views, likes, etc.)  
+- Cleaning steps 
+- Transformations: 
+  - log-transform of engagement variables which are skewness 
+  - converting categorical variables into factors  
+
+
+
+# **5 Exploratory Data Analysis (EDA)**
+
+## **5.1 EDA — Completion Rate**
+(Visualizations, summaries, and exploratory statistical analyses. Justify the steps you took, and show any major changes to your ideas.)
+
+## **5.2 EDA — Trend Label**
+
+
+
+# **6. Additional Analysis**
+
+## **6.1 Topic 1: Modeling Completion Rate**
+(ZBR)
+### **6.1.1 Modeling Motivation**
+
+Completion rate is a continuous outcome influenced by timing factors, creator metadata, and engagement patterns.  
+We model completion_rate using regression to quantify associations, not to maximize predictive performance.  
+Because completion behavior depends on creative quality and recommendation exposure—both unobserved variables—we expect low R² values and interpret the model as descriptive.
+
+
+### **6.1.2 Regression Models**
+
+
+
+
+---
+
+### **Conclusion for Topic 1**
+Completion rate shows consistent associations with duration, engagement intensity, creator reach, and formatting choices. However, low R² values highlight the importance of unobserved creative factors. Regression provides structural insights, not predictive accuracy, and motivates future modeling incorporating content-based features.
+
+
+
+## **6.2 Topic 2: Modeling Trend Label**
+(ZXT)
+
+
+
+# **7. Discussion**
+(What were your findings? Are they what you expect? What insights into the data can you make?)
+
+## **7.1 Completion Rate Insights**
+(ZBR)
+
+
+
+## **7.2 Trend Prediction Insights**
+(ZXT)
+
+
+## **7.3 Unexpected Findings**
+- Low R² but realistic  (ZBR)
+- Nonlinear models did not substantially outperform linear models   (ZBR)
+()
+()
+
+
+# **8 Limitations and Future Work**
+
+
+
