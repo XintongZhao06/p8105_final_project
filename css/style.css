@@ -1,3 +1,4 @@
+
 /* ===== Global Styles ===== */
 :root {
     --primary-color: #3498db;
@@ -158,6 +159,48 @@ body {
     padding-left: 0;
 }
 
+/* ===== About Us Section ===== */
+.about-section {
+    background: white;
+}
+
+.team-card {
+    padding: 1.5rem;
+    border-radius: 15px;
+    background: var(--light-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.team-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.team-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 5px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 50%; /* 圆形头像 */
+}
+
+.team-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.team-role {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
 /* ===== Findings Section ===== */
 .chart-container {
     background: white;
@@ -245,6 +288,11 @@ body {
     
     .section-title {
         font-size: 2rem;
+    }
+    
+    .team-img {
+        width: 120px;
+        height: 120px;
     }
 }
 
