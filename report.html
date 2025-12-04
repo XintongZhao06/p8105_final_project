@@ -736,10 +736,10 @@ assumptions, we examine the standard set of diagnostic plots. These
 plots provide insight into linearity, homoscedasticity, normality of
 residuals, and the influence of individual observations.</p>
 <div style="text-align: center;">
-<img src="regression_images/diagnostic_checks.png" width="100%">
 <p>
-Figure 6.x    Diagnostic plots for the stepwise linear model
+Figure 6.1    Diagnostic plots for the stepwise linear model
 </p>
+<p><img src="regression_images/diagnostic_checks.png" width="100%"></p>
 </div>
 <p>The Residuals vs Fitted and Scale–Location plots show slight changes
 in residual spread across fitted values, indicating mild
@@ -803,11 +803,11 @@ interpretable fitted curves. Variables such as <code>log_likes</code> or
 <code>has_emoji</code> are either discrete or less suitable for
 illustrating non-linear patterns.</p>
 <div style="text-align: center;">
-<img src="regression_images/nonlinear_comparison.png" width="100%">
 <p>
-Figure 6.1    Visual comparison of linear, smooth GAM, and wiggly GAM
+Figure 6.2    Visual comparison of linear, smooth GAM, and wiggly GAM
 fits
 </p>
+<img src="regression_images/nonlinear_comparison.png" width="100%">
 </div>
 <p>Across all three models, the downward association between video
 duration and completion_rate is clearly visible. The Linear Model
@@ -829,10 +829,10 @@ measure of forecasting accuracy, we use it here to assess the extent to
 which each model captures consistent patterns versus overfitting
 noise.</p>
 <div style="text-align: center;">
-<img src="regression_images/RMSE_distribution.png" width="100%">
 <p>
-Figure 6.2    RMSE distributions for the linear and GAM models
+Figure 6.3    RMSE distributions for the linear and GAM models
 </p>
+<p><img src="regression_images/RMSE_distribution.png" width="100%"></p>
 </div>
 <p>The RMSE distributions show that the Linear Model and Smooth GAM
 produce similarly low and stable error levels across folds, indicating
@@ -1113,8 +1113,8 @@ than the functional form of the model. In conclusion, metadata can
 reveal some meaningful patterns, but it can only explain a small
 fraction of audience behavior on short video platforms.</p>
 </div>
-<div id="trend-prediction-insights" class="section level2">
-<h2><strong>7.2 Trend Prediction Insights</strong></h2>
+<div id="discussion-of-trend-prediction" class="section level2">
+<h2><strong>7.2 Discussion of Trend Prediction</strong></h2>
 <p>The analysis reveals several significant findings that largely align
 with expectations from short-form video platform dynamics. The superior
 performance of Gradient Boosting was anticipated, given its proven

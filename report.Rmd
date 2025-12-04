@@ -246,8 +246,8 @@ Despite these incremental differences, all three models ultimately exhibit low r
 To assess whether the stepwise model satisfies key regression assumptions, we examine the standard set of diagnostic plots. These plots provide insight into linearity, homoscedasticity, normality of residuals, and the influence of individual observations.
 
 <div style="text-align: center;"> 
+<p>Figure 6.1&nbsp;&nbsp;&nbsp;&nbsp;Diagnostic plots for the stepwise linear model</p> 
 <img src="regression_images/diagnostic_checks.png" width="100%"> 
-<p>Figure 6.x&nbsp;&nbsp;&nbsp;&nbsp;Diagnostic plots for the stepwise linear model</p> 
 </div>
 
 The Residuals vs Fitted and Scale–Location plots show slight changes in residual spread across fitted values, indicating mild heteroscedasticity and some non-linearity. The Q–Q plot reveals noticeable deviations in the tails from a normal distribution; however, this is also expected because Q–Q plots become highly sensitive with large sample sizes and can highlight even very small departures from normality. The Residuals vs Leverage plot shows a few moderately high-leverage points, but none appear strongly influential. 
@@ -279,8 +279,9 @@ These models represent a progression from simple to increasingly flexible struct
 To illustrate differences in model behavior, we visualize fitted values against `duration_sec`, because it is a continuous predictor that allows the linear, smooth, and wiggly models to produce interpretable fitted curves. Variables such as `log_likes` or `has_emoji` are either discrete or less suitable for illustrating non-linear patterns.
 
 <div style="text-align: center;"> 
+<p>Figure 6.2&nbsp;&nbsp;&nbsp;&nbsp;Visual comparison of linear, smooth GAM, and wiggly GAM fits</p>
 <img src="regression_images/nonlinear_comparison.png" width="100%"> 
-<p>Figure 6.1&nbsp;&nbsp;&nbsp;&nbsp;Visual comparison of linear, smooth GAM, and wiggly GAM fits</p> </div>
+ </div>
 
 Across all three models, the downward association between video duration and completion_rate is clearly visible. The Linear Model produces a simple declining line, while the Smooth GAM allows gradual curvature but remains stable and consistent with overall trends. In contrast, the Wiggly GAM shows highly fluctuating and unstable fits, suggesting overfitting to noise rather than capturing meaningful structure.
 
@@ -289,8 +290,8 @@ Across all three models, the downward association between video duration and com
 Although prediction is not the primary goal of our analysis, cross-validated RMSE provides a useful way to compare how differently structured models behave out of sample and whether added flexibility leads to more stable estimates. Rather than interpreting RMSE as a measure of forecasting accuracy, we use it here to assess the extent to which each model captures consistent patterns versus overfitting noise.
 
 <div style="text-align: center;"> 
+<p>Figure 6.3&nbsp;&nbsp;&nbsp;&nbsp;RMSE distributions for the linear and GAM models</p> 
 <img src="regression_images/RMSE_distribution.png" width="100%"> 
-<p>Figure 6.2&nbsp;&nbsp;&nbsp;&nbsp;RMSE distributions for the linear and GAM models</p> 
 </div>
 
 The RMSE distributions show that the Linear Model and Smooth GAM produce similarly low and stable error levels across folds, indicating that their fitted relationships generalize reasonably well to held-out data. In contrast, the Wiggly GAM exhibits both higher RMSE values and substantially greater variability, showing the instability observed in its fitted curve. This pattern reinforces the conclusion that excessive model flexibility primarily captures sampling noise rather than meaningful structure in the relationship between duration and completion rate.
@@ -478,7 +479,7 @@ These findings offer several broader insights. View completion rates appear to d
 
 
 
-## **7.2 Trend Prediction Insights**
+## **7.2 Discussion of Trend Prediction**
 
 The analysis reveals several significant findings that largely align with expectations from short-form video platform dynamics. The superior performance of Gradient Boosting was anticipated, given its proven effectiveness in handling structured data with complex feature interactions. What exceeded expectations was the magnitude of difference between models, with Gradient Boosting achieving 3.2% higher accuracy than its nearest competitor.
 
