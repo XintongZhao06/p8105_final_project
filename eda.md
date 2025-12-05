@@ -21,7 +21,7 @@ df <- read_csv("./data/youtube_shorts_tiktok_trends_2025.csv") %>%
 ```
 
     ## Rows: 48079 Columns: 58
-    ## ── Column specification ─────────────────────────────────────────────────────────────────────
+    ## ── Column specification ────────────────────────────────────────────────────
     ## Delimiter: ","
     ## chr  (28): platform, country, region, language, category, hashtag, title_key...
     ## dbl  (29): week_of_year, duration_sec, views, likes, comments, shares, saves...
