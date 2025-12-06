@@ -400,7 +400,7 @@ attributes—and their statistical associations with completion rate</li>
 labels constructed from weighted engagement scores</li>
 </ol>
 <div id="key-findings" class="section level2">
-<h2>Key Findings</h2>
+<h2><strong>0.1 Key Findings</strong></h2>
 <p><strong>Completion Rate Analysis:</strong> Duration emerges as the
 strongest correlate of retention, while overall explanatory power
 remains low due to unobserved creative and algorithmic factors.</p>
@@ -411,7 +411,7 @@ platform–tier dynamics, regional differences, and engagement
 velocity.</p>
 </div>
 <div id="contributions" class="section level2">
-<h2>Contributions</h2>
+<h2><strong>0.2 Contributions</strong></h2>
 <p>This project offers a dual contribution: - <strong>Descriptive
 insights</strong> into structural factors influencing viewer retention -
 <strong>A practical framework</strong> for predicting video popularity
@@ -433,13 +433,13 @@ become increasingly opaque, identifying measurable, metadata-based
 signals of performance becomes both practically valuable and
 analytically challenging.</p>
 <div id="research-questions" class="section level2">
-<h2>Research Questions</h2>
+<h2><strong>1.1 Research Questions</strong></h2>
 <p>Our project is motivated by two central questions:</p>
 <div
-id="question-1-which-video-attributes-show-statistical-associations-with-completion-rate"
+id="which-video-attributes-show-statistical-associations-with-completion-rate"
 class="section level3">
-<h3><strong>Question 1: Which video attributes show statistical
-associations with completion rate?</strong></h3>
+<h3><strong>1.1.1 Which video attributes show statistical associations
+with completion rate?</strong></h3>
 <p>Completion rate is one of the most direct indicators of viewer
 interest, yet it is also shaped by unobserved content qualities such as:
 - Pacing and narrative structure - Editing style and visual quality -
@@ -455,10 +455,10 @@ attributes relate to viewer behavior.</p>
 </blockquote>
 </div>
 <div
-id="question-2-can-trend-labels-be-predicted-from-metadata-using-machine-learning"
+id="can-trend-labels-be-predicted-from-metadata-using-machine-learning"
 class="section level3">
-<h3><strong>Question 2: Can trend labels be predicted from metadata
-using machine learning?</strong></h3>
+<h3><strong>1.1.2 Can trend labels be predicted from metadata using
+machine learning?</strong></h3>
 <p>Emerging trends on short-form platforms are influenced by: - Social
 contagion dynamics - Algorithmic amplification - Cross-platform cultural
 patterns</p>
@@ -472,14 +472,14 @@ engagement metrics.</p>
 </div>
 </div>
 <div id="methodological-approach" class="section level2">
-<h2>Methodological Approach</h2>
+<h2><strong>1.2 Methodological Approach</strong></h2>
 <p>Beyond these two questions, the project is guided by a broader
 methodological motivation: <strong>to understand the limits and
 possibilities of metadata analytics</strong> in a domain dominated by
 creative expression, algorithmic influence, and rapidly evolving user
 behavior.</p>
 <div id="why-completion-rate-is-challenging" class="section level3">
-<h3>Why Completion Rate is Challenging</h3>
+<h3><strong>1.2.1 Why Completion Rate is Challenging</strong></h3>
 <p>Completion rate, by its nature, is tightly linked to content
 quality—which is not directly observable—so we anticipate low
 explanatory power from statistical models. This expectation shapes our
@@ -488,7 +488,7 @@ emphasize: - Descriptive modeling - Structural pattern identification -
 Model interpretability</p>
 </div>
 <div id="why-trend-prediction-may-work-better" class="section level3">
-<h3>Why Trend Prediction May Work Better</h3>
+<h3><strong>1.2.2 Why Trend Prediction May Work Better</strong></h3>
 <p>The shift to trend prediction acknowledges that some aspects of video
 popularity may be more amenable to machine learning. Engagement-driven
 trend labels: - Capture richer behavioral signals than completion rate
@@ -497,7 +497,7 @@ meaningfully approximate</p>
 </div>
 </div>
 <div id="project-vision" class="section level2">
-<h2>Project Vision</h2>
+<h2><strong>1.3 Project Vision</strong></h2>
 <p>Overall, the project is driven by a desire to <strong>bridge
 interpretability and predictability</strong>, examining what metadata
 can reveal about short-form video performance—and where its limitations
@@ -510,9 +510,9 @@ begin.</p>
 for short-form videos, drawing inspiration from practical research in
 the short-form video field, industry reports, and class discussions.</p>
 <div id="academic-research-foundations" class="section level2">
-<h2>Academic Research Foundations</h2>
+<h2><strong>2.1 Academic Research Foundations</strong></h2>
 <div id="short-video-engagement-dynamics" class="section level3">
-<h3>Short-Video Engagement Dynamics</h3>
+<h3><strong>2.1.1 Short-Video Engagement Dynamics</strong></h3>
 <p>Key insights include studies on TikTok and YouTube Shorts
 performance, which identify <strong>video duration</strong> and
 <strong>upload timing</strong> as critical factors influencing
@@ -520,7 +520,7 @@ completion rates. These findings guided the focus on temporal patterns
 and content characteristics in our Exploratory Data Analysis (EDA).</p>
 </div>
 <div id="engagement-rate-distributions" class="section level3">
-<h3>Engagement Rate Distributions</h3>
+<h3><strong>2.1.2 Engagement Rate Distributions</strong></h3>
 <p>Research on short-video metrics notes that engagement rates exhibit
 <strong>skewed distributions</strong>, consistent with our observation
 of right-skewed engagement rates. This supports the use of
@@ -528,7 +528,7 @@ of right-skewed engagement rates. This supports the use of
 </div>
 </div>
 <div id="industry-resources" class="section level2">
-<h2>Industry Resources</h2>
+<h2><strong>2.2 Industry Resources</strong></h2>
 <p>Industry resources played a vital role in shaping our approach:</p>
 <ul>
 <li><strong>Short-form video datasets</strong> from Kaggle provided
@@ -544,16 +544,16 @@ Trend Reports) informed feature selection, such as:
 </div>
 <div id="methodological-guidance-from-coursework"
 class="section level2">
-<h2>Methodological Guidance from Coursework</h2>
+<h2><strong>2.3 Methodological Guidance from Coursework</strong></h2>
 <div id="handling-imbalanced-data" class="section level3">
-<h3>Handling Imbalanced Data</h3>
+<h3><strong>2.3.1 Handling Imbalanced Data</strong></h3>
 <p>Class discussions on predictive modeling for imbalanced data led to
 the adoption of: - <strong>Weighted F1-scores</strong> for evaluation -
 <strong>Stratified cross-validation</strong> to address uneven
 distribution of trend labels (Low/Medium/High)</p>
 </div>
 <div id="eda-best-practices" class="section level3">
-<h3>EDA Best Practices</h3>
+<h3><strong>2.3.2 EDA Best Practices</strong></h3>
 <p>Courses on EDA best practices guided the development of a systematic
 analytical framework, prioritizing: 1. Analysis of key metrics 2.
 Temporal pattern identification 3. Platform difference characterization
@@ -561,23 +561,24 @@ Temporal pattern identification 3. Platform difference characterization
 </div>
 </div>
 <div id="project-evolution" class="section level2">
-<h2>Project Evolution</h2>
+<h2><strong>2.4 Project Evolution</strong></h2>
 <div id="initial-focus-completion-rate-prediction"
 class="section level3">
-<h3>Initial Focus: Completion Rate Prediction</h3>
+<h3><strong>2.4.1 Initial Focus: Completion Rate
+Prediction</strong></h3>
 <p>The project initially planned to focus solely on completion rate
 prediction using standard regression and machine learning
 approaches.</p>
 </div>
 <div id="pivot-to-multi-metric-analysis" class="section level3">
-<h3>Pivot to Multi-Metric Analysis</h3>
+<h3><strong>2.4.2 Pivot to Multi-Metric Analysis</strong></h3>
 <p>This adjustment stemmed from insights from <strong>multi-metric
 engagement scoring frameworks</strong>—combining comments, shares, and
 views provides a more comprehensive reflection of content popularity
 than completion rate alone.</p>
 </div>
 <div id="platform-specific-behavior" class="section level3">
-<h3>Platform-Specific Behavior</h3>
+<h3><strong>2.4.3 Platform-Specific Behavior</strong></h3>
 <p>Research on platform-specific user behavior led to the addition of
 <strong>interaction features</strong> (e.g., platform-creator tier
 combinations) in feature engineering, as engagement drivers differ
@@ -585,7 +586,7 @@ between platforms like TikTok and YouTube Shorts.</p>
 </div>
 </div>
 <div id="integration-of-external-experience" class="section level2">
-<h2>Integration of External Experience</h2>
+<h2><strong>2.5 Integration of External Experience</strong></h2>
 <p>These adjustments are based on the integration of external
 experience, aiming to enhance the project’s: - <strong>Practical
 applicability</strong> for content creators and platforms -
@@ -599,7 +600,7 @@ class="section level1">
 <h1><strong>3. Initial Questions and Project Evolution</strong></h1>
 <div id="starting-point-focus-on-completion-rate"
 class="section level2">
-<h2>Starting Point: Focus on Completion Rate</h2>
+<h2><strong>3.1 Starting Point: Focus on Completion Rate</strong></h2>
 <p>The project began with an interest in understanding viewer retention
 by examining completion rate. Our initial plan included:</p>
 <ol style="list-style-type: decimal">
@@ -612,12 +613,10 @@ performance</li>
 </ol>
 </div>
 <div id="the-reality-check-low-predictability" class="section level2">
-<h2>The Reality Check: Low Predictability</h2>
+<h2><strong>3.2 The Reality Check: Low Predictability</strong></h2>
 <p>Early results revealed a critical finding: <strong>completion rate
 was extremely difficult to predict</strong>, even when more flexible
 machine learning models were applied.</p>
-<div id="why-was-this-challenging" class="section level3">
-<h3>Why Was This Challenging?</h3>
 <p>This outcome suggested that completion behavior is strongly driven by
 <strong>unobserved factors</strong> such as: - Creative quality and
 production value - Narrative pacing and emotional resonance - Visual
@@ -626,10 +625,10 @@ aesthetics and editing techniques - Algorithmic recommendation exposure
 <p>These elements are not present in metadata and fundamentally limit
 predictive power.</p>
 </div>
-</div>
 <div id="strategic-pivot-from-prediction-to-description"
 class="section level2">
-<h2>Strategic Pivot: From Prediction to Description</h2>
+<h2><strong>3.3 Strategic Pivot: From Prediction to
+Description</strong></h2>
 <p>As a result, completion rate was treated <strong>only as a
 descriptive target</strong>, and the focus shifted to: -
 <strong>Exploratory identification</strong> of structural associations -
@@ -642,13 +641,12 @@ can and cannot tell us</strong> about viewer behavior.</p>
 </div>
 <div id="expanding-scope-the-search-for-predictable-targets"
 class="section level2">
-<h2>Expanding Scope: The Search for Predictable Targets</h2>
+<h2><strong>3.4 Expanding Scope: The Search for Predictable
+Targets</strong></h2>
 <p>These findings prompted us to adjust the scope of our research. Since
 metadata did not explain view completion rates well, we began to
 consider whether <strong>other performance metrics were more suitable
 for prediction</strong>.</p>
-<div id="why-trend-labels" class="section level3">
-<h3>Why Trend Labels?</h3>
 <p><strong>Trend labels</strong> emerged as a suitable alternative
 because they:</p>
 <ol style="list-style-type: decimal">
@@ -662,15 +660,14 @@ attributes</li>
 might better approximate</li>
 </ol>
 </div>
-</div>
 <div id="the-second-research-focus" class="section level2">
-<h2>The Second Research Focus</h2>
+<h2><strong>3.5 The Second Research Focus</strong></h2>
 <p>This consideration led to the second part of the project, which
 examines <strong>the extent to which trend labels can be predicted using
 machine learning methods</strong>.</p>
 </div>
 <div id="reflection-on-evolution" class="section level2">
-<h2>Reflection on Evolution</h2>
+<h2><strong>3.6 Reflection on Evolution</strong></h2>
 <p>The evolution of these research questions reflects a growing
 understanding of both: - <strong>The strengths of metadata
 analytics</strong>: identifying structural patterns and platform
@@ -695,7 +692,7 @@ synthetic/curated dataset</p></li>
 </ul>
 </div>
 <div id="key-variables" class="section level2">
-<h2><strong>4.1 Key Variables</strong></h2>
+<h2><strong>4.2 Key Variables</strong></h2>
 <div id="engagement-metrics" class="section level3">
 <h3><strong>4.2.1 Engagement Metrics</strong></h3>
 <ul>
@@ -739,13 +736,13 @@ data cleaning process is not included.</p>
 <div id="eda-completion-rate" class="section level2">
 <h2><strong>5.1 EDA — Completion Rate</strong></h2>
 <div id="overview-and-objectives" class="section level3">
-<h3>Overview and Objectives</h3>
+<h3><strong>5.1.1 Overview and Objectives</strong></h3>
 <p>This section aims to analyze the distribution characteristics of
 completion rates and their relationships with key variables, laying the
 groundwork for subsequent predictive modeling.</p>
 </div>
 <div id="data-preprocessing" class="section level3">
-<h3>Data Preprocessing</h3>
+<h3><strong>5.1.2 Data Preprocessing</strong></h3>
 <p>During data preprocessing, we: - Selected <strong>18 core
 features</strong> from the raw dataset: - Engagement metrics (likes,
 comments, shares, saves) - Temporal features (upload hour, day of week)
@@ -756,7 +753,7 @@ Produced a cleaned dataset of <strong>approximately 48,000
 records</strong> with no missing values</p>
 </div>
 <div id="descriptive-statistics" class="section level3">
-<h3>Descriptive Statistics</h3>
+<h3><strong>5.1.3 Descriptive Statistics</strong></h3>
 <p>Statistical results showed: - <strong>Average completion
 rate</strong>: 0.638 (median: 0.642) - <strong>Average views</strong>:
 128,000 - <strong>Average engagement rate</strong>: 0.067</p>
@@ -764,9 +761,9 @@ rate</strong>: 0.638 (median: 0.642) - <strong>Average views</strong>:
 and <strong>low-to-moderate interaction</strong> overall.</p>
 </div>
 <div id="target-variable-distribution" class="section level3">
-<h3>Target Variable Distribution</h3>
+<h3><strong>5.1.4 Target Variable Distribution</strong></h3>
 <div id="completion-rate-symmetric-and-stable" class="section level4">
-<h4>Completion Rate: Symmetric and Stable</h4>
+<h4><strong>5.1.4.1 Completion Rate: Symmetric and Stable</strong></h4>
 <p>Analysis revealed that completion rates exhibit a <strong>roughly
 symmetric distribution</strong>, concentrated between 0.6 and 0.7, with:
 - No significant skewness - No heavy tails - A stable target for
@@ -774,7 +771,8 @@ modeling</p>
 </div>
 <div id="engagement-rate-right-skewed-with-outliers"
 class="section level4">
-<h4>Engagement Rate: Right-Skewed with Outliers</h4>
+<h4><strong>5.1.4.2 Engagement Rate: Right-Skewed with
+Outliers</strong></h4>
 <p>In contrast, engagement rates show a <strong>severe right-skewed
 distribution</strong>, with: - Most values below 0.10 - Only a few
 high-engagement outliers - Wide variability visible in boxplot
@@ -783,7 +781,8 @@ comparisons</p>
 </div>
 <div id="relationship-between-completion-and-engagement"
 class="section level3">
-<h3>Relationship Between Completion and Engagement</h3>
+<h3><strong>5.1.5 Relationship Between Completion and
+Engagement</strong></h3>
 <p>A scatter plot revealed a <strong>weak positive correlation</strong>
 (Pearson’s r = 0.12) between completion rate and engagement rate.</p>
 <p><strong>Interpretation:</strong> - High retention does not imply high
@@ -796,9 +795,7 @@ outcome</p>
 outcome variables</strong> in our analysis.</p>
 </div>
 <div id="temporal-patterns" class="section level3">
-<h3>Temporal Patterns</h3>
-<div id="upload-timing-analysis" class="section level4">
-<h4>Upload Timing Analysis</h4>
+<h3><strong>5.1.6 Temporal Patterns</strong></h3>
 <p><strong>Upload Volume by Hour:</strong> - Peak upload times:
 <strong>16:00–22:00</strong> (evening hours) - Aligns with users’ active
 periods after work/school</p>
@@ -813,18 +810,18 @@ hypothesis that “timing affects retention,” indicating that short-form
 video viewers’ watching behavior <strong>is not restricted by upload
 timing</strong>.</p>
 </div>
-</div>
 <div id="content-characteristics" class="section level3">
-<h3>Content Characteristics</h3>
+<h3><strong>5.1.7 Content Characteristics</strong></h3>
 <div id="video-duration-distribution" class="section level4">
-<h4>Video Duration Distribution</h4>
+<h4><strong>5.1.7.1 Video Duration Distribution</strong></h4>
 <p>Video duration follows a <strong>right-skewed distribution</strong>:
 - <strong>78% of videos</strong> are shorter than 50 seconds -
 Consistent with short-form video platform norms</p>
 </div>
 <div id="duration-and-completion-rate-relationship"
 class="section level4">
-<h4>Duration and Completion Rate Relationship</h4>
+<h4><strong>5.1.7.2 Duration and Completion Rate
+Relationship</strong></h4>
 <p>A <strong>non-linear relationship</strong> exists between duration
 and completion rate: - Completion rates <strong>peak at approximately 12
 seconds</strong> (0.68) - Rates <strong>decline steadily</strong> as
@@ -836,16 +833,16 @@ completion rate</strong></p>
 </div>
 </div>
 <div id="title-characteristics" class="section level3">
-<h3>Title Characteristics</h3>
+<h3><strong>5.1.8 Title Characteristics</strong></h3>
 <div id="title-length" class="section level4">
-<h4>Title Length</h4>
+<h4><strong>5.1.8.1 Title Length</strong></h4>
 <p>Title lengths are concentrated between <strong>10–40
 characters</strong>, with: - No consistent monotonic relationship
 between length and completion rate - Suggests length alone is not a
 strong predictor</p>
 </div>
 <div id="emoji-usage-a-significant-factor" class="section level4">
-<h4>Emoji Usage: A Significant Factor</h4>
+<h4><strong>5.1.8.2 Emoji Usage: A Significant Factor</strong></h4>
 <p><strong>Videos with emojis in titles show:</strong> - <strong>Average
 completion rate</strong>: 0.659 - <strong>3.2% higher</strong> than
 videos without emojis (0.627) - <strong>Engagement rate 41%
@@ -857,9 +854,9 @@ cues</strong> that enhance initial audience interest and retention.</p>
 </div>
 </div>
 <div id="category-analysis" class="section level3">
-<h3>Category Analysis</h3>
+<h3><strong>5.1.9 Category Analysis</strong></h3>
 <div id="completion-rate-by-content-category" class="section level4">
-<h4>Completion Rate by Content Category</h4>
+<h4><strong>5.1.9.1 Completion Rate by Content Category</strong></h4>
 <p>Completion rates vary significantly by content category:</p>
 <p><strong>Highest performers:</strong> - <strong>Music</strong>: ~0.67
 median - <strong>Fitness</strong>: ~0.67 median</p>
@@ -867,7 +864,7 @@ median - <strong>Fitness</strong>: ~0.67 median</p>
 ~0.59 median - <strong>Technology</strong>: ~0.59 median</p>
 </div>
 <div id="duration-category-interaction" class="section level4">
-<h4>Duration-Category Interaction</h4>
+<h4><strong>5.1.9.2 Duration-Category Interaction</strong></h4>
 <p>When stratified by duration and category: - <strong>Music
 videos</strong> maintain relatively high completion rates even in longer
 intervals (30–60s: 0.64) - <strong>Education videos</strong> see a sharp
@@ -882,14 +879,14 @@ Information density may create fatigue</p>
 <div id="eda-trend-label" class="section level2">
 <h2><strong>5.2 EDA — Trend Label</strong></h2>
 <div id="motivation-for-trend-labels" class="section level3">
-<h3>Motivation for Trend Labels</h3>
+<h3><strong>5.2.1 Motivation for Trend Labels</strong></h3>
 <p>To go beyond single-metric limitations and comprehensively capture
 content popularity, we constructed an <strong>“engagement
 score”</strong> by integrating multiple engagement-related features,
 then generated trend labels.</p>
 </div>
 <div id="engagement-score-construction" class="section level3">
-<h3>Engagement Score Construction</h3>
+<h3><strong>5.2.2 Engagement Score Construction</strong></h3>
 <p>The engagement score formula:</p>
 <pre><code>Engagement Score = 
   Comment Rate (20% weight) +
@@ -900,7 +897,7 @@ then generated trend labels.</p>
   Creator Tier Bonuses (0–0.5)</code></pre>
 </div>
 <div id="trend-label-categories" class="section level3">
-<h3>Trend Label Categories</h3>
+<h3><strong>5.2.3 Trend Label Categories</strong></h3>
 <p>Based on engagement scores, videos were categorized into three trend
 labels:</p>
 <table>
@@ -934,7 +931,8 @@ Trend content.</p>
 </div>
 <div id="engagement-score-distribution-by-trend-label"
 class="section level3">
-<h3>Engagement Score Distribution by Trend Label</h3>
+<h3><strong>5.2.4 Engagement Score Distribution by Trend
+Label</strong></h3>
 <p>The distribution shows <strong>clear differentiation</strong>: -
 <strong>Low Trend</strong>: 0.6–0.8 - <strong>Medium Trend</strong>:
 1.0–1.5 - <strong>High Trend</strong>: 1.8–3.0</p>
@@ -942,9 +940,9 @@ class="section level3">
 effectiveness of trend labels in stratifying content popularity.</p>
 </div>
 <div id="platform-comparison" class="section level3">
-<h3>Platform Comparison</h3>
+<h3><strong>5.2.5 Platform Comparison</strong></h3>
 <div id="tiktok-vs.-youtube-shorts" class="section level4">
-<h4>TikTok vs. YouTube Shorts</h4>
+<h4><strong>5.2.5.1 TikTok vs. YouTube Shorts</strong></h4>
 <p>TikTok videos have <strong>higher median engagement scores</strong>
 than YouTube Shorts across all trend labels:</p>
 <p><strong>Example (High Trend):</strong> - TikTok: 2.3 - YouTube:
@@ -953,7 +951,7 @@ than YouTube Shorts across all trend labels:</p>
 <strong>more likely to drive high-interaction content</strong>.</p>
 </div>
 <div id="device-type-no-significant-impact" class="section level4">
-<h4>Device Type: No Significant Impact</h4>
+<h4><strong>5.2.5.2 Device Type: No Significant Impact</strong></h4>
 <p>Mobile and desktop users show <strong>nearly identical median
 scores</strong> for each trend label.</p>
 <p><strong>Key Finding:</strong> Content popularity—rather than viewing
@@ -961,12 +959,10 @@ device—determines interaction levels.</p>
 </div>
 </div>
 <div id="core-metrics-by-trend-label" class="section level3">
-<h3>Core Metrics by Trend Label</h3>
+<h3><strong>5.2.6 Core Metrics by Trend Label</strong></h3>
 <p>Boxplots reveal a <strong>strong monotonic relationship</strong>:
 views, likes, comments, shares, and saves all increase significantly
 with trend label level.</p>
-<div id="high-trend-vs.-low-trend-comparison" class="section level4">
-<h4>High Trend vs. Low Trend Comparison</h4>
 <table>
 <thead>
 <tr class="header">
@@ -1000,25 +996,15 @@ with trend label level.</p>
 <p><strong>Confirmation:</strong> Trend labels effectively aggregate
 multi-dimensional popularity metrics.</p>
 </div>
-</div>
 <div id="creator-analysis" class="section level3">
-<h3>Creator Analysis</h3>
-<div id="creator-average-views-vs.-individual-video-performance"
-class="section level4">
-<h4>Creator Average Views vs. Individual Video Performance</h4>
+<h3><strong>5.2.7 Creator Analysis</strong></h3>
 <p>There is a <strong>positive correlation</strong> (r = 0.48) between a
 creator’s average views and individual video views, but with
 <strong>high dispersion</strong>.</p>
-</div>
-<div id="creator-tier-impact" class="section level4">
-<h4>Creator Tier Impact</h4>
 <p>Star creators have a <strong>median engagement score 3.2× that of
 Micro creators</strong>, reflecting the <strong>“influence
 effect”</strong>: - Larger audience base provides initial exposure -
 Creator credibility enhances audience trust</p>
-</div>
-<div id="important-caveat" class="section level4">
-<h4>Important Caveat</h4>
 <p><strong>High dispersion</strong> indicates: - Micro creators can
 still produce viral videos - Star creators may have underperforming
 content</p>
@@ -1026,18 +1012,12 @@ content</p>
 factor, but <strong>content-specific features remain
 critical</strong>.</p>
 </div>
-</div>
 <div id="hashtag-analysis" class="section level3">
-<h3>Hashtag Analysis</h3>
-<div id="popular-hashtags-drive-massive-views" class="section level4">
-<h4>Popular Hashtags Drive Massive Views</h4>
+<h3><strong>5.2.8 Hashtag Analysis</strong></h3>
 <p>Popular hashtags like: - <strong>#FYP</strong> (For You Page) -
 <strong>#GRWM</strong> (Get Ready With Me)</p>
 <p>These drive <strong>billions of views</strong> and serve as key
 channels for content discovery.</p>
-</div>
-<div id="niche-hashtags-precision-targeting" class="section level4">
-<h4>Niche Hashtags: Precision Targeting</h4>
 <p>Niche hashtags like: - <strong>#BookTok</strong> (book-related) -
 <strong>#StudyWithMe</strong> (study-along)</p>
 <p>These have: - Lower view counts - Precise, engaged audiences</p>
@@ -1045,12 +1025,10 @@ channels for content discovery.</p>
 popular and niche hashtags</strong> to balance exposure and audience
 relevance.</p>
 </div>
-</div>
 <div id="platform-differences-in-trend-distribution"
 class="section level3">
-<h3>Platform Differences in Trend Distribution</h3>
-<div id="tiktok-vs.-youtube-shorts-1" class="section level4">
-<h4>TikTok vs. YouTube Shorts</h4>
+<h3><strong>5.2.9 Platform Differences in Trend
+Distribution</strong></h3>
 <p>Significant differences exist in trend label distribution:</p>
 <table>
 <thead>
@@ -1073,21 +1051,174 @@ class="section level3">
 </tr>
 </tbody>
 </table>
-</div>
-<div id="engagement-rate-distribution" class="section level4">
-<h4>Engagement Rate Distribution</h4>
 <ul>
 <li><strong>TikTok</strong>: More right-skewed with more high-engagement
 outliers</li>
 <li><strong>YouTube Shorts</strong>: More clustered at low levels</li>
 </ul>
-</div>
-<div id="algorithmic-interpretation" class="section level4">
-<h4>Algorithmic Interpretation</h4>
 <p>This reflects that: - <strong>TikTok’s algorithm</strong> (e.g., For
 You Page focus on novelty and popularity) is more likely to drive
 content virality - <strong>YouTube Shorts</strong> may prioritize
 established creators or longer content</p>
+</div>
+</div>
+<div id="group-comparison-analysis" class="section level2">
+<h2><strong>5.3 Group Comparison Analysis</strong></h2>
+<p>This section examines how completion rates vary across different
+content categories and duration bins, exploring interaction effects and
+nonlinear patterns that inform subsequent modeling decisions.</p>
+<div id="completion-rate-by-content-category-1" class="section level3">
+<h3><strong>5.3.1 Completion Rate by Content Category</strong></h3>
+<p>To evaluate whether completion rate varies across content types, we
+compared distributions using <strong>boxplots with jittered
+points</strong>.</p>
+<p>Results show distinct patterns across categories:</p>
+<p><strong>High-Performing Categories:</strong> - <strong>Music</strong>
+and <strong>Fitness</strong> videos exhibit: - Higher median completion
+rates - Tighter distributions (less variability) - More consistent
+viewer retention</p>
+<p><strong>Lower-Performing Categories:</strong> -
+<strong>Education</strong> and <strong>Technology</strong> videos
+display: - Lower central values - Wider spread (higher variability) -
+Greater difficulty retaining viewers</p>
+<p>These findings align with earlier observations that
+<strong>entertainment-oriented categories</strong> tend to perform
+better on passive engagement metrics such as completion: - Entertainment
+content requires less cognitive effort - Information-heavy content may
+fatigue viewers - Category type fundamentally shapes retention
+potential</p>
+</div>
+<div id="completion-rate-across-duration-bins" class="section level3">
+<h3><strong>5.3.2 Completion Rate Across Duration Bins</strong></h3>
+<p>We examined completion rate across <strong>four duration
+bins</strong>: - &lt;15s - 15–30s - 30–60s - &gt;60s</p>
+<p>The boxplots reveal a <strong>clear pattern</strong>:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Duration Bin</th>
+<th>Retention Level</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>&lt;15s</strong></td>
+<td>Highest retention</td>
+</tr>
+<tr class="even">
+<td><strong>15–30s</strong></td>
+<td>Moderate retention</td>
+</tr>
+<tr class="odd">
+<td><strong>30–60s</strong></td>
+<td>Lower retention</td>
+</tr>
+<tr class="even">
+<td><strong>&gt;60s</strong></td>
+<td>Significantly lowest retention</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>steady decline across bins</strong> aligns with the
+nonlinear patterns identified earlier, confirming that: - Viewers on
+short-form platforms <strong>strongly prefer brief, quickly consumable
+content</strong> - Each additional duration interval corresponds to
+measurable retention loss - Platform users exhibit limited patience for
+longer content</p>
+<p><strong>Conclusion:</strong> This bin-based comparison reinforces
+<strong>duration as one of the dominant structural factors</strong>
+influencing retention.</p>
+</div>
+<div id="durationcategory-interaction" class="section level3">
+<h3><strong>5.3.3 Duration–Category Interaction</strong></h3>
+<p>To explore whether the <strong>effect of duration varies by content
+type</strong>, we visualized completion rates using a <strong>violin
+plot stratified by category and duration bin</strong>.</p>
+<p>Results show important differences:</p>
+<p><strong>Music Videos:</strong> - Sustain <strong>relatively high
+completion rates</strong> even in longer bins - Demonstrate resilience
+to duration increases - Suggest that engaging audio content maintains
+attention</p>
+<p><strong>Lifestyle Videos:</strong> - Show <strong>moderate
+declines</strong> as duration increases - Mid-range sensitivity to
+length</p>
+<p><strong>Education Videos:</strong> - Exhibit <strong>sharper
+declines</strong> as duration increases - Most sensitive to duration
+effects - Information density may create cognitive fatigue</p>
+<p>These patterns indicate that <strong>duration does not operate
+uniformly across categories</strong>: - Content type <strong>moderates
+the magnitude</strong> of duration’s impact - The relationship between
+length and retention is <strong>category-dependent</strong> - Different
+content types require different optimization strategies</p>
+<p><strong>Modeling Implication:</strong> This interaction supports the
+inclusion of <strong>category–duration interaction features</strong> in
+subsequent modeling.</p>
+</div>
+<div id="completion-rate-vs.-duration-loess-curve"
+class="section level3">
+<h3><strong>5.3.4 Completion Rate vs. Duration (LOESS
+Curve)</strong></h3>
+<p>A <strong>scatterplot with global LOESS smoothing</strong> provides a
+continuous view of the duration–completion relationship.</p>
+<div id="nonlinear-decline-pattern" class="section level4">
+<h4><strong>5.3.4.1 Nonlinear Decline Pattern</strong></h4>
+<p>The curve shows a <strong>pronounced nonlinear pattern</strong>:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Sharp Initial Decline:</strong>
+<ul>
+<li>Retention decreases rapidly as duration increases from very short
+lengths</li>
+<li>Steepest drop occurs in the first 20-30 seconds</li>
+</ul></li>
+<li><strong>Gradual Leveling:</strong>
+<ul>
+<li>The decline gradually levels off at longer durations</li>
+<li>Suggests a “floor effect” where remaining viewers are committed</li>
+</ul></li>
+</ol>
+</div>
+<div id="methodological-validation" class="section level4">
+<h4><strong>5.3.4.2 Methodological Validation</strong></h4>
+<p>This smooth trend: - <strong>Confirms earlier bin-based
+findings</strong> with greater precision - Reveals <strong>more nuanced
+curve behavior</strong> across the full duration range - Shows that the
+relationship is continuously nonlinear, not just step-wise</p>
+<p><strong>Modeling Motivation:</strong> The result provides
+<strong>empirical justification</strong> for employing nonlinear
+functional forms (such as GAM) in the regression models developed in
+Section 6.</p>
+</div>
+</div>
+<div id="loess-based-optimal-duration" class="section level3">
+<h3><strong>5.3.5 LOESS-Based Optimal Duration</strong></h3>
+<p>A separate LOESS model was used to estimate the <strong>duration at
+which predicted completion rate reaches its maximum</strong>.</p>
+<div id="the-optimal-range" class="section level4">
+<h4><strong>5.3.5.1 The Optimal Range</strong></h4>
+<p>The resulting curve <strong>peaks at approximately 5–10
+seconds</strong>, after which retention declines consistently.</p>
+</div>
+<div id="interpretation-and-caveats" class="section level4">
+<h4><strong>5.3.5.2 Interpretation and Caveats</strong></h4>
+<p>While this peak is <strong>descriptive rather than
+prescriptive</strong>, it highlights that: - <strong>Ultra-short
+videos</strong> are most likely to be completed - The “sweet spot”
+exists in the very brief range - Platform design favors extremely
+concise content</p>
+<p><strong>Important Note:</strong> This optimal duration reflects
+completion rate, not necessarily engagement quality or business
+value.</p>
+</div>
+<div id="cross-category-validation" class="section level4">
+<h4><strong>5.2.5.3 Cross-Category Validation</strong></h4>
+<p>A <strong>faceted boxplot by category and duration</strong> further
+supports this pattern by showing that: - <strong>Virtually all
+categories</strong> experience reduced retention beyond short durations
+- The <strong>severity varies by content type</strong>: - Music
+maintains retention better at longer durations - Education shows steeper
+declines</p>
+<p><strong>Universal Pattern:</strong> Regardless of category, brevity
+strongly predicts completion.</p>
 </div>
 </div>
 </div>
@@ -1497,9 +1628,8 @@ Sports, Education, Gaming</p></li>
 comment rate, share rate, daily views</p></li>
 </ul>
 </div>
-</div>
-<div id="target-variable-construction" class="section level3">
-<h3><strong>6.2.2.2 Target Variable Construction</strong></h3>
+<div id="target-variable-construction" class="section level4">
+<h4><strong>6.2.2.2 Target Variable Construction</strong></h4>
 <p>We constructed an <strong>Engagement Score</strong> using the
 following weighted formula:</p>
 <p><span class="math display">\[
@@ -1536,6 +1666,7 @@ categories:</p>
 <li><p><strong>High Trend (2)</strong>: Engagement Score &gt;
 1.5</p></li>
 </ul>
+</div>
 </div>
 <div id="feature-engineering" class="section level3">
 <h3><strong>6.2.3 Feature Engineering</strong></h3>
@@ -1661,11 +1792,11 @@ commenting) are the primary predictors of video trends, accounting for
 <div id="discussion-of-completion-rate" class="section level2">
 <h2><strong>7.1 Discussion of Completion Rate</strong></h2>
 <div id="clear-patterns-identified" class="section level3">
-<h3>Clear Patterns Identified</h3>
+<h3><strong>7.1.1 Clear Patterns Identified</strong></h3>
 <p>The regression results reveal several clear patterns in the
 relationship between video features and view completion rates.</p>
 <div id="video-duration-the-dominant-factor" class="section level4">
-<h4>Video Duration: The Dominant Factor</h4>
+<h4><strong>7.1.1.1 Video Duration: The Dominant Factor</strong></h4>
 <p>Among all models, <strong>video length consistently has the strongest
 influence</strong>: - Longer videos tend to have <strong>lower view
 completion rates</strong> - Aligns with expectations for short-video
@@ -1673,7 +1804,8 @@ platforms - Viewers prefer quick and easy-to-understand content</p>
 </div>
 <div id="interaction-metrics-positive-correlates"
 class="section level4">
-<h4>Interaction Metrics: Positive Correlates</h4>
+<h4><strong>7.1.1.2 Interaction Metrics: Positive
+Correlates</strong></h4>
 <p>Interaction metrics such as <strong>likes and saves</strong> are
 positively correlated with view completion rates: - Videos that retain
 viewers tend to generate more interaction - Suggests a bidirectional
@@ -1681,10 +1813,7 @@ relationship between retention and engagement</p>
 </div>
 </div>
 <div id="surprising-findings" class="section level3">
-<h3>Surprising Findings</h3>
-<div id="creator-attributes-weak-and-negative-association"
-class="section level4">
-<h4>Creator Attributes: Weak and Negative Association</h4>
+<h3><strong>7.1.2 Surprising Findings</strong></h3>
 <p>More surprisingly, an unexpected finding is that
 <strong>creator-level attributes</strong>, including average historical
 views, have a <strong>weak and even negative correlation</strong> with
@@ -1694,17 +1823,14 @@ guarantee high retention rates - <strong>Content features may be more
 important than creator scale</strong> - Challenges assumptions about
 influencer effectiveness</p>
 </div>
-</div>
 <div id="model-performance-the-low-r-squared-problem"
 class="section level3">
-<h3>Model Performance: The Low R-Squared Problem</h3>
+<h3><strong>7.1.3 Model Performance: The Low R-Squared
+Problem</strong></h3>
 <p>The <strong>consistently low R-squared value across all
 models</strong> indicates that these predictors explain only a
 <strong>small portion of the variation</strong> in view completion
 rates.</p>
-<div id="limited-improvement-from-additional-predictors"
-class="section level4">
-<h4>Limited Improvement from Additional Predictors</h4>
 <p>Adding more predictors provides <strong>limited improvement</strong>,
 further suggesting that metadata only captures some of the potential
 factors influencing viewer retention.</p>
@@ -1712,25 +1838,24 @@ factors influencing viewer retention.</p>
 value - Narrative structure and pacing - Emotional resonance - Visual
 aesthetics - Algorithmic exposure patterns</p>
 </div>
-</div>
 <div id="broader-insights" class="section level3">
-<h3>Broader Insights</h3>
+<h3><strong>7.1.4 Broader Insights</strong></h3>
 <div id="content-quality-over-creator-identity" class="section level4">
-<h4>Content Quality Over Creator Identity</h4>
+<h4><strong>7.1.4.1 Content Quality Over Creator Identity</strong></h4>
 <p>View completion rates appear to depend more on <strong>video-level
 quality</strong>, such as: - Content design - Thematic appeal -
 Execution quality</p>
 <p>Rather than: - Creator’s identity - Posting time - Follower count</p>
 </div>
 <div id="the-metadata-limitation" class="section level4">
-<h4>The Metadata Limitation</h4>
+<h4><strong>7.1.4.2 The Metadata Limitation</strong></h4>
 <p>The low R-squared value confirms that <strong>most determinants of
 retention</strong>—including creative quality and algorithmic
 exposure—are <strong>not reflected in the existing
 variables</strong>.</p>
 </div>
 <div id="non-linear-models-dont-help" class="section level4">
-<h4>Non-Linear Models Don’t Help</h4>
+<h4><strong>7.1.4.3 Non-Linear Models Don’t Help</strong></h4>
 <p>The non-linear model shows <strong>little improvement over the linear
 model</strong>, suggesting that the primary limitation lies in: -
 <strong>The lack of relevant content-level information</strong> - NOT
@@ -1738,7 +1863,7 @@ the functional form of the model</p>
 </div>
 </div>
 <div id="conclusion" class="section level3">
-<h3>Conclusion</h3>
+<h3><strong>7.1.5 Conclusion</strong></h3>
 <p>In conclusion, <strong>metadata can reveal some meaningful
 patterns</strong>, but it can only explain a <strong>small fraction of
 audience behavior</strong> on short video platforms.</p>
@@ -1751,17 +1876,19 @@ processes.</p>
 <div id="discussion-of-trend-prediction" class="section level2">
 <h2><strong>7.2 Discussion of Trend Prediction</strong></h2>
 <div id="expected-vs.-unexpected-findings" class="section level3">
-<h3>Expected vs. Unexpected Findings</h3>
+<h3><strong>7.2.1 Expected vs. Unexpected Findings</strong></h3>
 <div id="gradient-boosting-performance-as-expected"
 class="section level4">
-<h4>Gradient Boosting Performance: As Expected</h4>
+<h4><strong>7.2.1.1 Gradient Boosting Performance: As
+Expected</strong></h4>
 <p>The superior performance of <strong>Gradient Boosting was
 anticipated</strong>, given its proven effectiveness in handling
 structured data with complex feature interactions.</p>
 </div>
 <div id="magnitude-of-difference-beyond-expectations"
 class="section level4">
-<h4>Magnitude of Difference: Beyond Expectations</h4>
+<h4><strong>7.2.1.2 Magnitude of Difference: Beyond
+Expectations</strong></h4>
 <p>What <strong>exceeded expectations</strong> was the <strong>magnitude
 of difference</strong> between models: - Gradient Boosting achieved
 <strong>3.2% higher accuracy</strong> than its nearest competitor -
@@ -1769,18 +1896,18 @@ Demonstrates clear superiority for this task</p>
 </div>
 </div>
 <div id="system-effectiveness" class="section level3">
-<h3>System Effectiveness</h3>
+<h3><strong>7.2.2 System Effectiveness</strong></h3>
 <p>Our research results show that the proposed trend prediction system
 <strong>effectively captures meaningful behavioral patterns</strong> in
 short video participation.</p>
 <div id="clear-category-separation" class="section level4">
-<h4>Clear Category Separation</h4>
+<h4><strong>7.2.2.1 Clear Category Separation</strong></h4>
 <p><strong>High, Medium, and Low Trend categories</strong> show clear
 and consistent separations in key indicators: - Views - Likes - Comments
 - Shares - Saves</p>
 </div>
 <div id="alignment-with-expectations" class="section level4">
-<h4>Alignment with Expectations</h4>
+<h4><strong>7.2.2.2 Alignment with Expectations</strong></h4>
 <p>This model is <strong>highly consistent with expectations</strong>: -
 The higher the trend of a video, the more user engagement it naturally
 accumulates - This accelerates visibility in the platform’s
@@ -1788,9 +1915,9 @@ recommendation ecosystem</p>
 </div>
 </div>
 <div id="validation-of-feature-design" class="section level3">
-<h3>Validation of Feature Design</h3>
+<h3><strong>7.2.3 Validation of Feature Design</strong></h3>
 <div id="distribution-of-engagement-scores" class="section level4">
-<h4>Distribution of Engagement Scores</h4>
+<h4><strong>7.2.3.1 Distribution of Engagement Scores</strong></h4>
 <p>The distribution of engagement scores further validates the
 <strong>reliability of the constructed labels</strong>: - Each category
 forms a <strong>distinct group</strong> - Indicates that our feature
@@ -1798,7 +1925,7 @@ design has successfully captured the <strong>underlying drivers of viral
 spread</strong></p>
 </div>
 <div id="feature-importance-findings" class="section level4">
-<h4>Feature Importance Findings</h4>
+<h4><strong>7.2.3.2 Feature Importance Findings</strong></h4>
 <p>Analysis confirms that <strong>user interaction metrics</strong>
 (particularly sharing and commenting) are the <strong>primary
 predictors</strong> of video trends, accounting for: - <strong>65% of
@@ -1808,9 +1935,9 @@ driven by active user participation.</p>
 </div>
 </div>
 <div id="practical-implications" class="section level3">
-<h3>Practical Implications</h3>
+<h3><strong>7.2.4 Practical Implications</strong></h3>
 <div id="for-content-creators" class="section level4">
-<h4>For Content Creators</h4>
+<h4><strong>7.2.4.1 For Content Creators</strong></h4>
 <p>The model provides actionable insights: - Focus on
 <strong>share-worthy content</strong> (highest feature importance) -
 Optimize for <strong>comment generation</strong> through engaging hooks
@@ -1818,16 +1945,17 @@ Optimize for <strong>comment generation</strong> through engaging hooks
 vs. YouTube Shorts)</p>
 </div>
 <div id="for-platforms" class="section level4">
-<h4>For Platforms</h4>
+<h4><strong>7.2.4.2 For Platforms</strong></h4>
 <p>Understanding trend drivers enables: - Better recommendation
 algorithm design - Content moderation prioritization - Creator support
 and guidance</p>
 </div>
 <div id="for-marketers" class="section level4">
-<h4>For Marketers</h4>
+<h4><strong>7.2.4.3 For Marketers</strong></h4>
 <p>Trend prediction allows: - Early identification of viral
 opportunities - Strategic partnership timing - ROI optimization for
 influencer campaigns</p>
+<hr />
 </div>
 </div>
 </div>
@@ -1840,14 +1968,15 @@ class="section level2">
 1)</strong></h2>
 <div id="heterogeneity-problem-one-model-for-all"
 class="section level3">
-<h3>Heterogeneity Problem: One Model for All?</h3>
+<h3><strong>8.1.1 Heterogeneity Problem: One Model for
+All?</strong></h3>
 <p>A major limitation of regression analysis is that it <strong>models
 all video data as a single merged dataset</strong> without
 distinguishing between: - Different platforms (TikTok vs. YouTube
 Shorts) - Languages and cultural contexts - Content categories (music,
 education, gaming)</p>
 <div id="why-this-is-problematic" class="section level4">
-<h4>Why This Is Problematic</h4>
+<h4><strong>8.1.1.1 Why This Is Problematic</strong></h4>
 <p>Because short videos vary greatly in: - Purpose - Audience
 expectations - Cultural context</p>
 <p><strong>Merging all observations introduces significant
@@ -1859,20 +1988,21 @@ patterns</strong> that may exist in specific subgroups</p>
 </div>
 <div id="the-large-sample-exacerbates-the-problem"
 class="section level4">
-<h4>The Large Sample Exacerbates the Problem</h4>
+<h4><strong>8.1.1.2 The Large Sample Exacerbates the
+Problem</strong></h4>
 <p>The large sample size further exacerbates this issue by: - Detecting
 statistically significant but practically meaningless effects -
 Obscuring meaningful patterns within specific content types</p>
 </div>
 </div>
 <div id="the-low-r-squared-problem" class="section level3">
-<h3>The Low R-Squared Problem</h3>
+<h3><strong>8.1.2 The Low R-Squared Problem</strong></h3>
 <p>The consistently <strong>low R-squared values</strong> across all
 models indicate that the current set of metadata variables captures only
 a <strong>small portion of the factors</strong> influencing completion
 rate.</p>
 <div id="multiple-interpretations" class="section level4">
-<h4>Multiple Interpretations</h4>
+<h4><strong>8.1.2.1 Multiple Interpretations</strong></h4>
 <p>This weak model fit may reflect: 1. <strong>The limits of
 metadata</strong> — creative quality cannot be quantified through
 observable features 2. <strong>The absence of important
@@ -1881,18 +2011,19 @@ observable in the dataset</p>
 </div>
 </div>
 <div id="recommendations-for-future-research" class="section level3">
-<h3>Recommendations for Future Research</h3>
+<h3><strong>8.1.3 Recommendations for Future Research</strong></h3>
 <p>In future research, we should:</p>
 <div id="expand-the-breadth-of-observed-variables"
 class="section level4">
-<h4>1. Expand the Breadth of Observed Variables</h4>
+<h4><strong>8.1.3.1 Expand the Breadth of Observed
+Variables</strong></h4>
 <p>Include: - Content-level features (visual quality, editing pace,
 music choice) - Behavior-level features (scroll patterns, replays, pause
 behavior) - Algorithmic features (recommendation score, position in
 feed)</p>
 </div>
 <div id="use-stratified-or-subgroup-analysis" class="section level4">
-<h4>2. Use Stratified or Subgroup Analysis</h4>
+<h4><strong>8.1.3.2 Use Stratified or Subgroup Analysis</strong></h4>
 <p>Better control the model by: - <strong>Modeling completion rate
 separately</strong> by language or platform - Determining whether
 observed correlations are <strong>consistent across different content
@@ -1904,7 +2035,7 @@ creator tier matters more on TikTok than YouTube Shorts - Examine
 whether emoji effects vary by audience age group</p>
 </div>
 <div id="benefits-of-stratification" class="section level4">
-<h4>Benefits of Stratification</h4>
+<h4><strong>8.1.3.3 Benefits of Stratification</strong></h4>
 <p>This approach can: - <strong>Identify category-specific
 patterns</strong> masked in aggregate analysis - <strong>Control for
 confounding</strong> by analyzing homogeneous subgroups -
@@ -1920,9 +2051,9 @@ class="section level2">
 ability</strong> for short video trends, there are still some
 limitations providing opportunities for future enhancement.</p>
 <div id="data-quality-and-representativeness" class="section level3">
-<h3>Data Quality and Representativeness</h3>
+<h3><strong>8.2.1 Data Quality and Representativeness</strong></h3>
 <div id="synthetic-data-limitations" class="section level4">
-<h4>Synthetic Data Limitations</h4>
+<h4><strong>8.2.1.1 Synthetic Data Limitations</strong></h4>
 <p>The dataset relies on <strong>synthetic or proxy-generated behavioral
 patterns</strong>, which means: - The engagement relationships in model
 learning may not fully capture <strong>platform-specific
@@ -1932,9 +2063,9 @@ actual algorithmic amplification effects</p>
 </div>
 </div>
 <div id="feature-completeness" class="section level3">
-<h3>Feature Completeness</h3>
+<h3><strong>8.2.2 Feature Completeness</strong></h3>
 <div id="missing-multimodal-elements" class="section level4">
-<h4>Missing Multimodal Elements</h4>
+<h4><strong>8.2.2.1 Missing Multimodal Elements</strong></h4>
 <p>The current feature design mainly focuses on <strong>structured
 metadata and digital interaction metrics</strong>, but does not
 incorporate:</p>
@@ -1950,9 +2081,9 @@ are not currently captured.</p>
 </div>
 </div>
 <div id="temporal-dynamics" class="section level3">
-<h3>Temporal Dynamics</h3>
+<h3><strong>8.2.3 Temporal Dynamics</strong></h3>
 <div id="static-vs.-dynamic-modeling" class="section level4">
-<h4>Static vs. Dynamic Modeling</h4>
+<h4><strong>8.2.3.1 Static vs. Dynamic Modeling</strong></h4>
 <p>The <strong>contemporaneity of social trends has been
 simplified</strong>: - These models handle <strong>each sample
 independently</strong> - Do not model the <strong>dynamic trend
@@ -1963,15 +2094,15 @@ patterns</p>
 </div>
 </div>
 <div id="model-architecture-opportunities" class="section level3">
-<h3>Model Architecture Opportunities</h3>
+<h3><strong>8.2.4 Model Architecture Opportunities</strong></h3>
 <div id="current-limitations" class="section level4">
-<h4>Current Limitations</h4>
+<h4><strong>8.2.4.1 Current Limitations</strong></h4>
 <p>The current model uses traditional machine learning approaches, which
 may miss: - Complex sequential dependencies - Long-range feature
 interactions - Hierarchical content structures</p>
 </div>
 <div id="advanced-technologies-for-enhancement" class="section level4">
-<h4>Advanced Technologies for Enhancement</h4>
+<h4><strong>8.2.4.2 Advanced Technologies for Enhancement</strong></h4>
 <p>Model performance can be further enhanced through:</p>
 <p><strong>1. Transformer-Based Architectures</strong> - Better capture
 of sequential patterns - Attention mechanisms for feature importance -
@@ -1988,15 +2119,15 @@ model selection</p>
 <div id="future-work-directions" class="section level2">
 <h2><strong>8.3 Future Work Directions</strong></h2>
 <div id="data-integration" class="section level3">
-<h3>Data Integration</h3>
+<h3><strong>8.3.1 Data Integration</strong></h3>
 <div id="real-platform-data-streams" class="section level4">
-<h4>Real Platform Data Streams</h4>
+<h4><strong>8.3.1.1 Real Platform Data Streams</strong></h4>
 <p>Integrating <strong>real platform data streams</strong> would enable:
 - Validation of findings on actual user behavior - Capture of
 platform-specific algorithmic effects - Real-time trend tracking</p>
 </div>
 <div id="expanding-the-feature-space" class="section level4">
-<h4>Expanding the Feature Space</h4>
+<h4><strong>8.3.1.2 Expanding the Feature Space</strong></h4>
 <p>Include: - <strong>Visual and NLP-based content signals</strong>
 (scene detection, sentiment analysis) - <strong>User trajectory
 data</strong> (viewing history, scroll patterns) - <strong>Network
@@ -2004,9 +2135,9 @@ effects</strong> (follower graphs, sharing cascades)</p>
 </div>
 </div>
 <div id="methodological-enhancements" class="section level3">
-<h3>Methodological Enhancements</h3>
+<h3><strong>8.3.2 Methodological Enhancements</strong></h3>
 <div id="time-series-prediction-methods" class="section level4">
-<h4>Time Series Prediction Methods</h4>
+<h4><strong>8.3.2.1 Time Series Prediction Methods</strong></h4>
 <p>Adopting <strong>time series approaches</strong> such as: -
 <strong>Sequence models</strong> (LSTM, GRU) for temporal dependencies -
 <strong>Graph-based diffusion learning</strong> for viral spread
@@ -2014,7 +2145,7 @@ modeling - <strong>Survival analysis</strong> for trend lifecycle
 prediction</p>
 </div>
 <div id="multi-task-learning" class="section level4">
-<h4>Multi-Task Learning</h4>
+<h4><strong>8.3.2.2 Multi-Task Learning</strong></h4>
 <p>Simultaneously predict: - Trend label - Completion rate - Engagement
 metrics</p>
 <p>This could capture shared underlying factors and improve overall
@@ -2022,36 +2153,36 @@ performance.</p>
 </div>
 </div>
 <div id="real-world-deployment" class="section level3">
-<h3>Real-World Deployment</h3>
+<h3><strong>8.3.3 Real-World Deployment</strong></h3>
 <div id="real-time-feedback-loop" class="section level4">
-<h4>Real-Time Feedback Loop</h4>
+<h4><strong>8.3.3.1 Real-Time Feedback Loop</strong></h4>
 <p>Deploying the model into a <strong>real-time feedback loop</strong>
 would: - Enable continuous learning from new data - Adapt to evolving
 platform dynamics - Provide immediate value to stakeholders</p>
 </div>
 <div id="production-constraints-evaluation" class="section level4">
-<h4>Production Constraints Evaluation</h4>
+<h4><strong>8.3.3.2 Production Constraints Evaluation</strong></h4>
 <p>Evaluating the model under <strong>production constraints</strong>: -
 Latency requirements - Computational costs - Update frequency - Model
 interpretability for non-technical users</p>
 </div>
 </div>
 <div id="stakeholder-applications" class="section level3">
-<h3>Stakeholder Applications</h3>
+<h3><strong>8.3.4 Stakeholder Applications</strong></h3>
 <div id="for-content-creators-1" class="section level4">
-<h4>For Content Creators</h4>
+<h4><strong>8.3.4.1 For Content Creators</strong></h4>
 <p>Future systems could provide: - Real-time trend prediction before
 publishing - Optimization suggestions for title, hashtags, timing -
 Competitive benchmarking</p>
 </div>
 <div id="for-marketers-1" class="section level4">
-<h4>For Marketers</h4>
+<h4><strong>8.3.4.2 For Marketers</strong></h4>
 <p>Enhanced capabilities for: - Early identification of emerging trends
 - Influencer selection and campaign timing - ROI prediction and
 optimization</p>
 </div>
 <div id="for-recommendation-systems" class="section level4">
-<h4>For Recommendation Systems</h4>
+<h4><strong>8.3.4.3 For Recommendation Systems</strong></h4>
 <p>Integration with platform algorithms for: - Better content discovery
 - Personalized trend surfaces - Diversity in trending content</p>
 </div>
@@ -2059,11 +2190,8 @@ optimization</p>
 </div>
 <div id="concluding-thoughts" class="section level2">
 <h2><strong>8.4 Concluding Thoughts</strong></h2>
-<p>This project demonstrates both the <strong>possibilities and
-limitations</strong> of metadata-based analytics for short-form video
-performance.</p>
 <div id="what-we-learned" class="section level3">
-<h3>What We Learned</h3>
+<h3><strong>8.4.1 What We Learned</strong></h3>
 <p><strong>Completion Rate:</strong> - Metadata can identify structural
 patterns - But cannot capture creative quality - Descriptive insights
 are more valuable than predictive accuracy</p>
@@ -2072,7 +2200,7 @@ are more predictable - Machine learning can effectively classify
 popularity levels - Feature engineering is crucial for performance</p>
 </div>
 <div id="the-path-forward" class="section level3">
-<h3>The Path Forward</h3>
+<h3><strong>8.4.2 The Path Forward</strong></h3>
 <p>The future of short-form video analytics lies in: 1.
 <strong>Integrating multimodal data</strong> (visual, audio, text) 2.
 <strong>Modeling temporal dynamics</strong> of trend propagation 3.
