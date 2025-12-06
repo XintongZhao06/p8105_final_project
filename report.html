@@ -412,10 +412,39 @@ exploration.</p>
 </div>
 <div id="related-work" class="section level1">
 <h1><strong>2 Related Work</strong></h1>
-<p>(Anything that inspired you, such as a paper, a web site, or
-something we discussed in class.)</p>
-<p>(We anticipate that your project will change somewhat over time;
-these changes and the reasons for them should be documented!)</p>
+<p>This project focuses on completion rate analysis and trend prediction
+for short-form videos, drawing inspiration from practical research in
+the short-form video field, industry reports, and class discussions. Key
+insights include studies on short-video engagement dynamics—such as
+analyses of TikTok and YouTube Shorts performance—which identify video
+duration and upload timing as critical factors influencing completion
+rates. These findings guided the focus on temporal patterns and content
+characteristics in the Exploratory Data Analysis (EDA). Additionally,
+research on short-video metrics notes that engagement rates exhibit
+skewed distributions, consistent with our observation of right-skewed
+engagement rates, and supports the use of logarithmic transformations
+for modeling.</p>
+<p>Industry resources also play a vital role: short-form video datasets
+from Kaggle and platform-specific reports (e.g., TikTok Creator Trend
+Reports) informed feature selection, such as including creator tiers and
+hashtag performance in the analysis. Class discussions on predictive
+modeling for imbalanced data led to the adoption of weighted F1-scores
+and stratified cross-validation to address uneven distribution of trend
+labels (Low/Medium/High). Courses on EDA best practices guided the
+development of a systematic analytical framework, prioritizing analysis
+of key metrics, temporal patterns, and platform differences before model
+development.</p>
+<p>The project initially planned to focus solely on completion rate
+prediction but later expanded to include trend label analysis. This
+adjustment stemmed from insights from multi-metric engagement scoring
+frameworks—combining comments, shares, and views provides a more
+comprehensive reflection of content popularity. Meanwhile, research on
+platform-specific user behavior led to the addition of interaction
+features (e.g., platform-creator tier combinations) in feature
+engineering, as engagement drivers differ between platforms like TikTok
+and YouTube Shorts. These adjustments are based on the integration of
+external experience, aiming to enhance the project’s practicality and
+predictive accuracy.</p>
 </div>
 <div id="initial-questions-and-project-evolution"
 class="section level1">
@@ -501,12 +530,128 @@ data cleaning process is not included.</p>
 <h1><strong>5 Exploratory Data Analysis (EDA)</strong></h1>
 <div id="eda-completion-rate" class="section level2">
 <h2><strong>5.1 EDA — Completion Rate</strong></h2>
-<p>(Visualizations, summaries, and exploratory statistical analyses.
-Justify the steps you took, and show any major changes to your
-ideas.)</p>
+<p>This section of EDA aims to analyze the distribution characteristics
+of completion rates and their relationships with key variables, laying
+the groundwork for subsequent predictive modeling. During data
+preprocessing, 18 core features (e.g., engagement rate, upload hour,
+duration) were selected from the raw dataset. Categorical variables
+(e.g., creator tier, platform) were converted to appropriate formats,
+and missing values were handled, resulting in a cleaned dataset of
+approximately 48,000 records with no missing values. Statistical results
+showed an average completion rate of approximately 0.638 (median:
+0.642), an average of 128,000 views, and an average engagement rate of
+approximately 0.067, indicating moderate audience retention and
+low-to-moderate interaction overall.</p>
+<p>Analysis of the target variable revealed that completion rates
+exhibit a roughly symmetric distribution, concentrated between 0.6 and
+0.7, with no significant skewness or heavy tails—making it a stable
+target for modeling. In contrast, engagement rates show a severe
+right-skewed distribution, with most values below 0.10 and only a few
+pieces of content having high-engagement outliers. A boxplot comparison
+further highlighted this difference: completion rates cluster tightly
+around the median, while engagement rates show wide variability and
+outliers.</p>
+<p>A scatter plot of completion rates vs. engagement rates showed a weak
+positive correlation (Pearson’s r = 0.12), indicating that high
+retention does not imply high interaction. The two metrics reflect
+audience retention and active interaction, respectively, and may be
+driven by different factors—providing a basis for treating them as
+independent outcome variables.</p>
+<p>Temporal analysis showed that upload volume peaks between
+16:00–22:00, aligning with users’ active periods after work/school, but
+average completion rates remain stable across all time slots
+(approximately 0.635–0.645). Weekday uploads (29,953 videos) outnumbered
+weekend uploads (18,126 videos), but completion rates showed almost no
+difference (0.638 on weekdays vs. 0.636 on weekends). This result
+contradicts the initial hypothesis that “timing affects retention,”
+indicating that short-form video viewers’ watching behavior is not
+restricted by upload timing.</p>
+<p>Content characteristic analysis revealed that video duration follows
+a right-skewed distribution, with 78% of videos shorter than 50
+seconds—consistent with short-form video features. Duration and
+completion rates exhibit a non-linear relationship: completion rates
+peak at approximately 12 seconds (0.68) and decline steadily as duration
+increases, with completion rates for videos longer than 120 seconds
+dropping to 0.52. Based on this, we divided duration into intervals (s,
+15-30s, 30-60s, &gt;60s) for subsequent group analysis.</p>
+<p>Regarding title characteristics, title lengths are concentrated
+between 10–40 characters, and there is no consistent monotonic
+relationship between length and completion rate. However, emoji usage
+has a significant impact on completion rates: videos with emojis in
+titles have an average completion rate of 0.659, 3.2% higher than those
+without emojis (0.627), and their engagement rate is 41% higher (0.095
+vs. 0.067). Additionally, videos with emojis have higher medians for
+both completion and engagement rates, with fewer low-performance
+outliers—indicating that emojis act as visual cues to enhance initial
+audience interest and retention.</p>
+<p>Further group comparison analysis found that completion rates vary by
+content category: music and fitness videos have the highest median
+completion rates (approximately 0.67), while education and technology
+videos have the lowest (approximately 0.59). When stratified by duration
+and category, music videos maintain relatively high completion rates
+even in longer intervals (30–60s: 0.64), while education videos see a
+sharp drop to 0.51 in the same interval. This indicates that
+category-specific content quality (e.g., the appeal of music,
+information density of educational content) moderates the impact of
+duration on retention.</p>
 </div>
 <div id="eda-trend-label" class="section level2">
 <h2><strong>5.2 EDA — Trend Label</strong></h2>
+<p>To go beyond single-metric limitations and comprehensively capture
+content popularity, we constructed an “engagement score” by integrating
+multiple engagement-related features, then generated trend labels. The
+engagement score includes comment rate (20% weight), share rate (30%
+weight), views (20% weight), text richness (10% weight), weekend effects
+(10% weight), and creator tier bonuses (0–0.5). Based on this, videos
+were categorized into three trend labels: Low Trend (score ≤0.8), Medium
+Trend (0.8 &lt; score ≤1.5), and High Trend (score &gt;1.5). The
+distribution of the three labels is 42%, 47%, and 11% respectively,
+showing a mild imbalance with more Low Trend content.</p>
+<p>The distribution of engagement scores by trend label shows clear
+differentiation: Low Trend videos cluster between 0.6–0.8, Medium Trend
+between 1.0–1.5, and High Trend between 1.8–3.0, with low
+overlap—validating the effectiveness of trend labels in stratifying
+content popularity. Platform comparison reveals that TikTok videos have
+higher median engagement scores than YouTube Shorts across all trend
+labels (e.g., High Trend: TikTok 2.3 vs. YouTube 1.9), indicating that
+TikTok’s algorithm or user base is more likely to drive high-interaction
+content. Device type has no significant impact on engagement scores:
+mobile and desktop users show nearly identical median scores for each
+trend label, demonstrating that content popularity—rather than viewing
+device—determines interaction levels.</p>
+<p>Boxplots of core metrics by trend label show a strong monotonic
+relationship: views, likes, comments, shares, and saves all increase
+significantly with trend label level. High Trend videos have a median of
+approximately 380,000 views (vs. 45,000 for Low Trend) and a median of
+approximately 18,000 likes (vs. 1,200 for Low Trend). Engagement rates
+also rise with label level (Low: 0.032, Medium: 0.068, High: 0.145),
+confirming that trend labels effectively aggregate multi-dimensional
+popularity metrics.</p>
+<p>Creator analysis shows a positive correlation between a creator’s
+average views and individual video views (correlation coefficient =
+0.48), but with high dispersion. Star creators have a median engagement
+score 3.2 times that of Micro creators, reflecting the “influence
+effect”—a larger audience base provides initial exposure, and creator
+credibility enhances audience trust. However, high dispersion indicates
+that Micro creators can still produce viral videos, while Star creators
+may have underperforming content—proving that creator tier is an
+important predictive factor, but content-specific features remain
+critical.</p>
+<p>Hashtag analysis shows that popular hashtags like #FYP (For You Page)
+and #GRWM (Get Ready With Me) drive billions of views, serving as key
+channels for content discovery. Niche hashtags like #BookTok
+(book-related) and #StudyWithMe (study-along) have lower view counts but
+precise audiences, suggesting creators should combine popular and niche
+hashtags to balance exposure and audience relevance.</p>
+<p>Significant differences exist in trend label distribution between
+platforms: TikTok has a higher proportion of High Trend videos (13%
+vs. 8% on YouTube Shorts) and a lower proportion of Low Trend videos
+(38% vs. 47% on YouTube Shorts). TikTok’s engagement rate distribution
+is more right-skewed with more high-engagement outliers, while YouTube
+Shorts’ engagement rates cluster more at low levels. This reflects that
+TikTok’s algorithm (e.g., the For You Page’s focus on novelty and
+popularity) is more likely to drive content virality, while YouTube
+Shorts may prioritize established creators or longer content.</p>
 </div>
 </div>
 <div id="detailed-regression-ml-analysis" class="section level1">
