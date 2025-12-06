@@ -934,8 +934,6 @@ Interaction metrics such as **likes and saves** are positively correlated with v
 - Videos that retain viewers tend to generate more interaction
 - Suggests a bidirectional relationship between retention and engagement
 
----
-
 ### Surprising Findings
 
 #### Creator Attributes: Weak and Negative Association
@@ -946,8 +944,6 @@ More surprisingly, an unexpected finding is that **creator-level attributes**, i
 - Having a large audience does not guarantee high retention rates
 - **Content features may be more important than creator scale**
 - Challenges assumptions about influencer effectiveness
-
----
 
 ### Model Performance: The Low R-Squared Problem
 
@@ -963,8 +959,6 @@ Adding more predictors provides **limited improvement**, further suggesting that
 - Emotional resonance
 - Visual aesthetics
 - Algorithmic exposure patterns
-
----
 
 ### Broader Insights
 
@@ -990,15 +984,11 @@ The non-linear model shows **little improvement over the linear model**, suggest
 - **The lack of relevant content-level information**
 - NOT the functional form of the model
 
----
-
 ### Conclusion
 
 In conclusion, **metadata can reveal some meaningful patterns**, but it can only explain a **small fraction of audience behavior** on short video platforms.
 
 **Key Takeaway:** The challenge is not about finding the right model—it's about the fundamental limits of what observable metadata can capture about inherently creative and algorithmic processes.
-
----
 
 ## **7.2 Discussion of Trend Prediction**
 
@@ -1013,8 +1003,6 @@ The superior performance of **Gradient Boosting was anticipated**, given its pro
 What **exceeded expectations** was the **magnitude of difference** between models:
 - Gradient Boosting achieved **3.2% higher accuracy** than its nearest competitor
 - Demonstrates clear superiority for this task
-
----
 
 ### System Effectiveness
 
@@ -1035,8 +1023,6 @@ This model is **highly consistent with expectations**:
 - The higher the trend of a video, the more user engagement it naturally accumulates
 - This accelerates visibility in the platform's recommendation ecosystem
 
----
-
 ### Validation of Feature Design
 
 #### Distribution of Engagement Scores
@@ -1051,8 +1037,6 @@ Analysis confirms that **user interaction metrics** (particularly sharing and co
 - **65% of the model's decision-making**
 
 This validates the theoretical foundation that viral content is driven by active user participation.
-
----
 
 ### Practical Implications
 
