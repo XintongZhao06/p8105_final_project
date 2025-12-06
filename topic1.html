@@ -923,6 +923,178 @@ values. This suggests that while overall averages are comparable, the
 potential for high engagement virality might be structurally different
 between the platforms, with TikTok facilitating more extreme “outlier”
 engagement events.</p>
+</div>
+<div id="group-comparison-analysis" class="section level2">
+<h2>7.Group Comparison Analysis</h2>
+<pre class="r"><code>df_raw &lt;- fread(&quot;data/youtube_shorts_tiktok_trends_2025.csv&quot;, encoding = &quot;UTF-8&quot;) %&gt;% as_tibble()
+
+guess_col &lt;- function(patterns, cols) {
+  for(p in patterns){
+    idx &lt;- grep(p, cols, ignore.case = TRUE)
+    if(length(idx) &gt; 0) return(cols[idx[1]])
+  }
+  NA_character_
+}
+
+cols &lt;- names(df_raw)
+
+col_duration   &lt;- guess_col(c(&quot;duration_seconds&quot;,&quot;duration_sec&quot;,&quot;duration&quot;,&quot;video_length&quot;), cols)
+col_completion &lt;- guess_col(c(&quot;completion_rate&quot;,&quot;completion&quot;,&quot;completion_pct&quot;), cols)
+col_engagement &lt;- guess_col(c(&quot;engagement&quot;,&quot;interaction&quot;,&quot;engagement_rate&quot;,&quot;er&quot;), cols)
+col_category   &lt;- guess_col(c(&quot;category&quot;,&quot;content_type&quot;,&quot;topic&quot;,&quot;genre&quot;), cols)
+col_platform   &lt;- guess_col(c(&quot;platform&quot;,&quot;source&quot;,&quot;site&quot;), cols)
+col_views      &lt;- guess_col(c(&quot;views&quot;,&quot;plays&quot;,&quot;impressions&quot;,&quot;view_count&quot;), cols)
+col_avgwatch   &lt;- guess_col(c(&quot;watch&quot;,&quot;avg_watch&quot;,&quot;watch_time&quot;), cols)
+
+df &lt;- tibble(
+  duration_sec = as.numeric(df_raw[[col_duration]]),
+  completion_rate = as.numeric(df_raw[[col_completion]]),
+  category = tolower(as.character(df_raw[[col_category]])),
+  platform = if(!is.na(col_platform)) tolower(as.character(df_raw[[col_platform]])) else NA_character_,
+  engagement = if(!is.na(col_engagement)) as.numeric(df_raw[[col_engagement]]) else NA_real_,
+  views = if(!is.na(col_views)) as.numeric(df_raw[[col_views]]) else NA_real_,
+  avg_watch_time_sec = if(!is.na(col_avgwatch)) as.numeric(df_raw[[col_avgwatch]]) else NA_real_
+) %&gt;%
+  mutate(
+    completion_rate = ifelse(completion_rate &gt; 1, completion_rate / 100, completion_rate)
+  ) %&gt;%
+  filter(!is.na(duration_sec), !is.na(completion_rate))
+
+df &lt;- df %&gt;%
+  mutate(
+    duration_bin = case_when(
+      duration_sec &lt; 15 ~ &quot;&lt;15s&quot;,
+      duration_sec &gt;= 15 &amp; duration_sec &lt; 30 ~ &quot;15-30s&quot;,
+      duration_sec &gt;= 30 &amp; duration_sec &lt;= 60 ~ &quot;30-60s&quot;,
+      duration_sec &gt; 60 ~ &quot;&gt;60s&quot;,
+      TRUE ~ NA_character_
+    ),
+    duration_bin = factor(duration_bin, levels = c(&quot;&lt;15s&quot;,&quot;15-30s&quot;,&quot;30-60s&quot;,&quot;&gt;60s&quot;))
+  )
+
+preferred &lt;- c(&quot;lifestyle&quot;,&quot;sport&quot;,&quot;music&quot;)
+present_pref &lt;- intersect(preferred, unique(df$category))
+if(length(present_pref) == 0){
+  present_pref &lt;- df %&gt;% count(category, sort = TRUE) %&gt;% slice_head(n = 3) %&gt;% pull(category)
+}
+
+ggplot(df %&gt;% filter(category %in% present_pref),
+       aes(x = category, y = completion_rate)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.18, alpha = 0.35, size = 0.7) +
+  stat_summary(fun = mean, geom = &quot;point&quot;, shape = 20, size = 2, color = &quot;red&quot;) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(title = &quot;Completion Rate by Category&quot;, x = &quot;Category&quot;, y = &quot;Completion Rate&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="topic1_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Description:</p>
+<p>This boxplot with jittered points compares the completion rates
+across different content categories (specifically “lifestyle” and
+“music” in the example). Each box represents the distribution of
+completion rates for a category, with the red dot indicating the mean
+completion rate.</p>
+<p>Interpretation:</p>
+<p>It helps identify which categories tend to have higher or more
+consistent completion rates. For example, “music” may show a higher
+median completion rate than “lifestyle.”</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(!is.na(duration_bin)),
+       aes(x = duration_bin, y = completion_rate)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.15, alpha = 0.3, size = 0.7) +
+  stat_summary(fun = mean, geom = &quot;point&quot;, shape = 20, size = 2, color = &quot;red&quot;) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(title = &quot;Completion Rate by Duration Bin&quot;, x = &quot;Duration Bin&quot;, y = &quot;Completion Rate&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="topic1_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Description:</p>
+<p>This boxplot visualizes how completion rates vary across different
+video duration bins: &lt;15s, 15-30s, 30-60s, and &gt;60s. The red dot
+marks the mean completion rate for each bin.</p>
+<p>Interpretation:</p>
+<p>Shows whether shorter videos (e.g., &lt;15s) tend to have higher
+completion rates compared to longer ones. Often, shorter videos retain
+viewers better.</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(category %in% present_pref),
+       aes(x = duration_bin, y = completion_rate, fill = category)) +
+  geom_violin(trim = TRUE, alpha = 0.5) +
+  stat_summary(fun = mean, geom = &quot;point&quot;, shape = 20, size = 2, color = &quot;black&quot;,
+               position = position_dodge(width = 0.9)) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(title = &quot;Completion Rate Distribution by Duration and Category&quot;,
+       x = &quot;Duration Bin&quot;, y = &quot;Completion Rate&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="topic1_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Description:</p>
+<p>A violin plot showing the distribution of completion rates across
+duration bins, separated by category (“lifestyle” and “music”). The
+black dot represents the mean for each category-bin combination.</p>
+<p>Interpretation:</p>
+<p>Allows comparison of how completion rates are distributed within each
+duration bin for different categories. For example, “music” videos may
+maintain higher completion rates even in longer bins.</p>
+<pre class="r"><code>ggplot(df,
+       aes(x = duration_sec, y = completion_rate, color = category)) +
+  geom_point(alpha = 0.15, size = 0.7) +
+  geom_smooth(aes(color = NULL), method = &quot;loess&quot;, span = 0.3, se = TRUE) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(title = &quot;Completion Rate vs Duration (LOESS)&quot;, x = &quot;Duration (seconds)&quot;, y = &quot;Completion Rate&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="topic1_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Description:</p>
+<p>A scatterplot with a LOESS smoothing curve showing the relationship
+between video duration (in seconds) and completion rate. Points are
+colored by category, but the trend line is global.</p>
+<p>Interpretation:</p>
+<p>Reveals the overall trend: completion rates generally decline as
+video duration increases. The LOESS curve helps visualize the non-linear
+relationship.</p>
+<pre class="r"><code>pred_df &lt;- df %&gt;% select(duration_sec, completion_rate) %&gt;% drop_na()
+
+if(nrow(pred_df) &gt;= 20){
+  loess_fit &lt;- loess(completion_rate ~ duration_sec, data = pred_df, span = 0.3)
+  grid_x &lt;- seq(min(pred_df$duration_sec), quantile(pred_df$duration_sec, 0.99), length.out = 1200)
+  preds &lt;- predict(loess_fit, newdata = data.frame(duration_sec = grid_x))
+  pred_tbl &lt;- tibble(duration_sec = grid_x, pred_completion = preds) %&gt;% drop_na()
+  peak_row &lt;- pred_tbl %&gt;% slice_max(pred_completion, n = 1)
+
+  ggplot(pred_tbl, aes(x = duration_sec, y = pred_completion)) +
+    geom_line(size = 0.8) +
+    geom_vline(xintercept = peak_row$duration_sec, linetype = &quot;dashed&quot;) +
+    annotate(&quot;text&quot;, x = peak_row$duration_sec, y = max(pred_tbl$pred_completion),
+             label = paste0(&quot;Peak ≈ &quot;, round(peak_row$duration_sec, 1), &quot;s&quot;),
+             hjust = -0.1, vjust = -0.3, size = 3.6) +
+    scale_y_continuous(labels = percent_format()) +
+    labs(title = &quot;Predicted Optimal Duration (LOESS)&quot;,
+         x = &quot;Duration (seconds)&quot;, y = &quot;Predicted Completion Rate&quot;) +
+    theme_minimal()
+}</code></pre>
+<p><img src="topic1_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Description:</p>
+<p>A line plot derived from a LOESS model predicting completion rate
+based on duration. A vertical dashed line marks the duration at which
+the predicted completion rate peaks.</p>
+<p>Interpretation:</p>
+<p>Indicates the optimal video duration for maximizing completion rate.
+In the example, the peak is around 5 seconds, suggesting very short
+videos are most likely to be completed.</p>
+<pre class="r"><code>ggplot(df %&gt;% filter(category %in% present_pref, !is.na(duration_bin)),
+       aes(x = duration_bin, y = completion_rate)) +
+  geom_boxplot(outlier.shape = NA) +
+  stat_summary(fun = mean, geom = &quot;point&quot;, size = 2, color = &quot;red&quot;) +
+  scale_y_continuous(labels = percent_format()) +
+  facet_wrap(~ category) +
+  labs(title = &quot;Completion Rate by Duration Bin (Faceted by Category)&quot;,
+       x = &quot;Duration Bin&quot;, y = &quot;Completion Rate&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="topic1_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Description:</p>
+<p>A faceted boxplot showing completion rates across duration bins,
+separately for each category (“lifestyle” and “music”). Red dots
+indicate bin means.</p>
+<p>Interpretation:</p>
+<p>Enables category-specific analysis of how completion rates change
+with duration. For instance, “music” may show less decline in longer
+bins compared to “lifestyle.”</p>
 <p><a href="regression_analysis.html">Next: Completion Rate Analysis
 →</a></p>
 </div>
