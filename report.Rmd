@@ -441,13 +441,13 @@ A **non-linear relationship** exists between duration and completion rate:
 
 **Duration Intervals Created:**
 
-- <15s
+- shorter than 15s
 
 - 15-30s
 
 - 30-60s
 
-- >60s
+- longer than 60s
 
 These intervals facilitate subsequent group analysis.
 
@@ -691,13 +691,13 @@ These findings align with earlier observations that **entertainment-oriented cat
 
 We examined completion rate across **four duration bins**:
 
-- <15s
+- shorter than 15s
 
 - 15–30s
 
 - 30–60s
 
-- >60s
+- longer than 60s
 
 The boxplots reveal a **clear pattern**:
 
@@ -1362,8 +1362,6 @@ Trend prediction allows:
 - Strategic partnership timing
 
 - ROI optimization for influencer campaigns
-
----
 
 # **8. Limitations and Future Work**
 
