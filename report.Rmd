@@ -521,15 +521,16 @@ To go beyond single-metric limitations and comprehensively capture content popul
 
 The engagement score formula:
 
-```
-Engagement Score = 
-  Comment Rate (20% weight) +
-  Share Rate (30% weight) +
-  Views (20% weight) +
-  Text Richness (10% weight) +
-  Weekend Effects (10% weight) +
-  Creator Tier Bonuses (0–0.5)
-```
+$$
+\begin{aligned}
+\text{Engagement Score} = & \ \text{Comment Rate} \times 0.20 \ + \\
+& \ \text{Share Rate} \times 0.30 \ + \\
+& \ \text{Views} \times 0.20 \ + \\
+& \ \text{Text Richness} \times 0.10 \ + \\
+& \ \text{Weekend Effects} \times 0.10 \ + \\
+& \ \text{Creator Tier Bonuses} \ (0-0.5)
+\end{aligned}
+$$
 
 ### **5.2.3 Trend Label Categories**
 
